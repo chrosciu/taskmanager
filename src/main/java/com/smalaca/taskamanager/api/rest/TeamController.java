@@ -69,24 +69,23 @@ public class TeamController {
     public ResponseEntity<TeamDto> findById(@PathVariable Long id) {
         Optional<Team> found = teamRepository.findById(id);
 
-        if (found.isEmpty()) {
+        if (found.isPresent()) {
+            Team team = found.get();
+            TeamDto dto = new TeamDto();
+            dto.setId(team.getId());
+            dto.setName(team.getName());
+
+            if (team.getCodename() != null) {
+                dto.setCodenameShort(team.getCodename().getShortName());
+                dto.setCodenameFull(team.getCodename().getFullName());
+            }
+
+            dto.setDescription(team.getDescription());
+            dto.setUserIds(team.getMembers().stream().map(User::getId).collect(toList()));
+            return new ResponseEntity<>(dto, HttpStatus.OK);
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-        Team team = found.get();
-        TeamDto dto = new TeamDto();
-        dto.setId(team.getId());
-        dto.setName(team.getName());
-
-        if (team.getCodename() != null) {
-            dto.setCodenameShort(team.getCodename().getShortName());
-            dto.setCodenameFull(team.getCodename().getFullName());
-        }
-
-        dto.setDescription(team.getDescription());
-        dto.setUserIds(team.getMembers().stream().map(User::getId).collect(toList()));
-
-        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @PostMapping
