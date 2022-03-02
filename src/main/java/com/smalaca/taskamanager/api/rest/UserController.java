@@ -97,26 +97,13 @@ public class UserController {
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
-        User user;
+        Optional<User> found = userRepository.findById(id);
 
-        try {
-            user = getUserById(id);
-        } catch (UserNotFoundException exception) {
+        if (found.isPresent()) {
+            userRepository.delete(found.get());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-        userRepository.delete(user);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    private User getUserById(Long id) {
-        Optional<User> user;
-        user = userRepository.findById(id);
-
-        if (user.isEmpty()) {
-            throw new UserNotFoundException();
-        }
-
-        return user.get();
     }
 }
