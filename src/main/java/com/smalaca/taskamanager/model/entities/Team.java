@@ -138,7 +138,7 @@ public class Team {
         return codename.getFullName();
     }
 
-    public TeamDto asDto() {
+    public TeamDto asDtoWithUserIds() {
         TeamDto dto = new TeamDto();
         dto.setId(id);
         dto.setName(name);
@@ -154,5 +154,18 @@ public class Team {
 
     private List<Long> getUserIds() {
         return members.stream().map(User::getId).collect(toList());
+    }
+
+    public TeamDto asDto() {
+        TeamDto dto = new TeamDto();
+        dto.setId(getId());
+        dto.setName(getName());
+
+        if (hasCodename()) {
+            dto.setCodename(getShortName(), getFullName());
+        }
+
+        dto.setDescription(getDescription());
+        return dto;
     }
 }

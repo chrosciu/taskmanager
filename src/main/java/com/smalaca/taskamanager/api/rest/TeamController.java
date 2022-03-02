@@ -45,19 +45,7 @@ public class TeamController {
     @GetMapping
     public ResponseEntity<List<TeamDto>> findAll() {
         List<TeamDto> teams = StreamSupport.stream(teamRepository.findAll().spliterator(), false)
-                .map(team -> {
-                    TeamDto dto = new TeamDto();
-                    dto.setId(team.getId());
-                    dto.setName(team.getName());
-
-                    if (team.hasCodename()) {
-                        dto.setCodename(team.getShortName(), team.getFullName());
-                    }
-
-                    dto.setDescription(team.getDescription());
-
-                    return dto;
-                })
+                .map(Team::asDto)
                 .collect(toList());
 
         return new ResponseEntity<>(teams, HttpStatus.OK);
@@ -69,7 +57,7 @@ public class TeamController {
         Optional<Team> found = teamRepository.findById(id);
 
         if (found.isPresent()) {
-            TeamDto dto = found.get().asDto();
+            TeamDto dto = found.get().asDtoWithUserIds();
             return new ResponseEntity<>(dto, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -118,16 +106,7 @@ public class TeamController {
 
         Team updated = teamRepository.save(team);
 
-        TeamDto dto = new TeamDto();
-        dto.setId(updated.getId());
-        dto.setName(updated.getName());
-        if (updated.hasCodename()) {
-            dto.setCodename(updated.getShortName(), updated.getFullName());
-        }
-
-        dto.setDescription(updated.getDescription());
-
-        return new ResponseEntity<>(dto, HttpStatus.OK);
+        return new ResponseEntity<>(updated.asDto(), HttpStatus.OK);
     }
 
     @PutMapping("/{id}/members")
