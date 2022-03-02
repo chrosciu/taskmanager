@@ -185,4 +185,31 @@ public class User {
     private boolean hasEmailAddress() {
         return emailAddress != null;
     }
+
+    public void update(UserDto userDto) {
+        if (userDto.getLogin() != null) {
+            setLogin(userDto.getLogin());
+        }
+
+        if (userDto.getPassword() != null) {
+            setPassword(userDto.getPassword());
+        }
+
+        if (userDto.getPhoneNumber() != null) {
+            PhoneNumber phoneNumber = new PhoneNumber();
+            phoneNumber.setPrefix(userDto.getPhonePrefix());
+            phoneNumber.setNumber(userDto.getPhoneNumber());
+            setPhoneNumber(phoneNumber);
+        }
+
+        if (userDto.getEmailAddress() != null) {
+            EmailAddress emailAddress = new EmailAddress();
+            emailAddress.setEmailAddress(userDto.getEmailAddress());
+            setEmailAddress(emailAddress);
+        }
+
+        if (userDto.getTeamRole() != null) {
+            setTeamRole(TeamRole.valueOf(userDto.getTeamRole()));
+        }
+    }
 }
