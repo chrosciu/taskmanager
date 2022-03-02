@@ -69,17 +69,7 @@ public class TeamController {
         Optional<Team> found = teamRepository.findById(id);
 
         if (found.isPresent()) {
-            Team team = found.get();
-            TeamDto dto = new TeamDto();
-            dto.setId(team.getId());
-            dto.setName(team.getName());
-
-            if (team.hasCodename()) {
-                dto.setCodename(team.getShortName(), team.getFullName());
-            }
-
-            dto.setDescription(team.getDescription());
-            dto.setUserIds(team.getUserIds());
+            TeamDto dto = found.get().asDto();
             return new ResponseEntity<>(dto, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

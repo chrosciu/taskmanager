@@ -1,5 +1,6 @@
 package com.smalaca.taskamanager.model.entities;
 
+import com.smalaca.taskamanager.dto.TeamDto;
 import com.smalaca.taskamanager.model.embedded.Codename;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -135,5 +136,19 @@ public class Team {
 
     public List<Long> getUserIds() {
         return members.stream().map(User::getId).collect(toList());
+    }
+
+    public TeamDto asDto() {
+        TeamDto dto = new TeamDto();
+        dto.setId(getId());
+        dto.setName(getName());
+
+        if (hasCodename()) {
+            dto.setCodename(getShortName(), getFullName());
+        }
+
+        dto.setDescription(getDescription());
+        dto.setUserIds(getUserIds());
+        return dto;
     }
 }
