@@ -96,8 +96,7 @@ class UserControllerTest {
 
     private UserDto givenUserWithFirstAndLastName(String firstName, String lastName) {
         UserDto userDto = new UserDto();
-        userDto.setFirstName(firstName);
-        userDto.setLastName(lastName);
+        userDto.setUserName(firstName, lastName);
         userDto.setTeamRole(TEAM_ROLE);
         return userDto;
     }

@@ -176,4 +176,12 @@ public class User {
     public String phoneNumber() {
         return phoneNumber.getNumber();
     }
+
+    public String getFirstName() {
+        return userName.getFirstName();
+    }
+
+    public String getLastName() {
+        return userName.getLastName();
+    }
 }

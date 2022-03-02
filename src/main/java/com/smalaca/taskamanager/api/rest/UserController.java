@@ -44,8 +44,7 @@ public class UserController {
         for (User user : userRepository.findAll()) {
             UserDto userDto = new UserDto();
             userDto.setId(user.getId());
-            userDto.setFirstName(user.getUserName().getFirstName());
-            userDto.setLastName(user.getUserName().getLastName());
+            userDto.setUserName(user.getFirstName(), user.getLastName());
             userDto.setLogin(user.getLogin());
             userDto.setPassword(user.getPassword());
 
@@ -77,8 +76,7 @@ public class UserController {
 
             UserDto userDto = new UserDto();
             userDto.setId(user.getId());
-            userDto.setFirstName(user.getUserName().getFirstName());
-            userDto.setLastName(user.getUserName().getLastName());
+            userDto.setUserName(user.getFirstName(), user.getLastName());
             userDto.setLogin(user.getLogin());
             userDto.setPassword(user.getPassword());
 
@@ -166,8 +164,7 @@ public class UserController {
 
         UserDto response = new UserDto();
         response.setId(updated.getId());
-        response.setFirstName(updated.getUserName().getFirstName());
-        response.setLastName(updated.getUserName().getLastName());
+        response.setUserName(updated.getFirstName(), updated.getLastName());
         response.setLogin(updated.getLogin());
         response.setPassword(updated.getPassword());
 

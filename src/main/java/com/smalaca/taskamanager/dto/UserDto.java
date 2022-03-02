@@ -17,16 +17,8 @@ public class UserDto {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
     public String getLastName() {
         return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public String getLogin() {
@@ -87,5 +79,10 @@ public class UserDto {
 
     public TeamRole asTeamRole() {
         return TeamRole.valueOf(teamRole);
+    }
+
+    public void setUserName(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 }
