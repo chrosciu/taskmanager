@@ -81,19 +81,18 @@ public class UserController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable("id") Long id, @RequestBody UserDto userDto) {
-        User user;
+        Optional<User> found = userRepository.findById(id);
 
-        try {
-            user = getUserById(id);
-        } catch (UserNotFoundException exception) {
+        if (found.isPresent()) {
+            User user = found.get();
+            user.update(userDto);
+
+            User updated = userRepository.save(user);
+            UserDto response = updated.asDto();
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-        user.update(userDto);
-
-        User updated = userRepository.save(user);
-        UserDto response = updated.asDto();
-        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}")
