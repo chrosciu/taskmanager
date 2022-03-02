@@ -36,6 +36,13 @@ public class Team {
     private Project project;
 
     @Deprecated
+    public Team() {}
+
+    public Team(String name) {
+        this.name = name;
+    }
+
+    @Deprecated
     public String getName() {
         return name;
     }
