@@ -130,8 +130,7 @@ class TeamControllerTest {
         String newDescription = randomString();
         TeamDto dto = new TeamDto();
         dto.setName(newName);
-        dto.setCodenameShort(newCodenameShort);
-        dto.setCodenameFull(newCodenameFull);
+        dto.setCodename(newCodenameShort, newCodenameFull);
         dto.setDescription(newDescription);
 
         ResponseEntity<TeamDto> response = controller.updateTeam(EXISTING_TEAM_ID, dto);
