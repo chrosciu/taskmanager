@@ -42,25 +42,7 @@ public class UserController {
         List<UserDto> usersDtos = new ArrayList<>();
 
         for (User user : userRepository.findAll()) {
-            UserDto userDto = new UserDto();
-            userDto.setId(user.getId());
-            userDto.setUserName(user.getFirstName(), user.getLastName());
-            userDto.setLogin(user.getLogin());
-            userDto.setPassword(user.getPassword());
-
-            if (user.hasTeamRole()) {
-                userDto.setTeamRole(user.getTeamRoleName());
-            }
-
-            if (user.hasPhoneNumber()) {
-                userDto.setPhoneNumber(user.phonePrefix(), user.phoneNumber());
-            }
-
-            if (user.hasEmailAddress()) {
-                userDto.setEmailAddress(user.emailAddress());
-            }
-
-            usersDtos.add(userDto);
+            usersDtos.add(user.asDto());
         }
 
         return new ResponseEntity<>(usersDtos, HttpStatus.OK);
@@ -72,24 +54,7 @@ public class UserController {
 
         if (found.isPresent()) {
             User user = found.get();
-
-            UserDto userDto = new UserDto();
-            userDto.setId(user.getId());
-            userDto.setUserName(user.getFirstName(), user.getLastName());
-            userDto.setLogin(user.getLogin());
-            userDto.setPassword(user.getPassword());
-
-            if (user.hasTeamRole()) {
-                userDto.setTeamRole(user.getTeamRoleName());
-            }
-
-            if (user.hasPhoneNumber()) {
-                userDto.setPhoneNumber(user.phonePrefix(), user.phoneNumber());
-            }
-
-            if (user.hasEmailAddress()) {
-                userDto.setEmailAddress(user.emailAddress());
-            }
+            UserDto userDto = user.asDto();
 
             return new ResponseEntity<>(userDto, HttpStatus.OK);
         } else {
@@ -159,25 +124,7 @@ public class UserController {
         }
         
         User updated = userRepository.save(user);
-
-        UserDto response = new UserDto();
-        response.setId(updated.getId());
-        response.setUserName(updated.getFirstName(), updated.getLastName());
-        response.setLogin(updated.getLogin());
-        response.setPassword(updated.getPassword());
-
-        if (user.hasTeamRole()) {
-            response.setTeamRole(user.getTeamRoleName());
-        }
-
-        if (user.hasPhoneNumber()) {
-            response.setPhoneNumber(user.phonePrefix(), user.phoneNumber());
-        }
-
-        if (user.hasEmailAddress()) {
-            response.setEmailAddress(user.emailAddress());
-        }
-
+        UserDto response = updated.asDto();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

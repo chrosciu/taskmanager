@@ -1,5 +1,6 @@
 package com.smalaca.taskamanager.model.entities;
 
+import com.smalaca.taskamanager.dto.UserDto;
 import com.smalaca.taskamanager.model.embedded.EmailAddress;
 import com.smalaca.taskamanager.model.embedded.PhoneNumber;
 import com.smalaca.taskamanager.model.embedded.UserName;
@@ -49,6 +50,7 @@ public class User {
         this.userName = userName;
     }
 
+    @Deprecated
     public String getLogin() {
         return login;
     }
@@ -57,6 +59,7 @@ public class User {
         this.login = login;
     }
 
+    @Deprecated
     public String getPassword() {
         return password;
     }
@@ -149,39 +152,37 @@ public class User {
                 .toHashCode();
     }
 
-    public String getTeamRoleName() {
-        return teamRole.name();
+    public UserDto asDto() {
+        UserDto response = new UserDto();
+        response.setId(getId());
+        response.setUserName(userName.getFirstName(), userName.getLastName());
+        response.setLogin(login);
+        response.setPassword(password);
+
+        if (hasTeamRole()) {
+            response.setTeamRole(teamRole.name());
+        }
+
+        if (hasPhoneNumber()) {
+            response.setPhoneNumber(phoneNumber.getPrefix(), phoneNumber.getNumber());
+        }
+
+        if (hasEmailAddress()) {
+            response.setEmailAddress(emailAddress.getEmailAddress());
+        }
+
+        return response;
     }
 
-    public boolean hasTeamRole() {
+    private boolean hasTeamRole() {
         return teamRole != null;
     }
 
-    public String emailAddress() {
-        return emailAddress.getEmailAddress();
-    }
-
-    public boolean hasEmailAddress() {
-        return emailAddress != null;
-    }
-
-    public boolean hasPhoneNumber() {
+    private boolean hasPhoneNumber() {
         return phoneNumber != null;
     }
 
-    public String phonePrefix() {
-        return phoneNumber.getPrefix();
-    }
-
-    public String phoneNumber() {
-        return phoneNumber.getNumber();
-    }
-
-    public String getFirstName() {
-        return userName.getFirstName();
-    }
-
-    public String getLastName() {
-        return userName.getLastName();
+    private boolean hasEmailAddress() {
+        return emailAddress != null;
     }
 }
