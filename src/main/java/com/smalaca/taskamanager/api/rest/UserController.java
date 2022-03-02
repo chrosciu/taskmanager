@@ -53,8 +53,7 @@ public class UserController {
             }
 
             if (user.hasPhoneNumber()) {
-                userDto.setPhonePrefix(user.phonePrefix());
-                userDto.setPhoneNumber(user.phoneNumber());
+                userDto.setPhoneNumber(user.phonePrefix(), user.phoneNumber());
             }
 
             if (user.hasEmailAddress()) {
@@ -85,8 +84,7 @@ public class UserController {
             }
 
             if (user.hasPhoneNumber()) {
-                userDto.setPhonePrefix(user.phonePrefix());
-                userDto.setPhoneNumber(user.phoneNumber());
+                userDto.setPhoneNumber(user.phonePrefix(), user.phoneNumber());
             }
 
             if (user.hasEmailAddress()) {
@@ -173,8 +171,7 @@ public class UserController {
         }
 
         if (user.hasPhoneNumber()) {
-            response.setPhonePrefix(user.phonePrefix());
-            response.setPhoneNumber(user.phoneNumber());
+            response.setPhoneNumber(user.phonePrefix(), user.phoneNumber());
         }
 
         if (user.hasEmailAddress()) {

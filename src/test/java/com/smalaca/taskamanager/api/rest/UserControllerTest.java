@@ -145,8 +145,7 @@ class UserControllerTest {
         userDto.setLogin(newLogin);
         userDto.setPassword(newPassword);
         userDto.setEmailAddress(emailAddress);
-        userDto.setPhonePrefix(phonePrefix);
-        userDto.setPhoneNumber(phoneNumber);
+        userDto.setPhoneNumber(phonePrefix, phoneNumber);
         userDto.setTeamRole(teamRole);
 
         ResponseEntity<UserDto> response = controller.updateUser(EXISTING_USER_ID, userDto);

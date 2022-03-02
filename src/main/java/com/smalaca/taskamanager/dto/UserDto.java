@@ -49,16 +49,8 @@ public class UserDto {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
     public String getPhonePrefix() {
         return phonePrefix;
-    }
-
-    public void setPhonePrefix(String phonePrefix) {
-        this.phonePrefix = phonePrefix;
     }
 
     public String getEmailAddress() {
@@ -84,5 +76,10 @@ public class UserDto {
     public void setUserName(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public void setPhoneNumber(String phonePrefix, String phoneNumber) {
+        this.phonePrefix = phonePrefix;
+        this.phoneNumber = phoneNumber;
     }
 }
