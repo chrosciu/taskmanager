@@ -49,9 +49,8 @@ public class UserController {
             userDto.setLogin(user.getLogin());
             userDto.setPassword(user.getPassword());
 
-            TeamRole teamRole = user.getTeamRole();
-            if (teamRole != null) {
-                userDto.setTeamRole(teamRole.name());
+            if (user.hasTeamRole()) {
+                userDto.setTeamRole(user.getTeamRoleName());
             }
 
             PhoneNumber phoneNumber = user.getPhoneNumber();
@@ -85,9 +84,8 @@ public class UserController {
             userDto.setLogin(user.getLogin());
             userDto.setPassword(user.getPassword());
 
-            TeamRole teamRole = user.getTeamRole();
-            if (teamRole != null) {
-                userDto.setTeamRole(teamRole.name());
+            if (user.hasTeamRole()) {
+                userDto.setTeamRole(user.getTeamRoleName());
             }
 
             PhoneNumber phoneNumber = user.getPhoneNumber();
@@ -177,9 +175,8 @@ public class UserController {
         response.setLogin(updated.getLogin());
         response.setPassword(updated.getPassword());
 
-        TeamRole teamRole = updated.getTeamRole();
-        if (teamRole != null) {
-            response.setTeamRole(teamRole.name());
+        if (user.hasTeamRole()) {
+            response.setTeamRole(user.getTeamRoleName());
         }
 
         PhoneNumber phoneNumber = updated.getPhoneNumber();

@@ -148,4 +148,12 @@ public class User {
                 .append(teamRole)
                 .toHashCode();
     }
+
+    public String getTeamRoleName() {
+        return getTeamRole().name();
+    }
+
+    public boolean hasTeamRole() {
+        return getTeamRole() != null;
+    }
 }
