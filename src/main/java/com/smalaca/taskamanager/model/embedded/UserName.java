@@ -10,6 +10,14 @@ public class UserName {
     private String firstName;
     private String lastName;
 
+    @Deprecated
+    public UserName() {}
+
+    public UserName(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
     public String getFirstName() {
         return firstName;
     }

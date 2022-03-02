@@ -7,10 +7,7 @@ public class UserFactory {
     public User create(UserDto userDto) {
         User user = new User();
         user.setTeamRole(userDto.asTeamRole());
-        UserName userName = new UserName();
-        userName.setFirstName(userDto.getFirstName());
-        userName.setLastName(userDto.getLastName());
-        user.setUserName(userName);
+        user.setUserName(new UserName(userDto.getFirstName(), userDto.getLastName()));
         user.setLogin(userDto.getLogin());
         user.setPassword(userDto.getPassword());
         return user;
