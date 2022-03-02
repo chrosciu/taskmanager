@@ -206,7 +206,7 @@ public class User {
         }
 
         if (userDto.hasTeamRole()) {
-            this.teamRole = TeamRole.valueOf(userDto.getTeamRole());
+            this.teamRole = userDto.asTeamRole();
         }
     }
 }
