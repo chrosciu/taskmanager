@@ -164,4 +164,16 @@ public class User {
     public boolean hasEmailAddress() {
         return emailAddress != null;
     }
+
+    public boolean hasPhoneNumber() {
+        return phoneNumber != null;
+    }
+
+    public String phonePrefix() {
+        return phoneNumber.getPrefix();
+    }
+
+    public String phoneNumber() {
+        return phoneNumber.getNumber();
+    }
 }

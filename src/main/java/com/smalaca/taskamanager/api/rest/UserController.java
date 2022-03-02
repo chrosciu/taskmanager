@@ -53,10 +53,9 @@ public class UserController {
                 userDto.setTeamRole(user.getTeamRoleName());
             }
 
-            PhoneNumber phoneNumber = user.getPhoneNumber();
-            if (phoneNumber != null) {
-                userDto.setPhonePrefix(phoneNumber.getPrefix());
-                userDto.setPhoneNumber(phoneNumber.getNumber());
+            if (user.hasPhoneNumber()) {
+                userDto.setPhonePrefix(user.phonePrefix());
+                userDto.setPhoneNumber(user.phoneNumber());
             }
 
             if (user.hasEmailAddress()) {
@@ -87,10 +86,9 @@ public class UserController {
                 userDto.setTeamRole(user.getTeamRoleName());
             }
 
-            PhoneNumber phoneNumber = user.getPhoneNumber();
-            if (phoneNumber != null) {
-                userDto.setPhonePrefix(phoneNumber.getPrefix());
-                userDto.setPhoneNumber(phoneNumber.getNumber());
+            if (user.hasPhoneNumber()) {
+                userDto.setPhonePrefix(user.phonePrefix());
+                userDto.setPhoneNumber(user.phoneNumber());
             }
 
             if (user.hasEmailAddress()) {
@@ -177,10 +175,9 @@ public class UserController {
             response.setTeamRole(user.getTeamRoleName());
         }
 
-        PhoneNumber phoneNumber = updated.getPhoneNumber();
-        if (phoneNumber != null) {
-            response.setPhonePrefix(phoneNumber.getPrefix());
-            response.setPhoneNumber(phoneNumber.getNumber());
+        if (user.hasPhoneNumber()) {
+            response.setPhonePrefix(user.phonePrefix());
+            response.setPhoneNumber(user.phoneNumber());
         }
 
         if (user.hasEmailAddress()) {
