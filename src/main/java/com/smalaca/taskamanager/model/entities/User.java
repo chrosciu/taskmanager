@@ -72,6 +72,7 @@ public class User {
         return phoneNumber;
     }
 
+    @Deprecated
     public void setPhoneNumber(PhoneNumber phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
@@ -80,6 +81,7 @@ public class User {
         return emailAddress;
     }
 
+    @Deprecated
     public void setEmailAddress(EmailAddress emailAddress) {
         this.emailAddress = emailAddress;
     }
@@ -188,28 +190,28 @@ public class User {
 
     public void update(UserDto userDto) {
         if (userDto.getLogin() != null) {
-            setLogin(userDto.getLogin());
+            this.login = userDto.getLogin();
         }
 
         if (userDto.getPassword() != null) {
-            setPassword(userDto.getPassword());
+            this.password = userDto.getPassword();
         }
 
         if (userDto.getPhoneNumber() != null) {
             PhoneNumber phoneNumber = new PhoneNumber();
             phoneNumber.setPrefix(userDto.getPhonePrefix());
             phoneNumber.setNumber(userDto.getPhoneNumber());
-            setPhoneNumber(phoneNumber);
+            this.phoneNumber = phoneNumber;
         }
 
         if (userDto.getEmailAddress() != null) {
             EmailAddress emailAddress = new EmailAddress();
             emailAddress.setEmailAddress(userDto.getEmailAddress());
-            setEmailAddress(emailAddress);
+            this.emailAddress = emailAddress;
         }
 
         if (userDto.getTeamRole() != null) {
-            setTeamRole(TeamRole.valueOf(userDto.getTeamRole()));
+            this.teamRole = TeamRole.valueOf(userDto.getTeamRole());
         }
     }
 }
