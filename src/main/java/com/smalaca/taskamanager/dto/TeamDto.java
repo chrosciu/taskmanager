@@ -31,16 +31,8 @@ public class TeamDto {
         return codenameShort;
     }
 
-    public void setCodenameShort(String codenameShort) {
-        this.codenameShort = codenameShort;
-    }
-
     public String getCodenameFull() {
         return codenameFull;
-    }
-
-    public void setCodenameFull(String codenameFull) {
-        this.codenameFull = codenameFull;
     }
 
     public String getDescription() {
