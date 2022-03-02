@@ -51,8 +51,8 @@ public class TeamController {
                     dto.setName(team.getName());
 
                     if (team.hasCodename()) {
-                        dto.setCodenameShort(team.getCodename().getShortName());
-                        dto.setCodenameFull(team.getCodename().getFullName());
+                        dto.setCodenameShort(team.getShortName());
+                        dto.setCodenameFull(team.getFullName());
                     }
 
                     dto.setDescription(team.getDescription());
@@ -76,8 +76,8 @@ public class TeamController {
             dto.setName(team.getName());
 
             if (team.hasCodename()) {
-                dto.setCodenameShort(team.getCodename().getShortName());
-                dto.setCodenameFull(team.getCodename().getFullName());
+                dto.setCodenameShort(team.getShortName());
+                dto.setCodenameFull(team.getFullName());
             }
 
             dto.setDescription(team.getDescription());
@@ -134,8 +134,8 @@ public class TeamController {
         dto.setId(updated.getId());
         dto.setName(updated.getName());
         if (updated.hasCodename()) {
-            dto.setCodenameShort(updated.getCodename().getShortName());
-            dto.setCodenameFull(updated.getCodename().getFullName());
+            dto.setCodenameShort(updated.getShortName());
+            dto.setCodenameFull(updated.getFullName());
         }
 
         dto.setDescription(updated.getDescription());

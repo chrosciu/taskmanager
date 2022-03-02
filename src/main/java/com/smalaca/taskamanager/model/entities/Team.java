@@ -121,4 +121,12 @@ public class Team {
     public boolean hasCodename() {
         return codename != null;
     }
+
+    public String getShortName() {
+        return codename.getShortName();
+    }
+
+    public String getFullName() {
+        return codename.getFullName();
+    }
 }
