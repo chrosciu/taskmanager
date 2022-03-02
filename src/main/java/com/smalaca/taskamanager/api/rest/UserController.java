@@ -111,7 +111,7 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         } else {
             User user = new User();
-            user.setTeamRole(TeamRole.valueOf(userDto.getTeamRole()));
+            user.setTeamRole(userDto.asTeamRole());
             UserName userName = new UserName();
             userName.setFirstName(userDto.getFirstName());
             userName.setLastName(userDto.getLastName());
