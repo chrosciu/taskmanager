@@ -82,4 +82,24 @@ public class UserDto {
         this.phonePrefix = phonePrefix;
         this.phoneNumber = phoneNumber;
     }
+
+    public boolean hasLogin() {
+        return login != null;
+    }
+
+    public boolean hasPassword() {
+        return password != null;
+    }
+
+    public boolean hasPhoneNumber() {
+        return phoneNumber != null;
+    }
+
+    public boolean hasTeamRole() {
+        return teamRole != null;
+    }
+
+    public boolean hasEmailAddress() {
+        return emailAddress != null;
+    }
 }

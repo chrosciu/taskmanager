@@ -189,28 +189,28 @@ public class User {
     }
 
     public void update(UserDto userDto) {
-        if (userDto.getLogin() != null) {
+        if (userDto.hasLogin()) {
             this.login = userDto.getLogin();
         }
 
-        if (userDto.getPassword() != null) {
+        if (userDto.hasPassword()) {
             this.password = userDto.getPassword();
         }
 
-        if (userDto.getPhoneNumber() != null) {
+        if (userDto.hasPhoneNumber()) {
             PhoneNumber phoneNumber = new PhoneNumber();
             phoneNumber.setPrefix(userDto.getPhonePrefix());
             phoneNumber.setNumber(userDto.getPhoneNumber());
             this.phoneNumber = phoneNumber;
         }
 
-        if (userDto.getEmailAddress() != null) {
+        if (userDto.hasEmailAddress()) {
             EmailAddress emailAddress = new EmailAddress();
             emailAddress.setEmailAddress(userDto.getEmailAddress());
             this.emailAddress = emailAddress;
         }
 
-        if (userDto.getTeamRole() != null) {
+        if (userDto.hasTeamRole()) {
             this.teamRole = TeamRole.valueOf(userDto.getTeamRole());
         }
     }
