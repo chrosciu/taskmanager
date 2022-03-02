@@ -59,9 +59,8 @@ public class UserController {
                 userDto.setPhoneNumber(phoneNumber.getNumber());
             }
 
-            EmailAddress emailAddress = user.getEmailAddress();
-            if (emailAddress != null) {
-                userDto.setEmailAddress(emailAddress.getEmailAddress());
+            if (user.hasEmailAddress()) {
+                userDto.setEmailAddress(user.emailAddress());
             }
 
             usersDtos.add(userDto);
@@ -94,9 +93,8 @@ public class UserController {
                 userDto.setPhoneNumber(phoneNumber.getNumber());
             }
 
-            EmailAddress emailAddress = user.getEmailAddress();
-            if (emailAddress != null) {
-                userDto.setEmailAddress(emailAddress.getEmailAddress());
+            if (user.hasEmailAddress()) {
+                userDto.setEmailAddress(user.emailAddress());
             }
 
             return new ResponseEntity<>(userDto, HttpStatus.OK);
@@ -185,9 +183,8 @@ public class UserController {
             response.setPhoneNumber(phoneNumber.getNumber());
         }
 
-        EmailAddress emailAddress = updated.getEmailAddress();
-        if (emailAddress != null) {
-            response.setEmailAddress(emailAddress.getEmailAddress());
+        if (user.hasEmailAddress()) {
+            response.setEmailAddress(user.emailAddress());
         }
 
         return new ResponseEntity<>(response, HttpStatus.OK);

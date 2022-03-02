@@ -150,10 +150,18 @@ public class User {
     }
 
     public String getTeamRoleName() {
-        return getTeamRole().name();
+        return teamRole.name();
     }
 
     public boolean hasTeamRole() {
-        return getTeamRole() != null;
+        return teamRole != null;
+    }
+
+    public String emailAddress() {
+        return emailAddress.getEmailAddress();
+    }
+
+    public boolean hasEmailAddress() {
+        return emailAddress != null;
     }
 }
