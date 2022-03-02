@@ -124,20 +124,6 @@ public class Team {
                 .toHashCode();
     }
 
-    public boolean hasCodename() {
-        return codename != null;
-    }
-
-    @Deprecated
-    public String getShortName() {
-        return codename.getShortName();
-    }
-
-    @Deprecated
-    public String getFullName() {
-        return codename.getFullName();
-    }
-
     public TeamDto asDtoWithUserIds() {
         TeamDto dto = new TeamDto();
         dto.setId(id);
@@ -152,20 +138,24 @@ public class Team {
         return dto;
     }
 
-    private List<Long> getUserIds() {
-        return members.stream().map(User::getId).collect(toList());
-    }
-
     public TeamDto asDto() {
         TeamDto dto = new TeamDto();
-        dto.setId(getId());
-        dto.setName(getName());
+        dto.setId(id);
+        dto.setName(name);
 
         if (hasCodename()) {
-            dto.setCodename(getShortName(), getFullName());
+            dto.setCodename(codename.getShortName(), codename.getFullName());
         }
 
-        dto.setDescription(getDescription());
+        dto.setDescription(description);
         return dto;
+    }
+
+    private boolean hasCodename() {
+        return codename != null;
+    }
+
+    private List<Long> getUserIds() {
+        return members.stream().map(User::getId).collect(toList());
     }
 }
