@@ -14,6 +14,14 @@ public class PhoneNumber {
     @Column(name = "phone_number")
     private String number;
 
+    @Deprecated
+    public PhoneNumber() {}
+
+    public PhoneNumber(String prefix, String number) {
+        this.prefix = prefix;
+        this.number = number;
+    }
+
     public String getPrefix() {
         return prefix;
     }

@@ -198,10 +198,7 @@ public class User {
         }
 
         if (userDto.hasPhoneNumber()) {
-            PhoneNumber phoneNumber = new PhoneNumber();
-            phoneNumber.setPrefix(userDto.getPhonePrefix());
-            phoneNumber.setNumber(userDto.getPhoneNumber());
-            this.phoneNumber = phoneNumber;
+            this.phoneNumber = new PhoneNumber(userDto.getPhonePrefix(), userDto.getPhoneNumber());
         }
 
         if (userDto.hasEmailAddress()) {
