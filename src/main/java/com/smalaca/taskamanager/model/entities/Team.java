@@ -125,6 +125,14 @@ public class Team {
     }
 
     public TeamDto asDtoWithUserIds() {
+        return asTeamDto(true);
+    }
+
+    public TeamDto asDto() {
+        return asTeamDto(false);
+    }
+
+    private TeamDto asTeamDto(boolean withUsers) {
         TeamDto dto = new TeamDto();
         dto.setId(id);
         dto.setName(name);
@@ -133,18 +141,8 @@ public class Team {
             dto.setCodename(codename.getShortName(), codename.getFullName());
         }
 
-        dto.setDescription(description);
-        dto.setUserIds(getUserIds());
-        return dto;
-    }
-
-    public TeamDto asDto() {
-        TeamDto dto = new TeamDto();
-        dto.setId(id);
-        dto.setName(name);
-
-        if (hasCodename()) {
-            dto.setCodename(codename.getShortName(), codename.getFullName());
+        if (withUsers) {
+            dto.setUserIds(getUserIds());
         }
 
         dto.setDescription(description);
