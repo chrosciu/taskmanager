@@ -202,9 +202,7 @@ public class User {
         }
 
         if (userDto.hasEmailAddress()) {
-            EmailAddress emailAddress = new EmailAddress();
-            emailAddress.setEmailAddress(userDto.getEmailAddress());
-            this.emailAddress = emailAddress;
+            this.emailAddress = new EmailAddress(userDto.getEmailAddress());
         }
 
         if (userDto.hasTeamRole()) {
