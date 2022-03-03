@@ -64,7 +64,7 @@ public class TeamController {
 
     @PostMapping
     public ResponseEntity<Void> createTeam(@RequestBody TeamDto teamDto, UriComponentsBuilder uriComponentsBuilder) {
-        Optional<Long> id = teamCommandFacade.create(teamDto);
+        Optional<Long> id = teamCommandFacade.create(teamDto.getName());
 
         if (id.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);

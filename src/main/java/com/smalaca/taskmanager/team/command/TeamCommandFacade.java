@@ -12,11 +12,11 @@ public class TeamCommandFacade {
         this.teamRepository = teamRepository;
     }
 
-    public Optional<Long> create(TeamDto teamDto) {
+    public Optional<Long> create(String name) {
         Optional<Long> id = Optional.empty();
 
-        if (teamRepository.doesNotExistByName(teamDto.getName())) {
-            Team team = new Team(teamDto.getName());
+        if (teamRepository.doesNotExistByName(name)) {
+            Team team = new Team(name);
             Long savedId = teamRepository.save(team);
             id = Optional.of(savedId);
         }
