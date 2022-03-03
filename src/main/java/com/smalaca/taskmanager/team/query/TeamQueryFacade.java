@@ -1,11 +1,8 @@
 package com.smalaca.taskmanager.team.query;
 
-import com.smalaca.taskamanager.api.rest.TeamController;
 import com.smalaca.taskamanager.dto.TeamDto;
 import com.smalaca.taskamanager.model.entities.Team;
 import com.smalaca.taskamanager.repository.TeamRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Optional;

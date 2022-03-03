@@ -1,6 +1,5 @@
 package com.smalaca.taskmanager.user.query;
 
-import com.smalaca.taskamanager.api.rest.UserController;
 import com.smalaca.taskamanager.dto.UserDto;
 import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.repository.UserRepository;

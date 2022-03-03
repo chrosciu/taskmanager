@@ -1,6 +1,5 @@
 package com.smalaca.taskmanager.team.command;
 
-import com.smalaca.taskamanager.api.rest.TeamController;
 import com.smalaca.taskamanager.dto.TeamDto;
 import com.smalaca.taskamanager.model.entities.Team;
 import com.smalaca.taskamanager.repository.TeamRepository;
