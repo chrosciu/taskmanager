@@ -9,6 +9,7 @@ import com.smalaca.taskamanager.model.entities.Team;
 import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.repository.TeamRepository;
 import com.smalaca.taskamanager.repository.UserRepository;
+import com.smalaca.taskmanager.team.query.TeamQueryFacade;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +26,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.StreamSupport;
-
-import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequestMapping("/team")
@@ -35,23 +33,22 @@ import static java.util.stream.Collectors.toList;
 public class TeamController {
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
+    private final TeamQueryFacade teamQueryFacade;
 
     public TeamController(TeamRepository teamRepository, UserRepository userRepository) {
         this.teamRepository = teamRepository;
         this.userRepository = userRepository;
+        teamQueryFacade = new TeamQueryFacade(teamRepository);
     }
 
     @GetMapping
     public ResponseEntity<List<TeamDto>> findAll() {
-        List<TeamDto> teams = StreamSupport.stream(teamRepository.findAll().spliterator(), false)
-                .map(Team::asDto)
-                .collect(toList());
-
-        return new ResponseEntity<>(teams, HttpStatus.OK);
+        return new ResponseEntity<>(teamQueryFacade.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     @Transactional
+    // query
     public ResponseEntity<TeamDto> findById(@PathVariable Long id) {
         Optional<Team> found = teamRepository.findById(id);
 
@@ -64,6 +61,7 @@ public class TeamController {
     }
 
     @PostMapping
+    // command
     public ResponseEntity<Void> createTeam(@RequestBody TeamDto teamDto, UriComponentsBuilder uriComponentsBuilder) {
         if (teamRepository.findByName(teamDto.getName()).isPresent()) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -78,6 +76,7 @@ public class TeamController {
     }
 
     @PutMapping("/{id}")
+    // command
     public ResponseEntity<TeamDto> updateTeam(@PathVariable Long id, @RequestBody TeamDto teamDto) {
         Team team;
 
@@ -96,6 +95,7 @@ public class TeamController {
 
     @PutMapping("/{id}/members")
     @Transactional
+    // command
     public ResponseEntity<Void> addTeamMembers(@PathVariable Long id, @RequestBody TeamMembersDto dto) {
         try {
             Team team = getTeamById(id);
@@ -122,6 +122,7 @@ public class TeamController {
 
     @DeleteMapping("/{id}/members")
     @Transactional
+    // command
     public ResponseEntity<Void> removeTeamMembers(@PathVariable Long id, @RequestBody TeamMembersDto dto) {
         try {
             Team team = getTeamById(id);
@@ -149,6 +150,7 @@ public class TeamController {
     }
 
     @DeleteMapping("/{id}")
+    // command
     public ResponseEntity<Void> deleteTeam(@PathVariable Long id) {
         Team team;
 
