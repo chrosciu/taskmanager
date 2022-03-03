@@ -13,12 +13,12 @@ public class TeamCommandFacade {
     }
 
     public Optional<Long> create(TeamDto teamDto) {
-        boolean present = teamRepository.findByName(teamDto.getName()).isPresent();
         Optional<Long> id = Optional.empty();
-        if (!present) {
+
+        if (teamRepository.doesNotExistByName(teamDto.getName())) {
             Team team = new Team(teamDto.getName());
-            Team saved = teamRepository.save(team);
-            id = Optional.of(saved.getId());
+            Long savedId = teamRepository.save(team);
+            id = Optional.of(savedId);
         }
         return id;
     }
@@ -29,8 +29,8 @@ public class TeamCommandFacade {
         if (found.isPresent()) {
             Team team = found.get();
             team.update(teamDto);
-            teamRepository.save(team);
-            return Optional.of(team.getId());
+            Long savedId = teamRepository.save(team);
+            return Optional.of(savedId);
         }
 
         return Optional.empty();

@@ -14,17 +14,17 @@ public class TeamAntiCorruptionLayer implements TeamCommandRepository {
     }
 
     @Override
-    public Optional<Team> findByName(String name) {
-        return teamRepository.findByName(name);
-    }
-
-    @Override
-    public Team save(Team team) {
-        return teamRepository.save(team);
+    public Long save(Team team) {
+        return teamRepository.save(team).getId();
     }
 
     @Override
     public Optional<Team> findById(Long id) {
         return teamRepository.findById(id);
+    }
+
+    @Override
+    public boolean doesNotExistByName(String name) {
+        return teamRepository.findByName(name).isEmpty();
     }
 }
