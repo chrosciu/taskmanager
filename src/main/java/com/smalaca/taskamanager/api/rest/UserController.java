@@ -56,7 +56,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<Void> createUser(@RequestBody UserDto userDto, UriComponentsBuilder uriComponentsBuilder) {
-        Optional<Long> id = userCommandFacade.create(userDto);
+        Optional<Long> id = userCommandFacade.create(userDto.getUserCreateCommand());
 
         if (id.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);

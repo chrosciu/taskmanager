@@ -1,6 +1,7 @@
 package com.smalaca.taskamanager.dto;
 
 import com.smalaca.taskamanager.model.enums.TeamRole;
+import com.smalaca.taskmanager.user.command.UserCreateCommand;
 
 public class UserDto {
     private Long id;
@@ -101,5 +102,15 @@ public class UserDto {
 
     public boolean hasEmailAddress() {
         return emailAddress != null;
+    }
+
+    public UserCreateCommand getUserCreateCommand() {
+        return UserCreateCommand.builder()
+                .teamRole(getTeamRole())
+                .firstName(getFirstName())
+                .lastName(getLastName())
+                .login(getLogin())
+                .password(getPassword())
+                .build();
     }
 }

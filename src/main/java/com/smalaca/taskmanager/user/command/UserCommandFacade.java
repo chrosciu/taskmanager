@@ -18,11 +18,11 @@ public class UserCommandFacade {
         return new UserCommandFacade(new UserFactory(), userRepository);
     }
 
-    public Optional<Long> create(UserDto userDto) {
-        if (userRepository.existsByUserName(userDto.getFirstName(), userDto.getLastName())) {
+    public Optional<Long> create(UserCreateCommand command) {
+        if (userRepository.existsByUserName(command.firstName(), command.lastName())) {
             return Optional.empty();
         } else {
-            User user = userFactory.create(userDto);
+            User user = userFactory.create(command);
             return Optional.of(userRepository.save(user));
         }
     }
