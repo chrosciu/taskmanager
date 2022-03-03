@@ -1,5 +1,6 @@
 package com.smalaca.taskmanager.user.command;
 
+import com.smalaca.taskamanager.api.rest.UserController;
 import com.smalaca.taskamanager.dto.UserDto;
 import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.model.entities.UserFactory;
@@ -30,5 +31,18 @@ public class UserCommandFacade {
 
     private boolean exists(UserDto userDto) {
         return !userRepository.findByUserNameFirstNameAndUserNameLastName(userDto.getFirstName(), userDto.getLastName()).isEmpty();
+    }
+
+    public Optional<Long> update(Long id, UserDto userDto) {
+        Optional<User> found = userRepository.findById(id);
+        Optional<Long> updateUserId = Optional.empty();
+
+        if (found.isPresent()) {
+            User user = found.get();
+            user.update(userDto);
+            userRepository.save(user);
+            updateUserId = Optional.of(user.getId());
+        }
+        return updateUserId;
     }
 }
