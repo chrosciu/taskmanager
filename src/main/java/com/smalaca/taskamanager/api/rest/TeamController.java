@@ -48,13 +48,11 @@ public class TeamController {
 
     @GetMapping("/{id}")
     @Transactional
-    // query
     public ResponseEntity<TeamDto> findById(@PathVariable Long id) {
-        Optional<Team> found = teamRepository.findById(id);
+        Optional<TeamDto> dto = teamQueryFacade.findTeamById(id);
 
-        if (found.isPresent()) {
-            TeamDto dto = found.get().asDtoWithUserIds();
-            return new ResponseEntity<>(dto, HttpStatus.OK);
+        if (dto.isPresent()) {
+            return new ResponseEntity<>(dto.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

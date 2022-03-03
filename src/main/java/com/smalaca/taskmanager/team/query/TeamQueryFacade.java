@@ -1,5 +1,6 @@
 package com.smalaca.taskmanager.team.query;
 
+import com.smalaca.taskamanager.api.rest.TeamController;
 import com.smalaca.taskamanager.dto.TeamDto;
 import com.smalaca.taskamanager.model.entities.Team;
 import com.smalaca.taskamanager.repository.TeamRepository;
@@ -7,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 import static java.util.stream.Collectors.toList;
@@ -22,5 +24,9 @@ public class TeamQueryFacade {
         return StreamSupport.stream(teamRepository.findAll().spliterator(), false)
                 .map(Team::asDto)
                 .collect(toList());
+    }
+
+    public Optional<TeamDto> findTeamById(Long id) {
+        return teamRepository.findById(id).map(Team::asDtoWithUserIds);
     }
 }
