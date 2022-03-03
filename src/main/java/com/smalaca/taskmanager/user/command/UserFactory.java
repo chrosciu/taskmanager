@@ -1,10 +1,11 @@
-package com.smalaca.taskamanager.model.entities;
+package com.smalaca.taskmanager.user.command;
 
 import com.smalaca.taskamanager.dto.UserDto;
 import com.smalaca.taskamanager.model.embedded.UserName;
+import com.smalaca.taskamanager.model.entities.User;
 
-public class UserFactory {
-    public User create(UserDto userDto) {
+class UserFactory {
+    User create(UserDto userDto) {
         User user = new User();
         user.setTeamRole(userDto.asTeamRole());
         user.setUserName(new UserName(userDto.getFirstName(), userDto.getLastName()));

@@ -2,7 +2,6 @@ package com.smalaca.taskmanager.user.command;
 
 import com.smalaca.taskamanager.dto.UserDto;
 import com.smalaca.taskamanager.model.entities.User;
-import com.smalaca.taskamanager.model.entities.UserFactory;
 
 import java.util.Optional;
 
@@ -13,6 +12,10 @@ public class UserCommandFacade {
     public UserCommandFacade(UserFactory userFactory, UserCommandRepository userRepository) {
         this.userFactory = userFactory;
         this.userRepository = userRepository;
+    }
+
+    public static UserCommandFacade create(UserCommandRepository userRepository) {
+        return new UserCommandFacade(new UserFactory(), userRepository);
     }
 
     public Optional<Long> create(UserDto userDto) {
