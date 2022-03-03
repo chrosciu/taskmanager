@@ -14,6 +14,7 @@ class QueryStructureTest {
                 .should().onlyDependOnClassesThat().resideInAnyPackage(
                         "..query..", "..repository..", "..model.entities..", "java..")
 
+                .because("2022-03-03-cqrs.md")
                 .check(javaClasses);
     }
 }

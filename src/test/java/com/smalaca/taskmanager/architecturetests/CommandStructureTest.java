@@ -13,6 +13,7 @@ class CommandStructureTest {
                 .that().resideInAPackage("..command..")
                 .should().onlyDependOnClassesThat().resideInAnyPackage("..command..", "java..")
 
+                .because("2022-03-03-cqrs.md")
                 .check(javaClasses);
     }
 }
