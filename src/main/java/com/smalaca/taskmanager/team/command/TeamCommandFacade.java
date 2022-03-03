@@ -1,6 +1,5 @@
 package com.smalaca.taskmanager.team.command;
 
-import com.smalaca.taskamanager.dto.TeamDto;
 import com.smalaca.taskamanager.model.entities.Team;
 
 import java.util.Optional;
@@ -23,12 +22,12 @@ public class TeamCommandFacade {
         return id;
     }
 
-    public Optional<Long> update(Long id, TeamDto teamDto) {
-        Optional<Team> found = teamRepository.findById(id);
+    public Optional<Long> update(TeamUpdateCommand command) {
+        Optional<Team> found = teamRepository.findById(command.getId());
 
         if (found.isPresent()) {
             Team team = found.get();
-            team.update(teamDto);
+            team.update(command);
             Long savedId = teamRepository.save(team);
             return Optional.of(savedId);
         }

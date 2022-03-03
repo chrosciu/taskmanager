@@ -1,5 +1,7 @@
 package com.smalaca.taskamanager.dto;
 
+import com.smalaca.taskmanager.team.command.TeamUpdateCommand;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,5 +56,14 @@ public class TeamDto {
     public void setCodename(String shortName, String fullName) {
         this.codenameShort = shortName;
         this.codenameFull = fullName;
+    }
+
+    public TeamUpdateCommand getTeamUpdateCommand(Long id) {
+        return TeamUpdateCommand.builder().id(id)
+                .name(getName())
+                .codenameShort(getCodenameShort())
+                .codenameFull(getCodenameFull())
+                .description(getDescription())
+                .build();
     }
 }

@@ -2,6 +2,7 @@ package com.smalaca.taskamanager.model.entities;
 
 import com.smalaca.taskamanager.dto.TeamDto;
 import com.smalaca.taskamanager.model.embedded.Codename;
+import com.smalaca.taskmanager.team.command.TeamUpdateCommand;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -167,20 +168,20 @@ public class Team {
         return members.stream().map(User::getId).collect(toList());
     }
 
-    public void update(TeamDto teamDto) {
-        if (teamDto.getName() != null) {
-            this.name = teamDto.getName();
+    public void update(TeamUpdateCommand command) {
+        if (command.getName() != null) {
+            this.name = command.getName();
         }
 
-        if (teamDto.getCodenameShort() != null && teamDto.getCodenameFull() != null) {
+        if (command.getCodenameShort() != null && command.getCodenameFull() != null) {
             Codename codename = new Codename();
-            codename.setShortName(teamDto.getCodenameShort());
-            codename.setFullName(teamDto.getCodenameFull());
+            codename.setShortName(command.getCodenameShort());
+            codename.setFullName(command.getCodenameFull());
             this.codename = codename;
         }
 
-        if (teamDto.getDescription() != null) {
-            this.description = teamDto.getDescription();
+        if (command.getDescription() != null) {
+            this.description = command.getDescription();
         }
     }
 }

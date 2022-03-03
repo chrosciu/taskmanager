@@ -11,6 +11,7 @@ import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.repository.TeamRepository;
 import com.smalaca.taskamanager.repository.UserRepository;
 import com.smalaca.taskmanager.team.command.TeamCommandFacade;
+import com.smalaca.taskmanager.team.command.TeamUpdateCommand;
 import com.smalaca.taskmanager.team.query.TeamQueryFacade;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -77,12 +78,21 @@ public class TeamController {
 
     @PutMapping("/{id}")
     public ResponseEntity<TeamDto> updateTeam(@PathVariable Long id, @RequestBody TeamDto teamDto) {
-        Optional<Long> updatedTeamId = teamCommandFacade.update(id, teamDto);
+        TeamUpdateCommand command = asCommand(id, teamDto);
+        Optional<Long> updatedTeamId = teamCommandFacade.update(command);
 
         if (updatedTeamId.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity<>(teamQueryFacade.findTeamById(id).get(), HttpStatus.OK);
+        }
+    }
+
+    private TeamUpdateCommand asCommand(Long id, TeamDto teamDto) {
+        if (teamDto == null) {
+            return new TeamDto().getTeamUpdateCommand(id);
+        } else {
+            return teamDto.getTeamUpdateCommand(id);
         }
     }
 
