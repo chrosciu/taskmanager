@@ -1,5 +1,6 @@
 package com.smalaca.taskamanager.api.rest;
 
+import com.smalaca.anticorruptionlayer.UserAntiCorruptionLayer;
 import com.smalaca.taskamanager.dto.UserDto;
 import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.model.entities.UserFactory;
@@ -35,7 +36,7 @@ public class UserController {
     public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
         userQueryFacade = new UserQueryFacade(userRepository);
-        userCommandFacade = new UserCommandFacade(new UserFactory(), userRepository);
+        userCommandFacade = new UserCommandFacade(new UserFactory(), new UserAntiCorruptionLayer(userRepository));
     }
 
     @GetMapping
