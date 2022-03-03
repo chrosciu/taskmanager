@@ -2,7 +2,6 @@ package com.smalaca.taskamanager.model.entities;
 
 import com.smalaca.taskamanager.dto.TeamDto;
 import com.smalaca.taskamanager.model.embedded.Codename;
-import com.smalaca.taskmanager.team.command.TeamUpdateCommand;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -166,22 +165,5 @@ public class Team {
 
     private List<Long> getUserIds() {
         return members.stream().map(User::getId).collect(toList());
-    }
-
-    public void update(TeamUpdateCommand command) {
-        if (command.getName() != null) {
-            this.name = command.getName();
-        }
-
-        if (command.getCodenameShort() != null && command.getCodenameFull() != null) {
-            Codename codename = new Codename();
-            codename.setShortName(command.getCodenameShort());
-            codename.setFullName(command.getCodenameFull());
-            this.codename = codename;
-        }
-
-        if (command.getDescription() != null) {
-            this.description = command.getDescription();
-        }
     }
 }

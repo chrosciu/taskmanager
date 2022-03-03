@@ -1,8 +1,8 @@
 package com.smalaca.anticorruptionlayer;
 
-import com.smalaca.taskamanager.model.entities.Team;
 import com.smalaca.taskamanager.repository.TeamRepository;
 import com.smalaca.taskmanager.team.command.TeamCommandRepository;
+import com.smalaca.taskmanager.team.command.TeamDomain;
 
 import java.util.Optional;
 
@@ -14,13 +14,13 @@ public class TeamAntiCorruptionLayer implements TeamCommandRepository {
     }
 
     @Override
-    public Long save(Team team) {
-        return teamRepository.save(team).getId();
+    public Long save(TeamDomain team) {
+        return teamRepository.save(team.getTeam()).getId();
     }
 
     @Override
-    public Optional<Team> findById(Long id) {
-        return teamRepository.findById(id);
+    public Optional<TeamDomain> findById(Long id) {
+        return teamRepository.findById(id).map(TeamDomain::new);
     }
 
     @Override
