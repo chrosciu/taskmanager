@@ -2,14 +2,13 @@ package com.smalaca.taskmanager.team.command;
 
 import com.smalaca.taskamanager.dto.TeamDto;
 import com.smalaca.taskamanager.model.entities.Team;
-import com.smalaca.taskamanager.repository.TeamRepository;
 
 import java.util.Optional;
 
 public class TeamCommandFacade {
-    private final TeamRepository teamRepository;
+    private final TeamCommandRepository teamRepository;
 
-    public TeamCommandFacade(TeamRepository teamRepository) {
+    public TeamCommandFacade(TeamCommandRepository teamRepository) {
         this.teamRepository = teamRepository;
     }
 
