@@ -4,6 +4,7 @@ import com.smalaca.taskamanager.dto.UserDto;
 import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.model.entities.UserFactory;
 import com.smalaca.taskamanager.repository.UserRepository;
+import com.smalaca.taskmanager.user.command.UserCommandFacade;
 import com.smalaca.taskmanager.user.query.UserQueryFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -27,13 +28,14 @@ import java.util.Optional;
 @SuppressWarnings("checkstyle:ClassFanOutComplexity")
 public class UserController {
     private final UserRepository userRepository;
-    private final UserFactory userFactory = new UserFactory();
     private final UserQueryFacade userQueryFacade;
+    private final UserCommandFacade userCommandFacade;
 
     @Autowired
     public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
         userQueryFacade = new UserQueryFacade(userRepository);
+        userCommandFacade = new UserCommandFacade(new UserFactory(), userRepository);
     }
 
     @GetMapping
@@ -54,21 +56,15 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<Void> createUser(@RequestBody UserDto userDto, UriComponentsBuilder uriComponentsBuilder) {
-        if (exists(userDto)) {
+        Optional<Long> id = userCommandFacade.create(userDto);
+
+        if (id.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         } else {
-            User user = userFactory.create(userDto);
-
-            User saved = userRepository.save(user);
-
             HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(uriComponentsBuilder.path("/user/{id}").buildAndExpand(saved.getId()).toUri());
+            headers.setLocation(uriComponentsBuilder.path("/user/{id}").buildAndExpand(id.get()).toUri());
             return new ResponseEntity<>(headers, HttpStatus.CREATED);
         }
-    }
-
-    private boolean exists(UserDto userDto) {
-        return !userRepository.findByUserNameFirstNameAndUserNameLastName(userDto.getFirstName(), userDto.getLastName()).isEmpty();
     }
 
     @PutMapping(value = "/{id}")
