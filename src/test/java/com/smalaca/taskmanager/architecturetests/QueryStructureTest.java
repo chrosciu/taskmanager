@@ -4,14 +4,15 @@ import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
 import org.junit.jupiter.api.Test;
 
-class CommandStructureTest {
+class QueryStructureTest {
     @Test
     void commandsShouldDependOnlyOnCommand() {
         JavaClasses javaClasses = ProjectManagementClasses.getAll();
 
         ArchRuleDefinition.classes()
-                .that().resideInAPackage("..command..")
-                .should().onlyDependOnClassesThat().resideInAnyPackage("..command..", "java..")
+                .that().resideInAPackage("..query..")
+                .should().onlyDependOnClassesThat().resideInAnyPackage(
+                        "..query..", "..repository..", "..model.entities..", "java..")
 
                 .check(javaClasses);
     }
