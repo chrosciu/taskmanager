@@ -43,13 +43,10 @@ public class UserController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable("id") Long id) {
-        Optional<User> found = userRepository.findById(id);
+        Optional<UserDto> dto = userQueryFacade.findById(id);
 
-        if (found.isPresent()) {
-            User user = found.get();
-            UserDto userDto = user.asDto();
-
-            return new ResponseEntity<>(userDto, HttpStatus.OK);
+        if (dto.isPresent()) {
+            return new ResponseEntity<>(dto.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
