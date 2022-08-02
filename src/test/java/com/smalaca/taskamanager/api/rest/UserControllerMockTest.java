@@ -206,8 +206,8 @@ class UserControllerMockTest {
     private static User aMockedUser() {
         User user = mock(User.class);
         given(user.getId()).willReturn(EXISTING_USER_ID);
-        UserName userName = aMockedUserName();
-        given(user.getUserName()).willReturn(userName);
+        given(user.firstName()).willReturn(FIRST_NAME);
+        given(user.lastName()).willReturn(LAST_NAME);
         given(user.getLogin()).willReturn(LOGIN);
         given(user.getPassword()).willReturn(PASSWORD);
         return user;
@@ -218,13 +218,6 @@ class UserControllerMockTest {
         User user = mock(User.class);
         given(user.getUserName()).willReturn(userName);
         return user;
-    }
-
-    private static UserName aMockedUserName() {
-        UserName userName = mock(UserName.class);
-        given(userName.getFirstName()).willReturn(FIRST_NAME);
-        given(userName.getLastName()).willReturn(LAST_NAME);
-        return userName;
     }
 
     private static UserDto aMockedUserDto() {
