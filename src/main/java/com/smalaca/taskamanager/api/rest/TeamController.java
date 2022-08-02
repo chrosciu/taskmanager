@@ -50,7 +50,7 @@ public class TeamController {
                     dto.setId(team.getId());
                     dto.setName(team.getName());
 
-                    if (hasCodename(team)) {
+                    if (team.hasCodename()) {
                         dto.setCodenameShort(team.getCodename().getShortName());
                         dto.setCodenameFull(team.getCodename().getFullName());
                     }
@@ -64,10 +64,6 @@ public class TeamController {
         return new ResponseEntity<>(teams, HttpStatus.OK);
     }
 
-    private boolean hasCodename(Team team) {
-        return team.getCodename() != null;
-    }
-
     @GetMapping("/{id}")
     @Transactional
     public ResponseEntity<TeamDto> findById(@PathVariable Long id) {
@@ -79,7 +75,7 @@ public class TeamController {
                 dto.setId(team.getId());
                 dto.setName(team.getName());
 
-                if (hasCodename(team)) {
+                if (team.hasCodename()) {
                     dto.setCodenameShort(team.getCodename().getShortName());
                     dto.setCodenameFull(team.getCodename().getFullName());
                 }
@@ -138,7 +134,7 @@ public class TeamController {
         TeamDto dto = new TeamDto();
         dto.setId(updated.getId());
         dto.setName(updated.getName());
-        if (hasCodename(updated)) {
+        if (updated.hasCodename()) {
             dto.setCodenameShort(updated.getCodename().getShortName());
             dto.setCodenameFull(updated.getCodename().getFullName());
         }
