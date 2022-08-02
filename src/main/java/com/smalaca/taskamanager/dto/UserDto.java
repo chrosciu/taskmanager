@@ -13,10 +13,6 @@ public class UserDto {
     private String emailAddress;
     private String teamRole;
 
-    public TeamRole asTeamRole() {
-        return TeamRole.valueOf(getTeamRole());
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -61,6 +57,7 @@ public class UserDto {
         return phoneNumber;
     }
 
+    @Deprecated
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
@@ -69,6 +66,7 @@ public class UserDto {
         return phonePrefix;
     }
 
+    @Deprecated
     public void setPhonePrefix(String phonePrefix) {
         this.phonePrefix = phonePrefix;
     }
@@ -87,5 +85,14 @@ public class UserDto {
 
     public void setTeamRole(String teamRole) {
         this.teamRole = teamRole;
+    }
+
+    public TeamRole asTeamRole() {
+        return TeamRole.valueOf(getTeamRole());
+    }
+
+    public void setPhoneNumber(String phonePrefix, String phoneNumber) {
+        this.phonePrefix = phonePrefix;
+        this.phoneNumber = phoneNumber;
     }
 }
