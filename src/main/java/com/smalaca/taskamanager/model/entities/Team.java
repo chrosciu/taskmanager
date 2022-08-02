@@ -50,6 +50,7 @@ public class Team {
         this.members = new ArrayList<>(members);
     }
 
+    @Deprecated
     public List<User> getMembers() {
         return members;
     }
@@ -65,6 +66,7 @@ public class Team {
         members.remove(user);
     }
 
+    @Deprecated
     public Codename getCodename() {
         return codename;
     }
