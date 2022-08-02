@@ -1,5 +1,7 @@
 package com.smalaca.taskamanager.model.entities;
 
+import static java.util.stream.Collectors.toList;
+
 import com.smalaca.taskamanager.model.embedded.Codename;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -128,5 +130,9 @@ public class Team {
 
     public String getCodenameFull() {
         return codename.getFullName();
+    }
+
+    public List<Long> getMemberIds() {
+        return members.stream().map(User::getId).collect(toList());
     }
 }
