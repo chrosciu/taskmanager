@@ -57,6 +57,7 @@ public class UserDto {
         return phoneNumber;
     }
 
+    @Deprecated
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
@@ -65,6 +66,7 @@ public class UserDto {
         return phonePrefix;
     }
 
+    @Deprecated
     public void setPhonePrefix(String phonePrefix) {
         this.phonePrefix = phonePrefix;
     }
@@ -87,5 +89,10 @@ public class UserDto {
 
     public TeamRole asTeamRole() {
         return TeamRole.valueOf(getTeamRole());
+    }
+
+    public void setPhoneNumber(String phonePrefix, String phoneNumber) {
+        this.phonePrefix = phonePrefix;
+        this.phoneNumber = phoneNumber;
     }
 }
