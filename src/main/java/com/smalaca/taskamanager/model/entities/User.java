@@ -148,4 +148,16 @@ public class User {
                 .append(teamRole)
                 .toHashCode();
     }
+
+    public boolean hasPhoneNumber() {
+        return getPhoneNumber() != null;
+    }
+
+    public boolean hasEmailAddress() {
+        return getEmailAddress() != null;
+    }
+
+    public boolean hasTeamRole() {
+        return getTeamRole() != null;
+    }
 }
