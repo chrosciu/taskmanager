@@ -49,20 +49,17 @@ public class UserController {
             userDto.setLogin(user.getLogin());
             userDto.setPassword(user.getPassword());
 
-            TeamRole teamRole = user.getTeamRole();
-            if (teamRole != null) {
-                userDto.setTeamRole(teamRole.name());
+            if (hasTeamRole(user)) {
+                userDto.setTeamRole(user.getTeamRole().name());
             }
 
-            PhoneNumber phoneNumber = user.getPhoneNumber();
-            if (phoneNumber != null) {
-                userDto.setPhonePrefix(phoneNumber.getPrefix());
-                userDto.setPhoneNumber(phoneNumber.getNumber());
+            if (hasPhoneNumber(user)) {
+                userDto.setPhonePrefix(user.getPhoneNumber().getPrefix());
+                userDto.setPhoneNumber(user.getPhoneNumber().getNumber());
             }
 
-            EmailAddress emailAddress = user.getEmailAddress();
-            if (emailAddress != null) {
-                userDto.setEmailAddress(emailAddress.getEmailAddress());
+            if (hasEmailAddress(user)) {
+                userDto.setEmailAddress(user.getEmailAddress().getEmailAddress());
             }
 
             usersDtos.add(userDto);
@@ -85,26 +82,35 @@ public class UserController {
             userDto.setLogin(user.getLogin());
             userDto.setPassword(user.getPassword());
 
-            TeamRole teamRole = user.getTeamRole();
-            if (teamRole != null) {
-                userDto.setTeamRole(teamRole.name());
+            if (hasTeamRole(user)) {
+                userDto.setTeamRole(user.getTeamRole().name());
             }
 
-            PhoneNumber phoneNumber = user.getPhoneNumber();
-            if (phoneNumber != null) {
-                userDto.setPhonePrefix(phoneNumber.getPrefix());
-                userDto.setPhoneNumber(phoneNumber.getNumber());
+            if (hasPhoneNumber(user)) {
+                userDto.setPhonePrefix(user.getPhoneNumber().getPrefix());
+                userDto.setPhoneNumber(user.getPhoneNumber().getNumber());
             }
 
-            EmailAddress emailAddress = user.getEmailAddress();
-            if (emailAddress != null) {
-                userDto.setEmailAddress(emailAddress.getEmailAddress());
+            if (hasEmailAddress(user)) {
+                userDto.setEmailAddress(user.getEmailAddress().getEmailAddress());
             }
 
             return new ResponseEntity<>(userDto, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    private boolean hasPhoneNumber(User user) {
+        return user.getPhoneNumber() != null;
+    }
+
+    private boolean hasEmailAddress(User user) {
+        return user.getEmailAddress() != null;
+    }
+
+    private boolean hasTeamRole(User user) {
+        return user.getTeamRole() != null;
     }
 
     @PostMapping
@@ -177,20 +183,17 @@ public class UserController {
         response.setLogin(updated.getLogin());
         response.setPassword(updated.getPassword());
 
-        TeamRole teamRole = updated.getTeamRole();
-        if (teamRole != null) {
-            response.setTeamRole(teamRole.name());
+        if (hasTeamRole(updated)) {
+            response.setTeamRole(updated.getTeamRole().name());
         }
 
-        PhoneNumber phoneNumber = updated.getPhoneNumber();
-        if (phoneNumber != null) {
-            response.setPhonePrefix(phoneNumber.getPrefix());
-            response.setPhoneNumber(phoneNumber.getNumber());
+        if (hasPhoneNumber(updated)) {
+            response.setPhonePrefix(updated.getPhoneNumber().getPrefix());
+            response.setPhoneNumber(updated.getPhoneNumber().getNumber());
         }
 
-        EmailAddress emailAddress = updated.getEmailAddress();
-        if (emailAddress != null) {
-            response.setEmailAddress(emailAddress.getEmailAddress());
+        if (hasEmailAddress(updated)) {
+            response.setEmailAddress(updated.getEmailAddress().getEmailAddress());
         }
 
         return new ResponseEntity<>(response, HttpStatus.OK);
