@@ -44,51 +44,27 @@ public class UserController {
         for (User user : userRepository.findAll()) {
             UserDto userDto = new UserDto();
             userDto.setId(user.getId());
-            userDto.setFirstName(getFirstName(user));
-            userDto.setLastName(getLastName(user));
+            userDto.setFirstName(user.firstName());
+            userDto.setLastName(user.lastName());
             userDto.setLogin(user.getLogin());
             userDto.setPassword(user.getPassword());
 
             if (user.hasTeamRole()) {
-                userDto.setTeamRole(getTeamRoleName(user));
+                userDto.setTeamRole(user.teamRoleName());
             }
 
             if (user.hasPhoneNumber()) {
-                userDto.setPhoneNumber(getPhonePrefix(user), getPhoneNumber(user));
+                userDto.setPhoneNumber(user.phonePrefix(), user.phoneNumber());
             }
 
             if (user.hasEmailAddress()) {
-                userDto.setEmailAddress(getEmailAddress(user));
+                userDto.setEmailAddress(user.emailAddress());
             }
 
             usersDtos.add(userDto);
         }
 
         return new ResponseEntity<>(usersDtos, HttpStatus.OK);
-    }
-
-    private String getLastName(User user) {
-        return user.getUserName().getLastName();
-    }
-
-    private String getFirstName(User user) {
-        return user.getUserName().getFirstName();
-    }
-
-    private String getTeamRoleName(User user) {
-        return user.getTeamRole().name();
-    }
-
-    private String getPhonePrefix(User user) {
-        return user.getPhoneNumber().getPrefix();
-    }
-
-    private String getPhoneNumber(User user) {
-        return user.getPhoneNumber().getNumber();
-    }
-
-    private String getEmailAddress(User user) {
-        return user.getEmailAddress().getEmailAddress();
     }
 
     @GetMapping(value = "/{id}")
@@ -100,21 +76,21 @@ public class UserController {
 
             UserDto userDto = new UserDto();
             userDto.setId(user.getId());
-            userDto.setFirstName(getFirstName(user));
-            userDto.setLastName(getLastName(user));
+            userDto.setFirstName(user.firstName());
+            userDto.setLastName(user.lastName());
             userDto.setLogin(user.getLogin());
             userDto.setPassword(user.getPassword());
 
             if (user.hasTeamRole()) {
-                userDto.setTeamRole(getTeamRoleName(user));
+                userDto.setTeamRole(user.teamRoleName());
             }
 
             if (user.hasPhoneNumber()) {
-                userDto.setPhoneNumber(getPhonePrefix(user), getPhoneNumber(user));
+                userDto.setPhoneNumber(user.phonePrefix(), user.phoneNumber());
             }
 
             if (user.hasEmailAddress()) {
-                userDto.setEmailAddress(getEmailAddress(user));
+                userDto.setEmailAddress(user.emailAddress());
             }
 
             return new ResponseEntity<>(userDto, HttpStatus.OK);
@@ -188,21 +164,21 @@ public class UserController {
 
         UserDto response = new UserDto();
         response.setId(updated.getId());
-        response.setFirstName(getFirstName(updated));
-        response.setLastName(getLastName(updated));
+        response.setFirstName(updated.firstName());
+        response.setLastName(updated.lastName());
         response.setLogin(updated.getLogin());
         response.setPassword(updated.getPassword());
 
         if (updated.hasTeamRole()) {
-            response.setTeamRole(getTeamRoleName(updated));
+            response.setTeamRole(updated.teamRoleName());
         }
 
         if (updated.hasPhoneNumber()) {
-            response.setPhoneNumber(getPhonePrefix(updated), getPhoneNumber(updated));
+            response.setPhoneNumber(updated.phonePrefix(), updated.phoneNumber());
         }
 
         if (updated.hasEmailAddress()) {
-            response.setEmailAddress(getEmailAddress(updated));
+            response.setEmailAddress(updated.emailAddress());
         }
 
         return new ResponseEntity<>(response, HttpStatus.OK);

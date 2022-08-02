@@ -41,6 +41,7 @@ public class User {
     @OneToMany
     private List<Team> teams = new ArrayList<>();
 
+    @Deprecated
     public UserName getUserName() {
         return userName;
     }
@@ -65,6 +66,7 @@ public class User {
         this.password = password;
     }
 
+    @Deprecated
     public PhoneNumber getPhoneNumber() {
         return phoneNumber;
     }
@@ -73,6 +75,7 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
+    @Deprecated
     public EmailAddress getEmailAddress() {
         return emailAddress;
     }
@@ -81,6 +84,7 @@ public class User {
         this.emailAddress = emailAddress;
     }
 
+    @Deprecated
     public TeamRole getTeamRole() {
         return teamRole;
     }
@@ -159,5 +163,29 @@ public class User {
 
     public boolean hasTeamRole() {
         return getTeamRole() != null;
+    }
+
+    public String lastName() {
+        return getUserName().getLastName();
+    }
+
+    public String firstName() {
+        return getUserName().getFirstName();
+    }
+
+    public String teamRoleName() {
+        return getTeamRole().name();
+    }
+
+    public String phonePrefix() {
+        return getPhoneNumber().getPrefix();
+    }
+
+    public String phoneNumber() {
+        return getPhoneNumber().getNumber();
+    }
+
+    public String emailAddress() {
+        return getEmailAddress().getEmailAddress();
     }
 }
