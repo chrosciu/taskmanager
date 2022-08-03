@@ -42,25 +42,7 @@ public class UserController {
         List<UserDto> usersDtos = new ArrayList<>();
 
         for (User user : userRepository.findAll()) {
-            UserDto userDto = new UserDto();
-            userDto.setId(user.getId());
-            userDto.setFirstName(user.firstName());
-            userDto.setLastName(user.lastName());
-            userDto.setLogin(user.getLogin());
-            userDto.setPassword(user.getPassword());
-
-            if (user.hasTeamRole()) {
-                userDto.setTeamRole(user.teamRoleName());
-            }
-
-            if (user.hasPhoneNumber()) {
-                userDto.setPhoneNumber(user.phonePrefix(), user.phoneNumber());
-            }
-
-            if (user.hasEmailAddress()) {
-                userDto.setEmailAddress(user.emailAddress());
-            }
-
+            UserDto userDto = user.asDto();
             usersDtos.add(userDto);
         }
 
@@ -70,29 +52,9 @@ public class UserController {
     @GetMapping(value = "/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable("id") Long id) {
         Optional<User> foundUser = userRepository.findById(id);
-
         if (foundUser.isPresent()) {
             User user = foundUser.get();
-
-            UserDto userDto = new UserDto();
-            userDto.setId(user.getId());
-            userDto.setFirstName(user.firstName());
-            userDto.setLastName(user.lastName());
-            userDto.setLogin(user.getLogin());
-            userDto.setPassword(user.getPassword());
-
-            if (user.hasTeamRole()) {
-                userDto.setTeamRole(user.teamRoleName());
-            }
-
-            if (user.hasPhoneNumber()) {
-                userDto.setPhoneNumber(user.phonePrefix(), user.phoneNumber());
-            }
-
-            if (user.hasEmailAddress()) {
-                userDto.setEmailAddress(user.emailAddress());
-            }
-
+            UserDto userDto = user.asDto();
             return new ResponseEntity<>(userDto, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -162,24 +124,7 @@ public class UserController {
         
         User updated = userRepository.save(user);
 
-        UserDto response = new UserDto();
-        response.setId(updated.getId());
-        response.setFirstName(updated.firstName());
-        response.setLastName(updated.lastName());
-        response.setLogin(updated.getLogin());
-        response.setPassword(updated.getPassword());
-
-        if (updated.hasTeamRole()) {
-            response.setTeamRole(updated.teamRoleName());
-        }
-
-        if (updated.hasPhoneNumber()) {
-            response.setPhoneNumber(updated.phonePrefix(), updated.phoneNumber());
-        }
-
-        if (updated.hasEmailAddress()) {
-            response.setEmailAddress(updated.emailAddress());
-        }
+        UserDto response = updated.asDto();
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

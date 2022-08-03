@@ -1,5 +1,6 @@
 package com.smalaca.taskamanager.model.entities;
 
+import com.smalaca.taskamanager.dto.UserDto;
 import com.smalaca.taskamanager.model.embedded.EmailAddress;
 import com.smalaca.taskamanager.model.embedded.PhoneNumber;
 import com.smalaca.taskamanager.model.embedded.UserName;
@@ -187,5 +188,27 @@ public class User {
 
     public String emailAddress() {
         return getEmailAddress().getEmailAddress();
+    }
+
+    public UserDto asDto() {
+        UserDto userDto = new UserDto();
+        userDto.setId(getId());
+        userDto.setFirstName(firstName());
+        userDto.setLastName(lastName());
+        userDto.setLogin(getLogin());
+        userDto.setPassword(getPassword());
+
+        if (hasTeamRole()) {
+            userDto.setTeamRole(teamRoleName());
+        }
+
+        if (hasPhoneNumber()) {
+            userDto.setPhoneNumber(phonePrefix(), phoneNumber());
+        }
+
+        if (hasEmailAddress()) {
+            userDto.setEmailAddress(emailAddress());
+        }
+        return userDto;
     }
 }
