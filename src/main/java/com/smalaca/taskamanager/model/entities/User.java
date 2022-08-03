@@ -155,25 +155,26 @@ public class User {
     }
 
     public UserDto asDto() {
-        UserDto userDto = new UserDto();
-        userDto.setId(id);
-        userDto.setFirstName(userName.getFirstName());
-        userDto.setLastName(userName.getLastName());
-        userDto.setLogin(login);
-        userDto.setPassword(password);
+        UserDto.UserDtoBuilder builder = UserDto.builder()
+        .id(id)
+        .firstName(userName.getFirstName())
+        .lastName(userName.getLastName())
+        .login(login)
+        .password(password);
 
         if (hasTeamRole()) {
-            userDto.setTeamRole(getTeamRole().name());
+            builder.teamRole(getTeamRole().name());
         }
 
         if (hasPhoneNumber()) {
-            userDto.setPhoneNumber(phoneNumber.getPrefix(), phoneNumber.getNumber());
+            builder.phone(phoneNumber.getPrefix(), phoneNumber.getNumber());
         }
 
         if (hasEmailAddress()) {
-            userDto.setEmailAddress(emailAddress.getEmailAddress());
+            builder.emailAddress(emailAddress.getEmailAddress());
         }
-        return userDto;
+
+        return builder.build();
     }
 
     public boolean hasPhoneNumber() {
