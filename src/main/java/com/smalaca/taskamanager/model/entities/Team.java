@@ -35,6 +35,7 @@ public class Team {
     @ManyToOne
     private Project project;
 
+    @Deprecated
     public String getName() {
         return name;
     }
@@ -76,6 +77,7 @@ public class Team {
         this.codename = codename;
     }
 
+    @Deprecated
     public String getDescription() {
         return description;
     }
@@ -84,6 +86,7 @@ public class Team {
         this.description = description;
     }
 
+    @Deprecated
     public Project getProject() {
         return project;
     }
@@ -123,33 +126,25 @@ public class Team {
                 .toHashCode();
     }
 
+    public TeamDto asTeamDto() {
+        TeamDto dto = new TeamDto();
+        dto.setId(id);
+        dto.setName(name);
+
+        if (hasCodename()) {
+            dto.setCodename(codename.getShortName(), codename.getFullName());
+        }
+
+        dto.setDescription(description);
+        dto.setUserIds(getMemberIds());
+        return dto;
+    }
+
     public boolean hasCodename() {
         return getCodename() != null;
     }
 
-    public String getCodenameShort() {
-        return codename.getShortName();
-    }
-
-    public String getCodenameFull() {
-        return codename.getFullName();
-    }
-
-    public List<Long> getMemberIds() {
+    private List<Long> getMemberIds() {
         return members.stream().map(User::getId).collect(toList());
-    }
-
-    public TeamDto asTeamDto() {
-        TeamDto dto = new TeamDto();
-        dto.setId(getId());
-        dto.setName(getName());
-
-        if (hasCodename()) {
-            dto.setCodename(getCodenameShort(), getCodenameFull());
-        }
-
-        dto.setDescription(getDescription());
-        dto.setUserIds(getMemberIds());
-        return dto;
     }
 }
