@@ -95,10 +95,11 @@ class UserControllerTest {
     }
 
     private UserDto givenUserWithFirstAndLastName(String firstName, String lastName) {
-        UserDto userDto = new UserDto();
-        userDto.setFirstName(firstName);
-        userDto.setLastName(lastName);
-        userDto.setTeamRole(TEAM_ROLE);
+        UserDto userDto = UserDto.builder()
+            .firstName(firstName)
+            .lastName(lastName)
+            .teamRole(TEAM_ROLE)
+            .build();
         return userDto;
     }
 
@@ -120,7 +121,7 @@ class UserControllerTest {
 
     @Test
     void shouldNotUpdateAnythingWhenNoChangesSend() {
-        ResponseEntity<UserDto> response = controller.updateUser(EXISTING_USER_ID, new UserDto());
+        ResponseEntity<UserDto> response = controller.updateUser(EXISTING_USER_ID, UserDto.builder().build());
 
         assertThat(response.getStatusCode()).isEqualTo(OK);
         assertUser(controller.getUser(EXISTING_USER_ID).getBody());
@@ -142,13 +143,13 @@ class UserControllerTest {
         String phoneNumber = randomString();
         String emailAddress = randomString();
         String teamRole = "BUSINESS_ANALYSIS";
-        UserDto userDto = new UserDto();
-        userDto.setLogin(newLogin);
-        userDto.setPassword(newPassword);
-        userDto.setEmailAddress(emailAddress);
-        userDto.setPhonePrefix(phonePrefix);
-        userDto.setPhoneNumber(phoneNumber);
-        userDto.setTeamRole(teamRole);
+        UserDto userDto = UserDto.builder()
+            .login(newLogin)
+            .password(newPassword)
+            .emailAddress(emailAddress)
+            .phone(phonePrefix, phoneNumber)
+            .teamRole(teamRole)
+            .build();
 
         ResponseEntity<UserDto> response = controller.updateUser(EXISTING_USER_ID, userDto);
 
