@@ -106,9 +106,7 @@ public class UserController {
         }
 
         if (userDto.getPhoneNumber() != null) {
-            PhoneNumber phoneNumber = new PhoneNumber();
-            phoneNumber.setPrefix(userDto.getPhonePrefix());
-            phoneNumber.setNumber(userDto.getPhoneNumber());
+            PhoneNumber phoneNumber = new PhoneNumber(userDto.getPhonePrefix(), userDto.getPhoneNumber());
             user.setPhoneNumber(phoneNumber);
         }
 
