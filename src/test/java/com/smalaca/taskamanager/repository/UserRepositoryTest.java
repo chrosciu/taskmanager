@@ -65,9 +65,7 @@ class UserRepositoryTest {
 
     private User user(String firstName, String lastName) {
         User user = new User();
-        UserName userName = new UserName();
-        userName.setFirstName(firstName);
-        userName.setLastName(lastName);
+        UserName userName = new UserName(firstName, lastName);
         user.setUserName(userName);
         user.setLogin("login");
         user.setPassword("password");
