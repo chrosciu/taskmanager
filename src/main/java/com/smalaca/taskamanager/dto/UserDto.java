@@ -1,7 +1,13 @@
 package com.smalaca.taskamanager.dto;
 
 import com.smalaca.taskamanager.model.enums.TeamRole;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDto {
     private Long id;
     private String firstName;
@@ -94,5 +100,11 @@ public class UserDto {
     public void setPhoneNumber(String phonePrefix, String phoneNumber) {
         this.phonePrefix = phonePrefix;
         this.phoneNumber = phoneNumber;
+    }
+
+    public static class UserDtoBuilder {
+        public UserDtoBuilder phone(String prefix, String number) {
+            return phonePrefix(prefix).phoneNumber(number);
+        }
     }
 }
