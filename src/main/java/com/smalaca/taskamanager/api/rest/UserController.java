@@ -4,10 +4,10 @@ import com.smalaca.taskamanager.dto.UserDto;
 import com.smalaca.taskamanager.exception.UserNotFoundException;
 import com.smalaca.taskamanager.model.embedded.EmailAddress;
 import com.smalaca.taskamanager.model.embedded.PhoneNumber;
-import com.smalaca.taskamanager.model.embedded.UserName;
 import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.model.enums.TeamRole;
 import com.smalaca.taskamanager.repository.UserRepository;
+import com.smalaca.taskmanager.user.command.UserCommands;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -31,10 +31,12 @@ import java.util.Optional;
 @SuppressWarnings("checkstyle:ClassFanOutComplexity")
 public class UserController {
     private final UserRepository userRepository;
+    private final UserCommands userCommands;
 
     @Autowired
     public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
+        userCommands = new UserCommands(userRepository);
     }
 
     @GetMapping
@@ -63,7 +65,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<Void> createUser(@RequestBody UserDto userDto, UriComponentsBuilder uriComponentsBuilder) {
-        Optional<Long> createdUserId = createUser(userDto);
+        Optional<Long> createdUserId = userCommands.create(userDto);
 
         if (createdUserId.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -72,27 +74,6 @@ public class UserController {
             headers.setLocation(uriComponentsBuilder.path("/user/{id}").buildAndExpand(createdUserId.get()).toUri());
             return new ResponseEntity<>(headers, HttpStatus.CREATED);
         }
-    }
-
-    private Optional<Long> createUser(UserDto userDto) {
-        Optional<Long> createdUserId = Optional.empty();
-
-        if (!exists(userDto)) {
-            User user = new User();
-            user.setTeamRole(userDto.asTeamRole());
-            UserName userName = new UserName(userDto.getFirstName(), userDto.getLastName());
-            user.setUserName(userName);
-            user.setLogin(userDto.getLogin());
-            user.setPassword(userDto.getPassword());
-
-            User saved = userRepository.save(user);
-            createdUserId = Optional.of(saved.getId());
-        }
-        return createdUserId;
-    }
-
-    private boolean exists(UserDto userDto) {
-        return !userRepository.findByUserNameFirstNameAndUserNameLastName(userDto.getFirstName(), userDto.getLastName()).isEmpty();
     }
 
     @PutMapping(value = "/{id}")
