@@ -11,6 +11,7 @@ import com.smalaca.taskamanager.model.entities.TeamFactory;
 import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.repository.TeamRepository;
 import com.smalaca.taskamanager.repository.UserRepository;
+import com.smalaca.taskmanager.team.command.TeamCommands;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -69,7 +70,7 @@ public class TeamController {
 
     @PostMapping
     public ResponseEntity<Void> createTeam(@RequestBody TeamDto teamDto, UriComponentsBuilder uriComponentsBuilder) {
-        Optional<Long> savedTeamId = createTeam(teamDto);
+        Optional<Long> savedTeamId = new TeamCommands(teamRepository).create(teamDto);
 
         if (savedTeamId.isPresent()) {
             HttpHeaders headers = new HttpHeaders();
@@ -78,18 +79,6 @@ public class TeamController {
             return new ResponseEntity<>(headers, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
-    }
-
-    private Optional<Long> createTeam(TeamDto teamDto) {
-        Optional<Team> foundTeam = teamRepository.findByName(teamDto.getName());
-
-        if (foundTeam.isEmpty()) {
-            Team team = teamFactory.create(teamDto);
-            Team saved = teamRepository.save(team);
-            return Optional.of(saved.getId());
-        } else {
-            return Optional.empty();
         }
     }
 
