@@ -52,17 +52,26 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<Void> createUser(@RequestBody UserDto userDto, UriComponentsBuilder uriComponentsBuilder) {
-        if (exists(userDto)) {
+        Optional<Long> createdUserId = createUser(userDto);
+
+        if (createdUserId.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         } else {
-            User user = User.createFromUserDto(userDto);
-
-            User saved = userRepository.save(user);
-
             HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(uriComponentsBuilder.path("/user/{id}").buildAndExpand(saved.getId()).toUri());
+            headers.setLocation(uriComponentsBuilder.path("/user/{id}").buildAndExpand(createdUserId.get()).toUri());
             return new ResponseEntity<>(headers, HttpStatus.CREATED);
         }
+    }
+
+    private Optional<Long> createUser(UserDto userDto) {
+        Optional<Long> createdUserId = Optional.empty();
+
+        if (!exists(userDto)) {
+            User user = User.createFromUserDto(userDto);
+            User saved = userRepository.save(user);
+            createdUserId = Optional.of(saved.getId());
+        }
+        return createdUserId;
     }
 
     private boolean exists(UserDto userDto) {
