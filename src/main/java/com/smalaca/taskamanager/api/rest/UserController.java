@@ -4,6 +4,7 @@ import com.smalaca.taskamanager.dto.UserDto;
 import com.smalaca.taskamanager.exception.UserNotFoundException;
 import com.smalaca.taskamanager.model.embedded.EmailAddress;
 import com.smalaca.taskamanager.model.embedded.PhoneNumber;
+import com.smalaca.taskamanager.model.embedded.UserName;
 import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.model.entities.UserFactory;
 import com.smalaca.taskamanager.model.enums.TeamRole;
@@ -65,17 +66,27 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<Void> createUser(@RequestBody UserDto userDto, UriComponentsBuilder uriComponentsBuilder) {
-        if (exists(userDto)) {
+        Optional<Long> createdUserId = createUser(userDto);
+
+        if (createdUserId.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         } else {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setLocation(uriComponentsBuilder.path("/user/{id}").buildAndExpand(createdUserId.get()).toUri());
+            return new ResponseEntity<>(headers, HttpStatus.CREATED);
+        }
+    }
+
+    private Optional<Long> createUser(UserDto userDto) {
+        Optional<Long> createdUserId = Optional.empty();
+
+        if (!exists(userDto)) {
             User user = userFactory.create(userDto);
 
             User saved = userRepository.save(user);
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(uriComponentsBuilder.path("/user/{id}").buildAndExpand(saved.getId()).toUri());
-            return new ResponseEntity<>(headers, HttpStatus.CREATED);
+            createdUserId = Optional.of(saved.getId());
         }
+        return createdUserId;
     }
 
     private boolean exists(UserDto userDto) {
