@@ -39,11 +39,13 @@ public class TeamController {
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
     private final TeamFactory teamFactory;
+    private final TeamCommands teamCommands;
 
     public TeamController(TeamRepository teamRepository, UserRepository userRepository) {
         this.teamRepository = teamRepository;
         this.userRepository = userRepository;
         this.teamFactory = new TeamFactory();
+        teamCommands = new TeamCommands(teamRepository);
     }
 
     @GetMapping
