@@ -37,10 +37,12 @@ import static java.util.stream.Collectors.toList;
 public class TeamController {
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
+    private final TeamCommands teamCommands;
 
     public TeamController(TeamRepository teamRepository, UserRepository userRepository) {
         this.teamRepository = teamRepository;
         this.userRepository = userRepository;
+        teamCommands = new TeamCommands(teamRepository);
     }
 
     @GetMapping
@@ -67,7 +69,7 @@ public class TeamController {
 
     @PostMapping
     public ResponseEntity<Void> createTeam(@RequestBody TeamDto teamDto, UriComponentsBuilder uriComponentsBuilder) {
-        Optional<Long> savedTeamId = new TeamCommands(teamRepository).create(teamDto);
+        Optional<Long> savedTeamId = teamCommands.create(teamDto);
 
         if (savedTeamId.isPresent()) {
             HttpHeaders headers = new HttpHeaders();
