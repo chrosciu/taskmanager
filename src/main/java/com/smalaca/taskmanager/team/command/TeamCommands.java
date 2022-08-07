@@ -1,52 +1,27 @@
 package com.smalaca.taskmanager.team.command;
 
 import com.smalaca.taskamanager.dto.TeamDto;
-import com.smalaca.taskamanager.model.embedded.Codename;
-import com.smalaca.taskamanager.model.entities.Team;
 import com.smalaca.taskamanager.repository.TeamRepository;
+import com.smalaca.taskmanager.team.command.create.TeamCreateCommand;
+import com.smalaca.taskmanager.team.command.update.TeamUpdateCommand;
 import java.util.Optional;
 
 public class TeamCommands {
     private final TeamRepository teamRepository;
+    private final TeamCreateCommand teamCreateCommand;
+    private final TeamUpdateCommand teamUpdateCommand;
 
     public TeamCommands(TeamRepository teamRepository) {
         this.teamRepository = teamRepository;
+        teamCreateCommand = new TeamCreateCommand(teamRepository);
+        teamUpdateCommand = new TeamUpdateCommand(teamRepository);
     }
 
     public Optional<Long> create(TeamDto teamDto) {
-        Optional<Team> foundTeam = teamRepository.findByName(teamDto.getName());
-
-        if (foundTeam.isEmpty()) {
-            Team team = new Team();
-            team.setName(teamDto.getName());
-            Team saved = teamRepository.save(team);
-            return Optional.of(saved.getId());
-        } else {
-            return Optional.empty();
-        }
+        return teamCreateCommand.create(teamDto);
     }
 
     public Optional<TeamDto> update(Long id, TeamDto teamDto) {
-        Optional<Team> found = teamRepository.findById(id);
-        Optional<TeamDto> updated = Optional.empty();
-        if (found.isPresent()) {
-            Team team = found.get();
-
-            if (teamDto.getName() != null) {
-                team.setName(teamDto.getName());
-            }
-
-            if (teamDto.getCodenameShort() != null && teamDto.getCodenameFull() != null) {
-                Codename codename = new Codename(teamDto.getCodenameShort(), teamDto.getCodenameFull());
-                team.setCodename(codename);
-            }
-
-            if (teamDto.getDescription() != null) {
-                team.setDescription(teamDto.getDescription());
-            }
-
-            updated = Optional.of(teamRepository.save(team).asTeamDto());
-        }
-        return updated;
+        return teamUpdateCommand.update(id, teamDto);
     }
 }
