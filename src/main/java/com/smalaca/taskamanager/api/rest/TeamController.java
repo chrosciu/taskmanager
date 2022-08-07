@@ -83,31 +83,13 @@ public class TeamController {
 
     @PutMapping("/{id}")
     public ResponseEntity<TeamDto> updateTeam(@PathVariable Long id, @RequestBody TeamDto teamDto) {
-        Team team;
+        Optional<TeamDto> updated = teamCommands.update(id, teamDto);
 
-        try {
-            team = getTeamById(id);
-        } catch (TeamNotFoundException exception) {
+        if (updated.isPresent()) {
+            return new ResponseEntity<>(updated.get(), HttpStatus.OK);
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-        if (teamDto.getName() != null) {
-            team.setName(teamDto.getName());
-        }
-
-        if (teamDto.getCodenameShort() != null && teamDto.getCodenameFull() != null) {
-            Codename codename = new Codename(teamDto.getCodenameShort(), teamDto.getCodenameFull());
-            team.setCodename(codename);
-        }
-
-        if (teamDto.getDescription() != null) {
-            team.setDescription(teamDto.getDescription());
-        }
-
-        Team updated = teamRepository.save(team);
-
-        TeamDto dto = updated.asTeamDto();
-        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @PutMapping("/{id}/members")
