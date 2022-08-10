@@ -56,9 +56,15 @@ class ToDoItemProcessorTest {
     @Test
     void shouldDoNothingForToBeDefined() {
         ToDoItem toDoItem = toDoItem(TO_BE_DEFINED);
+        willAnswer(invocationOnMock -> {
+            ToDoItemVisitor visitor = invocationOnMock.getArgument(0, ToDoItemVisitor.class);
+            visitor.visit(toDoItem);
+            return null;
+        }).given(toDoItem).accept(any(ToDoItemVisitor.class));
 
         processor.processFor(toDoItem);
 
+        then(toDoItem).should().accept(any(ToDoItemVisitor.class));
         then(toDoItem).should().getStatus();
         verifyNoMoreInteractions(toDoItem, storyService, eventsRegistry, projectBacklogService, communicationService, sprintBacklogService);
     }
