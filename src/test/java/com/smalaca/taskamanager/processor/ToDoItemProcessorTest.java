@@ -199,9 +199,15 @@ class ToDoItemProcessorTest {
     @Test
     void shouldDoNothingWhenProcessInProgressStory() {
         Story story = story(IN_PROGRESS);
+        willAnswer(invocationOnMock -> {
+            ToDoItemVisitor visitor = invocationOnMock.getArgument(0, ToDoItemVisitor.class);
+            visitor.visit(story);
+            return null;
+        }).given(story).accept(any(ToDoItemVisitor.class));
 
         processor.processFor(story);
 
+        then(story).should().accept(any(ToDoItemVisitor.class));
         then(story).should().getStatus();
         verifyNoMoreInteractions(story, storyService, eventsRegistry, projectBacklogService, communicationService, sprintBacklogService);
     }
@@ -209,9 +215,15 @@ class ToDoItemProcessorTest {
     @Test
     void shouldDoNothingWhenProcessInProgressEpic() {
         Epic epic = epic(IN_PROGRESS);
+        willAnswer(invocationOnMock -> {
+            ToDoItemVisitor visitor = invocationOnMock.getArgument(0, ToDoItemVisitor.class);
+            visitor.visit(epic);
+            return null;
+        }).given(epic).accept(any(ToDoItemVisitor.class));
 
         processor.processFor(epic);
 
+        then(epic).should().accept(any(ToDoItemVisitor.class));
         then(epic).should().getStatus();
         verifyNoMoreInteractions(epic, storyService, eventsRegistry, projectBacklogService, communicationService, sprintBacklogService);
     }
@@ -221,9 +233,15 @@ class ToDoItemProcessorTest {
         Task task = task(IN_PROGRESS);
         Story story = mock(Story.class);
         given(task.getStory()).willReturn(story);
+        willAnswer(invocationOnMock -> {
+            ToDoItemVisitor visitor = invocationOnMock.getArgument(0, ToDoItemVisitor.class);
+            visitor.visit(task);
+            return null;
+        }).given(task).accept(any(ToDoItemVisitor.class));
 
         processor.processFor(task);
 
+        then(task).should().accept(any(ToDoItemVisitor.class));
         then(task).should().getStatus();
         then(task).should().getStory();
         then(storyService).should().updateProgressOf(story, task);
@@ -235,9 +253,15 @@ class ToDoItemProcessorTest {
         Task task = task(DONE);
         Story story = story(IN_PROGRESS);
         given(task.getStory()).willReturn(story);
+        willAnswer(invocationOnMock -> {
+            ToDoItemVisitor visitor = invocationOnMock.getArgument(0, ToDoItemVisitor.class);
+            visitor.visit(task);
+            return null;
+        }).given(task).accept(any(ToDoItemVisitor.class));
 
         processor.processFor(task);
 
+        then(task).should().accept(any(ToDoItemVisitor.class));
         then(task).should().getStatus();
         then(task).should(times(2)).getStory();
         then(storyService).should().updateProgressOf(story, task);
@@ -251,9 +275,15 @@ class ToDoItemProcessorTest {
         given(story.getId()).willReturn(storyId);
         Task task = task(DONE);
         given(task.getStory()).willReturn(story);
+        willAnswer(invocationOnMock -> {
+            ToDoItemVisitor visitor = invocationOnMock.getArgument(0, ToDoItemVisitor.class);
+            visitor.visit(task);
+            return null;
+        }).given(task).accept(any(ToDoItemVisitor.class));
 
         processor.processFor(task);
 
+        then(task).should().accept(any(ToDoItemVisitor.class));
         then(task).should().getStatus();
         then(task).should(times(2)).getStory();
         then(storyService).should().updateProgressOf(story, task);
@@ -268,9 +298,15 @@ class ToDoItemProcessorTest {
         long storyId = 13;
         Story story = story(DONE);
         given(story.getId()).willReturn(storyId);
+        willAnswer(invocationOnMock -> {
+            ToDoItemVisitor visitor = invocationOnMock.getArgument(0, ToDoItemVisitor.class);
+            visitor.visit(story);
+            return null;
+        }).given(story).accept(any(ToDoItemVisitor.class));
 
         processor.processFor(story);
 
+        then(story).should().accept(any(ToDoItemVisitor.class));
         then(story).should().getStatus();
         then(story).should().getId();
         ArgumentCaptor<StoryDoneEvent> captor = ArgumentCaptor.forClass(StoryDoneEvent.class);
@@ -282,9 +318,15 @@ class ToDoItemProcessorTest {
     @Test
     void shouldDoNothingWhenProcessDoneEpic() {
         Epic epic = epic(DONE);
+        willAnswer(invocationOnMock -> {
+            ToDoItemVisitor visitor = invocationOnMock.getArgument(0, ToDoItemVisitor.class);
+            visitor.visit(epic);
+            return null;
+        }).given(epic).accept(any(ToDoItemVisitor.class));
 
         processor.processFor(epic);
 
+        then(epic).should().accept(any(ToDoItemVisitor.class));
         then(epic).should().getStatus();
         verifyNoMoreInteractions(epic, storyService, eventsRegistry, projectBacklogService, communicationService, sprintBacklogService);
     }
@@ -294,9 +336,15 @@ class ToDoItemProcessorTest {
         Story story = story(APPROVED);
         long storyId = 7;
         given(story.getId()).willReturn(storyId);
+        willAnswer(invocationOnMock -> {
+            ToDoItemVisitor visitor = invocationOnMock.getArgument(0, ToDoItemVisitor.class);
+            visitor.visit(story);
+            return null;
+        }).given(story).accept(any(ToDoItemVisitor.class));
 
         processor.processFor(story);
 
+        then(story).should().accept(any(ToDoItemVisitor.class));
         then(story).should().getStatus();
         then(story).should().getId();
         ArgumentCaptor<StoryApprovedEvent> captor = ArgumentCaptor.forClass(StoryApprovedEvent.class);
@@ -311,9 +359,15 @@ class ToDoItemProcessorTest {
         Task task = task(APPROVED);
         given(task.isSubtask()).willReturn(true);
         given(task.getId()).willReturn(taskId);
+        willAnswer(invocationOnMock -> {
+            ToDoItemVisitor visitor = invocationOnMock.getArgument(0, ToDoItemVisitor.class);
+            visitor.visit(task);
+            return null;
+        }).given(task).accept(any(ToDoItemVisitor.class));
 
         processor.processFor(task);
 
+        then(task).should().accept(any(ToDoItemVisitor.class));
         then(task).should().getStatus();
         then(task).should().isSubtask();
         then(task).should().getId();
@@ -333,9 +387,15 @@ class ToDoItemProcessorTest {
         given(task.getStory()).willReturn(story);
         given(task.getId()).willReturn(taskId);
         given(task.isSubtask()).willReturn(false);
+        willAnswer(invocationOnMock -> {
+            ToDoItemVisitor visitor = invocationOnMock.getArgument(0, ToDoItemVisitor.class);
+            visitor.visit(task);
+            return null;
+        }).given(task).accept(any(ToDoItemVisitor.class));
 
         processor.processFor(task);
 
+        then(task).should().accept(any(ToDoItemVisitor.class));
         then(task).should().getStatus();
         then(task).should().isSubtask();
         then(task).should().getStory();
@@ -347,9 +407,16 @@ class ToDoItemProcessorTest {
     @Test
     void shouldDoNothingWhenProcessApprovedEpic() {
         Epic epic = epic(APPROVED);
+        willAnswer(invocationOnMock -> {
+            ToDoItemVisitor visitor = invocationOnMock.getArgument(0, ToDoItemVisitor.class);
+            visitor.visit(epic);
+            return null;
+        }).given(epic).accept(any(ToDoItemVisitor.class));
 
         processor.processFor(epic);
 
+        then(epic).should().accept(any(ToDoItemVisitor.class));
+        then(epic).should().accept(any(ToDoItemVisitor.class));
         then(epic).should().getStatus();
         verifyNoMoreInteractions(epic, storyService, eventsRegistry, projectBacklogService, communicationService, sprintBacklogService);
     }
