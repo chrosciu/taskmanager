@@ -7,6 +7,7 @@ import com.smalaca.taskamanager.model.embedded.Watcher;
 import com.smalaca.taskamanager.model.enums.ToDoItemStatus;
 import com.smalaca.taskamanager.model.interfaces.ToDoItem;
 
+import com.smalaca.taskamanager.processor.ToDoItemProcessor.ToDoItemVisitor;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -64,6 +65,11 @@ public class Task implements ToDoItem {
     @Override
     public Long getId() {
         return id;
+    }
+
+    @Override
+    public void accept(ToDoItemVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override
