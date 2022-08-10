@@ -16,6 +16,7 @@ import com.smalaca.taskamanager.model.interfaces.ToDoItem;
 import com.smalaca.taskamanager.strategy.CommunicationStrategy;
 import com.smalaca.taskamanager.strategy.DirectCommunicationStrategy;
 import com.smalaca.taskamanager.strategy.MailCommunicationStrategy;
+import com.smalaca.taskamanager.strategy.NoOpCommunicationStrategy;
 import com.smalaca.taskamanager.strategy.NullTypeCommunicationStrategy;
 import com.smalaca.taskamanager.strategy.SmsCommunicationStrategy;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,6 @@ public class CommunicationServiceImpl implements CommunicationService {
     private final ChatClient chat;
     private final SmsCommunicatorClient smsCommunicator;
     private final MailClient mailClient;
-    private CommunicatorType type;
     private CommunicationStrategy communicationStrategy;
 
     public CommunicationServiceImpl(
@@ -40,12 +40,12 @@ public class CommunicationServiceImpl implements CommunicationService {
         this.mailClient = mailClient;
     }
 
+    @Deprecated
     public void setType(CommunicatorType type) {
-        this.type = type;
-        this.communicationStrategy = selectCommunicationStrategy();
+        this.communicationStrategy = selectCommunicationStrategy(type);
     }
 
-    private CommunicationStrategy selectCommunicationStrategy() {
+    private CommunicationStrategy selectCommunicationStrategy(CommunicatorType type) {
         switch (type) {
             case MAIL:
                 return new MailCommunicationStrategy(mailClient);
@@ -56,30 +56,11 @@ public class CommunicationServiceImpl implements CommunicationService {
             case NULL_TYPE:
                 return new NullTypeCommunicationStrategy(devNullDirectory);
         }
-        return new LegacyCommunicationStrategy();
+        return new NoOpCommunicationStrategy();
     }
 
-    private class LegacyCommunicationStrategy implements CommunicationStrategy {
-
-        @Override
-        public void notify(ToDoItem toDoItem, ProductOwner productOwner) {
-        }
-
-        @Override
-        public void notify(ToDoItem toDoItem, Owner owner) {
-        }
-
-        @Override
-        public void notify(ToDoItem toDoItem, Watcher watcher) {
-        }
-
-        @Override
-        public void notify(ToDoItem toDoItem, User user) {
-        }
-
-        @Override
-        public void notify(ToDoItem toDoItem, Stakeholder stakeholder) {
-        }
+    public void setCommunicationStrategy(CommunicationStrategy communicationStrategy) {
+        this.communicationStrategy = communicationStrategy;
     }
 
     public void notify(ToDoItem toDoItem, ProductOwner productOwner) {
