@@ -5,7 +5,6 @@ import com.smalaca.taskamanager.client.MailClient;
 import com.smalaca.taskamanager.client.SmsCommunicatorClient;
 import com.smalaca.taskamanager.devnull.DevNullDirectory;
 import com.smalaca.taskamanager.infrastructure.enums.CommunicatorType;
-import com.smalaca.taskamanager.model.embedded.EmailAddress;
 import com.smalaca.taskamanager.model.embedded.Owner;
 import com.smalaca.taskamanager.model.embedded.PhoneNumber;
 import com.smalaca.taskamanager.model.embedded.Stakeholder;
@@ -16,8 +15,8 @@ import com.smalaca.taskamanager.model.entities.Team;
 import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.model.interfaces.ToDoItem;
 import com.smalaca.taskamanager.model.other.ChatRoom;
-import com.smalaca.taskamanager.model.other.Mail;
-import com.smalaca.taskamanager.session.SessionHolder;
+import com.smalaca.taskamanager.strategy.CommunicationStrategy;
+import com.smalaca.taskamanager.strategy.MailCommunicationStrategy;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,20 +43,15 @@ public class CommunicationServiceImpl implements CommunicationService {
 
     public void setType(CommunicatorType type) {
         this.type = type;
-        this.communicationStrategy = new LegacyCommunicationStrategy();
+        this.communicationStrategy = selectCommunicationStrategy();
     }
 
-    private interface CommunicationStrategy {
-
-        void notify(ToDoItem toDoItem, ProductOwner productOwner);
-
-        void notify(ToDoItem toDoItem, Owner owner);
-
-        void notify(ToDoItem toDoItem, Watcher watcher);
-
-        void notify(ToDoItem toDoItem, User user);
-
-        void notify(ToDoItem toDoItem, Stakeholder stakeholder);
+    private CommunicationStrategy selectCommunicationStrategy() {
+        switch (type) {
+            case MAIL:
+                return new MailCommunicationStrategy(mailClient);
+        }
+        return new LegacyCommunicationStrategy();
     }
 
     private class LegacyCommunicationStrategy implements CommunicationStrategy {
@@ -65,9 +59,6 @@ public class CommunicationServiceImpl implements CommunicationService {
         @Override
         public void notify(ToDoItem toDoItem, ProductOwner productOwner) {
             switch (type) {
-                case MAIL:
-                    notifyAbout(toDoItem, productOwner.getEmailAddress());
-                    break;
                 case SMS:
                     notifyAbout(toDoItem, productOwner.getPhoneNumber());
                     break;
@@ -85,9 +76,6 @@ public class CommunicationServiceImpl implements CommunicationService {
             switch (type) {
                 case SMS:
                     notifyAbout(toDoItem, owner.getPhoneNumber());
-                    break;
-                case MAIL:
-                    notifyAbout(toDoItem, owner.getEmailAddress());
                     break;
                 case DIRECT:
                     notifyAbout(toDoItem, owner.getFirstName() + SEPARATOR + owner.getLastName());
@@ -107,9 +95,6 @@ public class CommunicationServiceImpl implements CommunicationService {
                 case DIRECT:
                     notifyAbout(toDoItem, watcher.getFirstName() + SEPARATOR + watcher.getLastName());
                     break;
-                case MAIL:
-                    notifyAbout(toDoItem, watcher.getEmailAddress());
-                    break;
                 case NULL_TYPE:
                     notifyAbout();
                     break;
@@ -125,9 +110,6 @@ public class CommunicationServiceImpl implements CommunicationService {
                 case DIRECT:
                     notifyAbout(toDoItem, user.getLogin());
                     break;
-                case MAIL:
-                    notifyAbout(toDoItem, user.getEmailAddress());
-                    break;
                 case NULL_TYPE:
                     notifyAbout();
                     break;
@@ -142,9 +124,6 @@ public class CommunicationServiceImpl implements CommunicationService {
                     break;
                 case SMS:
                     notifyAbout(toDoItem, stakeholder.getPhoneNumber());
-                    break;
-                case MAIL:
-                    notifyAbout(toDoItem, stakeholder.getEmailAddress());
                     break;
                 case NULL_TYPE:
                     notifyAbout();
@@ -198,14 +177,4 @@ public class CommunicationServiceImpl implements CommunicationService {
         smsCommunicator.textTo(phoneNumber, projectBacklogService.linkFor(toDoItem.getId()));
     }
 
-    private void notifyAbout(ToDoItem toDoItem, EmailAddress emailAddress) {
-        User loggedUser = SessionHolder.instance().logged();
-        Mail mail = new Mail();
-        mail.setFrom(loggedUser.getEmailAddress());
-        mail.setTo(emailAddress);
-        mail.setTopic("NOTIFICATION ABOUT: " + toDoItem.getId());
-        mail.setContent(String.valueOf(toDoItem.getId()));
-
-        mailClient.send(mail);
-    }
 }
