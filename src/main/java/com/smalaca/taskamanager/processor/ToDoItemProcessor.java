@@ -10,7 +10,9 @@ import com.smalaca.taskamanager.visitor.ApprovedToDoItemVisitor;
 import com.smalaca.taskamanager.visitor.DefinedToDoItemVisitor;
 import com.smalaca.taskamanager.visitor.DoneToDoItemVisitor;
 import com.smalaca.taskamanager.visitor.InProgressToDoItemVisitor;
+import com.smalaca.taskamanager.visitor.NoOpToDoItemVisitor;
 import com.smalaca.taskamanager.visitor.ReleasedToDoItemVisitor;
+import com.smalaca.taskamanager.visitor.ToDoItemVisitor;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,6 +23,7 @@ public class ToDoItemProcessor {
     private final InProgressToDoItemVisitor inProgressToDoItemVisitor;
     private final DoneToDoItemVisitor doneToDoItemVisitor;
     private final ApprovedToDoItemVisitor approvedToDoItemVisitor;
+    private final NoOpToDoItemVisitor noOpToDoItemVisitor;
 
     public ToDoItemProcessor(
             StoryService storyService, EventsRegistry eventsRegistry, ProjectBacklogService projectBacklogService,
@@ -31,52 +34,28 @@ public class ToDoItemProcessor {
         inProgressToDoItemVisitor = new InProgressToDoItemVisitor(storyService);
         doneToDoItemVisitor = new DoneToDoItemVisitor(eventsRegistry, storyService);
         approvedToDoItemVisitor = new ApprovedToDoItemVisitor(eventsRegistry, storyService);
+        noOpToDoItemVisitor = new NoOpToDoItemVisitor();
     }
 
     public void processFor(ToDoItem toDoItem) {
+        ToDoItemVisitor visitor = selectVisitor(toDoItem);
+        toDoItem.accept(visitor);
+    }
+
+    private ToDoItemVisitor selectVisitor(ToDoItem toDoItem) {
         switch (toDoItem.getStatus()) {
             case DEFINED:
-                processDefined(toDoItem);
-                break;
-
+                return definedToDoItemVisitor;
             case IN_PROGRESS:
-                processInProgress(toDoItem);
-                break;
-
+                return inProgressToDoItemVisitor;
             case DONE:
-                processDone(toDoItem);
-                break;
-
+                return doneToDoItemVisitor;
             case APPROVED:
-                processApproved(toDoItem);
-                break;
-
+                return approvedToDoItemVisitor;
             case RELEASED:
-                processReleased(toDoItem);
-                break;
-
+                return releasedToDoItemVisitor;
             default:
-                break;
+                return noOpToDoItemVisitor;
         }
-    }
-
-    private void processDefined(ToDoItem toDoItem) {
-        toDoItem.accept(definedToDoItemVisitor);
-    }
-
-    private void processInProgress(ToDoItem toDoItem) {
-        toDoItem.accept(inProgressToDoItemVisitor);
-    }
-
-    private void processDone(ToDoItem toDoItem) {
-        toDoItem.accept(doneToDoItemVisitor);
-    }
-
-    private void processApproved(ToDoItem toDoItem) {
-        toDoItem.accept(approvedToDoItemVisitor);
-    }
-
-    private void processReleased(ToDoItem toDoItem) {
-        toDoItem.accept(releasedToDoItemVisitor);
     }
 }
