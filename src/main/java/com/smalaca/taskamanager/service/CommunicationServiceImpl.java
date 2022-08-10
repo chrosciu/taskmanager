@@ -6,7 +6,6 @@ import com.smalaca.taskamanager.client.SmsCommunicatorClient;
 import com.smalaca.taskamanager.devnull.DevNullDirectory;
 import com.smalaca.taskamanager.infrastructure.enums.CommunicatorType;
 import com.smalaca.taskamanager.model.embedded.Owner;
-import com.smalaca.taskamanager.model.embedded.PhoneNumber;
 import com.smalaca.taskamanager.model.embedded.Stakeholder;
 import com.smalaca.taskamanager.model.embedded.Watcher;
 import com.smalaca.taskamanager.model.entities.ProductOwner;
@@ -14,15 +13,15 @@ import com.smalaca.taskamanager.model.entities.Project;
 import com.smalaca.taskamanager.model.entities.Team;
 import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.model.interfaces.ToDoItem;
-import com.smalaca.taskamanager.model.other.ChatRoom;
 import com.smalaca.taskamanager.strategy.CommunicationStrategy;
+import com.smalaca.taskamanager.strategy.DirectCommunicationStrategy;
 import com.smalaca.taskamanager.strategy.MailCommunicationStrategy;
+import com.smalaca.taskamanager.strategy.NullTypeCommunicationStrategy;
+import com.smalaca.taskamanager.strategy.SmsCommunicationStrategy;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CommunicationServiceImpl implements CommunicationService {
-    private static final String SEPARATOR = ".";
-
     private final ProjectBacklogService projectBacklogService;
     private final DevNullDirectory devNullDirectory;
     private final ChatClient chat;
@@ -50,6 +49,12 @@ public class CommunicationServiceImpl implements CommunicationService {
         switch (type) {
             case MAIL:
                 return new MailCommunicationStrategy(mailClient);
+            case SMS:
+                return new SmsCommunicationStrategy(smsCommunicator, projectBacklogService);
+            case DIRECT:
+                return new DirectCommunicationStrategy(chat, projectBacklogService);
+            case NULL_TYPE:
+                return new NullTypeCommunicationStrategy(devNullDirectory);
         }
         return new LegacyCommunicationStrategy();
     }
@@ -58,77 +63,22 @@ public class CommunicationServiceImpl implements CommunicationService {
 
         @Override
         public void notify(ToDoItem toDoItem, ProductOwner productOwner) {
-            switch (type) {
-                case SMS:
-                    notifyAbout(toDoItem, productOwner.getPhoneNumber());
-                    break;
-                case DIRECT:
-                    notifyAbout(toDoItem, productOwner.getFirstName() + SEPARATOR + productOwner.getLastName());
-                    break;
-                case NULL_TYPE:
-                    notifyAbout();
-                    break;
-            }
         }
 
         @Override
         public void notify(ToDoItem toDoItem, Owner owner) {
-            switch (type) {
-                case SMS:
-                    notifyAbout(toDoItem, owner.getPhoneNumber());
-                    break;
-                case DIRECT:
-                    notifyAbout(toDoItem, owner.getFirstName() + SEPARATOR + owner.getLastName());
-                    break;
-                case NULL_TYPE:
-                    notifyAbout();
-                    break;
-            }
         }
 
         @Override
         public void notify(ToDoItem toDoItem, Watcher watcher) {
-            switch (type) {
-                case SMS:
-                    notifyAbout(toDoItem, watcher.getPhoneNumber());
-                    break;
-                case DIRECT:
-                    notifyAbout(toDoItem, watcher.getFirstName() + SEPARATOR + watcher.getLastName());
-                    break;
-                case NULL_TYPE:
-                    notifyAbout();
-                    break;
-            }
         }
 
         @Override
         public void notify(ToDoItem toDoItem, User user) {
-            switch (type) {
-                case SMS:
-                    notifyAbout(toDoItem, user.getPhoneNumber());
-                    break;
-                case DIRECT:
-                    notifyAbout(toDoItem, user.getLogin());
-                    break;
-                case NULL_TYPE:
-                    notifyAbout();
-                    break;
-            }
         }
 
         @Override
         public void notify(ToDoItem toDoItem, Stakeholder stakeholder) {
-            switch (type) {
-                case DIRECT:
-                    notifyAbout(toDoItem, stakeholder.getFirstName() + SEPARATOR + stakeholder.getLastName());
-                    break;
-                case SMS:
-                    notifyAbout(toDoItem, stakeholder.getPhoneNumber());
-                    break;
-                case NULL_TYPE:
-                    notifyAbout();
-                    break;
-            }
         }
     }
 
@@ -163,18 +113,4 @@ public class CommunicationServiceImpl implements CommunicationService {
             notify(toDoItem, user);
         }
     }
-
-    private void notifyAbout() {
-        devNullDirectory.forget();
-    }
-
-    private void notifyAbout(ToDoItem toDoItem, String userName) {
-        ChatRoom chatRoom = chat.connectWith(userName);
-        chatRoom.send(projectBacklogService.linkFor(toDoItem.getId()));
-    }
-
-    private void notifyAbout(ToDoItem toDoItem, PhoneNumber phoneNumber) {
-        smsCommunicator.textTo(phoneNumber, projectBacklogService.linkFor(toDoItem.getId()));
-    }
-
 }
