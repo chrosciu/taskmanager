@@ -7,6 +7,7 @@ import com.smalaca.taskamanager.model.embedded.Watcher;
 import com.smalaca.taskamanager.model.entities.Project;
 import com.smalaca.taskamanager.model.enums.ToDoItemStatus;
 
+import com.smalaca.taskamanager.processor.ToDoItemProcessor.ToDoItemVisitor;
 import java.util.List;
 
 public interface ToDoItem {
@@ -25,4 +26,6 @@ public interface ToDoItem {
     List<Stakeholder> getStakeholders();
 
     Long getId();
+
+    void accept(ToDoItemVisitor visitor);
 }

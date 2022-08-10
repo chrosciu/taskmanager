@@ -14,6 +14,7 @@ import com.smalaca.taskamanager.model.entities.Story;
 import com.smalaca.taskamanager.model.entities.Task;
 import com.smalaca.taskamanager.model.enums.ToDoItemStatus;
 import com.smalaca.taskamanager.model.interfaces.ToDoItem;
+import com.smalaca.taskamanager.processor.ToDoItemProcessor.ToDoItemVisitor;
 import com.smalaca.taskamanager.registry.EventsRegistry;
 import com.smalaca.taskamanager.service.CommunicationService;
 import com.smalaca.taskamanager.service.ProjectBacklogService;
@@ -34,8 +35,10 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.willAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -66,9 +69,15 @@ class ToDoItemProcessorTest {
         Story story = story(DEFINED);
         given(story.getTasks()).willReturn(emptyList());
         given(story.getProject()).willReturn(project);
+        willAnswer(invocationOnMock -> {
+            ToDoItemVisitor visitor = invocationOnMock.getArgument(0, ToDoItemVisitor.class);
+            visitor.visit(story);
+            return null;
+        }).given(story).accept(any(ToDoItemVisitor.class));
 
         processor.processFor(story);
 
+        then(story).should().accept(any(ToDoItemVisitor.class));
         then(story).should().getStatus();
         then(story).should().getTasks();
         then(story).should().getProject();
@@ -84,9 +93,15 @@ class ToDoItemProcessorTest {
         given(story.getTasks()).willReturn(tasks);
         given(story.isAssigned()).willReturn(false);
         given(story.getProject()).willReturn(project);
+        willAnswer(invocationOnMock -> {
+            ToDoItemVisitor visitor = invocationOnMock.getArgument(0, ToDoItemVisitor.class);
+            visitor.visit(story);
+            return null;
+        }).given(story).accept(any(ToDoItemVisitor.class));
 
         processor.processFor(story);
 
+        then(story).should().accept(any(ToDoItemVisitor.class));
         then(story).should().getStatus();
         then(story).should().getTasks();
         then(story).should().isAssigned();
@@ -101,9 +116,15 @@ class ToDoItemProcessorTest {
         List<Task> tasks = asList(mock(Task.class), mock(Task.class));
         given(story.getTasks()).willReturn(tasks);
         given(story.isAssigned()).willReturn(true);
+        willAnswer(invocationOnMock -> {
+            ToDoItemVisitor visitor = invocationOnMock.getArgument(0, ToDoItemVisitor.class);
+            visitor.visit(story);
+            return null;
+        }).given(story).accept(any(ToDoItemVisitor.class));
 
         processor.processFor(story);
 
+        then(story).should().accept(any(ToDoItemVisitor.class));
         then(story).should().getStatus();
         then(story).should().getTasks();
         then(story).should().isAssigned();
@@ -115,9 +136,15 @@ class ToDoItemProcessorTest {
         Sprint sprint = mock(Sprint.class);
         Task task = task(DEFINED);
         given(task.getCurrentSprint()).willReturn(sprint);
+        willAnswer(invocationOnMock -> {
+            ToDoItemVisitor visitor = invocationOnMock.getArgument(0, ToDoItemVisitor.class);
+            visitor.visit(task);
+            return null;
+        }).given(task).accept(any(ToDoItemVisitor.class));
 
         processor.processFor(task);
 
+        then(task).should().accept(any(ToDoItemVisitor.class));
         then(task).should().getStatus();
         then(task).should().getCurrentSprint();
         then(sprintBacklogService).should().moveToReadyForDevelopment(task, sprint);
@@ -133,9 +160,15 @@ class ToDoItemProcessorTest {
         Epic epic = epic(DEFINED);
         given(epic.getProject()).willReturn(project);
         given(epic.getId()).willReturn(epicId);
+        willAnswer(invocationOnMock -> {
+            ToDoItemVisitor visitor = invocationOnMock.getArgument(0, ToDoItemVisitor.class);
+            visitor.visit(epic);
+            return null;
+        }).given(epic).accept(any(ToDoItemVisitor.class));
 
         processor.processFor(epic);
 
+        then(epic).should().accept(any(ToDoItemVisitor.class));
         then(epic).should().getStatus();
         then(epic).should().getId();
         then(epic).should().getProject();
@@ -150,9 +183,15 @@ class ToDoItemProcessorTest {
     @Test
     void shouldThrowUnsupportedToDoItemType() {
         ToDoItem toDoItem = toDoItem(DEFINED);
+        willAnswer(invocationOnMock -> {
+            ToDoItemVisitor visitor = invocationOnMock.getArgument(0, ToDoItemVisitor.class);
+            visitor.visit(toDoItem);
+            return null;
+        }).given(toDoItem).accept(any(ToDoItemVisitor.class));
 
         assertThrows(UnsupportedToDoItemType.class, () ->processor.processFor(toDoItem));
 
+        then(toDoItem).should().accept(any(ToDoItemVisitor.class));
         then(toDoItem).should().getStatus();
         verifyNoMoreInteractions(toDoItem, storyService, eventsRegistry, projectBacklogService, communicationService, sprintBacklogService);
     }
