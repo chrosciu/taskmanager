@@ -7,7 +7,7 @@ import com.smalaca.taskamanager.model.embedded.Watcher;
 import com.smalaca.taskamanager.model.enums.ToDoItemStatus;
 import com.smalaca.taskamanager.model.interfaces.ToDoItem;
 
-import com.smalaca.taskamanager.processor.ToDoItemProcessor.ToDoItemVisitor;
+import com.smalaca.taskamanager.visitor.ToDoItemVisitor;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;

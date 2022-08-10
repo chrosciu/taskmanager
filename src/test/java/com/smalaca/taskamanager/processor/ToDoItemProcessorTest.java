@@ -14,7 +14,7 @@ import com.smalaca.taskamanager.model.entities.Story;
 import com.smalaca.taskamanager.model.entities.Task;
 import com.smalaca.taskamanager.model.enums.ToDoItemStatus;
 import com.smalaca.taskamanager.model.interfaces.ToDoItem;
-import com.smalaca.taskamanager.processor.ToDoItemProcessor.ToDoItemVisitor;
+import com.smalaca.taskamanager.visitor.ToDoItemVisitor;
 import com.smalaca.taskamanager.registry.EventsRegistry;
 import com.smalaca.taskamanager.service.CommunicationService;
 import com.smalaca.taskamanager.service.ProjectBacklogService;
