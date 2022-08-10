@@ -64,9 +64,38 @@ public class ToDoItemProcessor {
         }
     }
 
-    private void processDefined(ToDoItem toDoItem) {
-        if (toDoItem instanceof Story) {
-            Story story = (Story) toDoItem;
+    private interface ToDoItemVisitor {
+        void visit(ToDoItem toDoItem);
+        void visit(Epic epic);
+        void visit(Story story);
+        void visit(Task task);
+    }
+
+    private class DefinedToDoItemVisitor implements ToDoItemVisitor {
+        @Override
+        public void visit(ToDoItem toDoItem) {
+            if (toDoItem instanceof Task) {
+                visit((Task)toDoItem);
+            } else if (toDoItem instanceof Epic) {
+                visit((Epic)toDoItem);
+            } else if (toDoItem instanceof Story) {
+                visit((Story)toDoItem);
+            } else {
+                throw new UnsupportedToDoItemType();
+            }
+        }
+
+        @Override
+        public void visit(Epic epic) {
+            projectBacklogService.putOnTop(epic);
+            EpicReadyToPrioritize event = new EpicReadyToPrioritize();
+            event.setEpicId(epic.getId());
+            eventsRegistry.publish(event);
+            communicationService.notify(epic, epic.getProject().getProductOwner());
+        }
+
+        @Override
+        public void visit(Story story) {
             if (story.getTasks().isEmpty()) {
                 projectBacklogService.moveToReadyForDevelopment(story, story.getProject());
             } else {
@@ -74,23 +103,16 @@ public class ToDoItemProcessor {
                     communicationService.notifyTeamsAbout(story, story.getProject());
                 }
             }
-        } else {
-            if (toDoItem instanceof Task) {
-                Task task = (Task) toDoItem;
-                sprintBacklogService.moveToReadyForDevelopment(task, task.getCurrentSprint());
-            } else {
-                if (toDoItem instanceof Epic) {
-                    Epic epic = (Epic) toDoItem;
-                    projectBacklogService.putOnTop(epic);
-                    EpicReadyToPrioritize event = new EpicReadyToPrioritize();
-                    event.setEpicId(epic.getId());
-                    eventsRegistry.publish(event);
-                    communicationService.notify(toDoItem, toDoItem.getProject().getProductOwner());
-                } else {
-                    throw new UnsupportedToDoItemType();
-                }
-            }
         }
+
+        @Override
+        public void visit(Task task) {
+            sprintBacklogService.moveToReadyForDevelopment(task, task.getCurrentSprint());
+        }
+    }
+
+    private void processDefined(ToDoItem toDoItem) {
+        new DefinedToDoItemVisitor().visit(toDoItem);
     }
 
     private void processInProgress(ToDoItem toDoItem) {
