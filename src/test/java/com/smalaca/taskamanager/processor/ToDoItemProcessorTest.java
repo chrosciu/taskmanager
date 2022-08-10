@@ -359,9 +359,15 @@ class ToDoItemProcessorTest {
         long toDoItemId = 42;
         ToDoItem toDoItem = toDoItem(RELEASED);
         given(toDoItem.getId()).willReturn(toDoItemId);
+        willAnswer(invocationOnMock -> {
+            ToDoItemVisitor visitor = invocationOnMock.getArgument(0, ToDoItemVisitor.class);
+            visitor.visit(toDoItem);
+            return null;
+        }).given(toDoItem).accept(any(ToDoItemVisitor.class));
 
         processor.processFor(toDoItem);
 
+        then(toDoItem).should().accept(any(ToDoItemVisitor.class));
         then(toDoItem).should().getStatus();
         then(toDoItem).should().getId();
         ArgumentCaptor<ToDoItemReleasedEvent> captor = ArgumentCaptor.forClass(ToDoItemReleasedEvent.class);
