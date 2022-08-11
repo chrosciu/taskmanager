@@ -69,20 +69,24 @@ public class ToDoItemProcessor {
         void visit(Epic epic);
         void visit(Story story);
         void visit(Task task);
+
+        static void visit(ToDoItemVisitor toDoItemVisitor, ToDoItem toDoItem) {
+            if (toDoItem instanceof Task) {
+                toDoItemVisitor.visit((Task)toDoItem);
+            } else if (toDoItem instanceof Epic) {
+                toDoItemVisitor.visit((Epic)toDoItem);
+            } else if (toDoItem instanceof Story) {
+                toDoItemVisitor.visit((Story)toDoItem);
+            } else {
+                toDoItemVisitor.visit(toDoItem);
+            }
+        }
     }
 
     private class DefinedToDoItemVisitor implements ToDoItemVisitor {
         @Override
         public void visit(ToDoItem toDoItem) {
-            if (toDoItem instanceof Task) {
-                visit((Task)toDoItem);
-            } else if (toDoItem instanceof Epic) {
-                visit((Epic)toDoItem);
-            } else if (toDoItem instanceof Story) {
-                visit((Story)toDoItem);
-            } else {
-                throw new UnsupportedToDoItemType();
-            }
+            throw new UnsupportedToDoItemType();
         }
 
         @Override
@@ -112,7 +116,7 @@ public class ToDoItemProcessor {
     }
 
     private void processDefined(ToDoItem toDoItem) {
-        new DefinedToDoItemVisitor().visit(toDoItem);
+        ToDoItemVisitor.visit(new DefinedToDoItemVisitor(), toDoItem);
     }
 
     private void processInProgress(ToDoItem toDoItem) {
