@@ -1,11 +1,5 @@
 package com.smalaca.taskamanager.processor;
 
-import com.smalaca.taskamanager.events.StoryApprovedEvent;
-import com.smalaca.taskamanager.events.StoryDoneEvent;
-import com.smalaca.taskamanager.events.TaskApprovedEvent;
-import com.smalaca.taskamanager.events.ToDoItemReleasedEvent;
-import com.smalaca.taskamanager.model.entities.Story;
-import com.smalaca.taskamanager.model.entities.Task;
 import com.smalaca.taskamanager.model.interfaces.ToDoItem;
 import com.smalaca.taskamanager.registry.EventsRegistry;
 import com.smalaca.taskamanager.service.CommunicationService;
@@ -16,10 +10,10 @@ import com.smalaca.taskamanager.state.ToDoItemApprovedState;
 import com.smalaca.taskamanager.state.ToDoItemDefinedState;
 import com.smalaca.taskamanager.state.ToDoItemDoneState;
 import com.smalaca.taskamanager.state.ToDoItemInProgressState;
+import com.smalaca.taskamanager.state.ToDoItemNoOpState;
 import com.smalaca.taskamanager.state.ToDoItemReleasedState;
+import com.smalaca.taskamanager.state.ToDoItemState;
 import org.springframework.stereotype.Component;
-
-import static com.smalaca.taskamanager.model.enums.ToDoItemStatus.DONE;
 
 @Component
 public class ToDoItemProcessor {
@@ -39,31 +33,26 @@ public class ToDoItemProcessor {
         this.sprintBacklogService = sprintBacklogService;
     }
 
-    public void processFor(ToDoItem toDoItem) {
+    private ToDoItemState getStateForToDoItem(ToDoItem toDoItem) {
         switch (toDoItem.getStatus()) {
             case DEFINED:
-                new ToDoItemDefinedState(projectBacklogService, communicationService, sprintBacklogService,
-                    eventsRegistry).process(toDoItem);
-                break;
-
+                return new ToDoItemDefinedState(projectBacklogService, communicationService, sprintBacklogService,
+                    eventsRegistry);
             case IN_PROGRESS:
-                new ToDoItemInProgressState(storyService).process(toDoItem);
-                break;
-
+                return new ToDoItemInProgressState(storyService);
             case DONE:
-                new ToDoItemDoneState(eventsRegistry, storyService).process(toDoItem);
-                break;
-
+                return new ToDoItemDoneState(eventsRegistry, storyService);
             case APPROVED:
-                new ToDoItemApprovedState(eventsRegistry, storyService).process(toDoItem);
-                break;
-
+                return new ToDoItemApprovedState(eventsRegistry, storyService);
             case RELEASED:
-                new ToDoItemReleasedState(eventsRegistry).process(toDoItem);
-                break;
-
+                return new ToDoItemReleasedState(eventsRegistry);
             default:
-                break;
+                return new ToDoItemNoOpState();
         }
+    }
+
+    public void processFor(ToDoItem toDoItem) {
+        ToDoItemState toDoItemState = getStateForToDoItem(toDoItem);
+        toDoItemState.process(toDoItem);
     }
 }
