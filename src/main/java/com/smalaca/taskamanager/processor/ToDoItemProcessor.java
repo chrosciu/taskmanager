@@ -12,7 +12,11 @@ import com.smalaca.taskamanager.service.CommunicationService;
 import com.smalaca.taskamanager.service.ProjectBacklogService;
 import com.smalaca.taskamanager.service.SprintBacklogService;
 import com.smalaca.taskamanager.service.StoryService;
+import com.smalaca.taskamanager.state.ToDoItemApprovedState;
 import com.smalaca.taskamanager.state.ToDoItemDefinedState;
+import com.smalaca.taskamanager.state.ToDoItemDoneState;
+import com.smalaca.taskamanager.state.ToDoItemInProgressState;
+import com.smalaca.taskamanager.state.ToDoItemReleasedState;
 import org.springframework.stereotype.Component;
 
 import static com.smalaca.taskamanager.model.enums.ToDoItemStatus.DONE;
@@ -43,73 +47,23 @@ public class ToDoItemProcessor {
                 break;
 
             case IN_PROGRESS:
-                processInProgress(toDoItem);
+                new ToDoItemInProgressState(storyService).process(toDoItem);
                 break;
 
             case DONE:
-                processDone(toDoItem);
+                new ToDoItemDoneState(eventsRegistry, storyService).process(toDoItem);
                 break;
 
             case APPROVED:
-                processApproved(toDoItem);
+                new ToDoItemApprovedState(eventsRegistry, storyService).process(toDoItem);
                 break;
 
             case RELEASED:
-                processReleased(toDoItem);
+                new ToDoItemReleasedState(eventsRegistry).process(toDoItem);
                 break;
 
             default:
                 break;
         }
-    }
-
-    private void processInProgress(ToDoItem toDoItem) {
-        if (toDoItem instanceof Task) {
-            Task task = (Task) toDoItem;
-            storyService.updateProgressOf(task.getStory(), task);
-        }
-    }
-
-    private void processDone(ToDoItem toDoItem) {
-        if (toDoItem instanceof Task) {
-            Task task = (Task) toDoItem;
-            Story story = task.getStory();
-            storyService.updateProgressOf(task.getStory(), task);
-            if (DONE.equals(story.getStatus())) {
-                StoryDoneEvent event = new StoryDoneEvent();
-                event.setStoryId(story.getId());
-                eventsRegistry.publish(event);
-            }
-        } else if (toDoItem instanceof Story) {
-            Story story = (Story) toDoItem;
-            StoryDoneEvent event = new StoryDoneEvent();
-            event.setStoryId(story.getId());
-            eventsRegistry.publish(event);
-        }
-    }
-
-    private void processApproved(ToDoItem toDoItem) {
-        if (toDoItem instanceof Story) {
-            Story story = (Story) toDoItem;
-            StoryApprovedEvent event = new StoryApprovedEvent();
-            event.setStoryId(story.getId());
-            eventsRegistry.publish(event);
-        } else if (toDoItem instanceof Task) {
-            Task task = (Task) toDoItem;
-
-            if (task.isSubtask()) {
-                TaskApprovedEvent event = new TaskApprovedEvent();
-                event.setTaskId(task.getId());
-                eventsRegistry.publish(event);
-            } else {
-                storyService.attachPartialApprovalFor(task.getStory().getId(), task.getId());
-            }
-        }
-    }
-
-    private void processReleased(ToDoItem toDoItem) {
-        ToDoItemReleasedEvent event = new ToDoItemReleasedEvent();
-        event.setToDoItemId(toDoItem.getId());
-        eventsRegistry.publish(event);
     }
 }
