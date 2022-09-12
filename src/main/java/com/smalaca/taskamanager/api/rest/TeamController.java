@@ -7,6 +7,7 @@ import com.smalaca.taskamanager.dto.TeamMembersDto;
 import com.smalaca.taskamanager.exception.TeamNotFoundException;
 import com.smalaca.taskamanager.model.embedded.Codename;
 import com.smalaca.taskamanager.model.entities.Team;
+import com.smalaca.taskamanager.model.entities.TeamFactory;
 import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.repository.TeamRepository;
 import com.smalaca.taskamanager.repository.UserRepository;
@@ -36,10 +37,12 @@ import static java.util.stream.Collectors.toList;
 public class TeamController {
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
+    private final TeamFactory teamFactory;
 
     public TeamController(TeamRepository teamRepository, UserRepository userRepository) {
         this.teamRepository = teamRepository;
         this.userRepository = userRepository;
+        this.teamFactory = new TeamFactory();
     }
 
     @GetMapping
@@ -69,8 +72,7 @@ public class TeamController {
         if (teamRepository.findByName(teamDto.getName()).isPresent()) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         } else {
-            Team team = new Team();
-            team.setName(teamDto.getName());
+            Team team = teamFactory.create(teamDto);
             Team saved = teamRepository.save(team);
 
             HttpHeaders headers = new HttpHeaders();
