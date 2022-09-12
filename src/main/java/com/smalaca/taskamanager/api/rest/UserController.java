@@ -4,8 +4,8 @@ import com.smalaca.taskamanager.dto.UserDto;
 import com.smalaca.taskamanager.exception.UserNotFoundException;
 import com.smalaca.taskamanager.model.embedded.EmailAddress;
 import com.smalaca.taskamanager.model.embedded.PhoneNumber;
-import com.smalaca.taskamanager.model.embedded.UserName;
 import com.smalaca.taskamanager.model.entities.User;
+import com.smalaca.taskamanager.model.entities.UserFactory;
 import com.smalaca.taskamanager.model.enums.TeamRole;
 import com.smalaca.taskamanager.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +31,12 @@ import java.util.Optional;
 @SuppressWarnings("checkstyle:ClassFanOutComplexity")
 public class UserController {
     private final UserRepository userRepository;
+    private final UserFactory userFactory;
 
     @Autowired
     public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
+        this.userFactory = new UserFactory();
     }
 
     @GetMapping
@@ -66,12 +68,7 @@ public class UserController {
         if (exists(userDto)) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         } else {
-            User user = new User();
-            user.setTeamRole(userDto.asTeamRole());
-            UserName userName = new UserName(userDto.getFirstName(), userDto.getLastName());
-            user.setUserName(userName);
-            user.setLogin(userDto.getLogin());
-            user.setPassword(userDto.getPassword());
+            User user = userFactory.create(userDto);
 
             User saved = userRepository.save(user);
 
