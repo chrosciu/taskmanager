@@ -1,21 +1,13 @@
-package com.smalaca.taskamanager.service;
+package com.smalaca.taskamanager.strategy;
 
-import com.smalaca.taskamanager.infrastructure.enums.CommunicatorType;
 import com.smalaca.taskamanager.model.embedded.Owner;
 import com.smalaca.taskamanager.model.embedded.Stakeholder;
 import com.smalaca.taskamanager.model.embedded.Watcher;
 import com.smalaca.taskamanager.model.entities.ProductOwner;
-import com.smalaca.taskamanager.model.entities.Project;
-import com.smalaca.taskamanager.model.entities.Team;
 import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.model.interfaces.ToDoItem;
-import com.smalaca.taskamanager.strategy.CommunicationStrategy;
 
-public interface CommunicationService {
-    @Deprecated
-    void setType(CommunicatorType type);
-
-    void setCommunicationStrategy(CommunicationStrategy communicationStrategy);
+public interface CommunicationStrategy {
 
     void notify(ToDoItem toDoItem, ProductOwner productOwner);
 
@@ -26,8 +18,4 @@ public interface CommunicationService {
     void notify(ToDoItem toDoItem, User user);
 
     void notify(ToDoItem toDoItem, Stakeholder stakeholder);
-
-    void notify(ToDoItem toDoItem, Team team);
-
-    void notifyTeamsAbout(ToDoItem toDoItem, Project project);
 }
