@@ -33,12 +33,6 @@
     <lombok.version>1.18.16</lombok.version>
   </properties>
 
-  <scm>
-    <url>https://github.com/smalaca/legacy-code-task-manager</url>
-    <connection>scm:git:https://github.com/smalaca/legacy-code-task-manager.git</connection>
-    <developerConnection>scm:git:https://github.com/smalaca/legacy-code-task-manager.git</developerConnection>
-  </scm>
-
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -135,6 +129,13 @@
   <profiles>
     <profile>
       <id>runtime-analysis</id>
+
+      <properties>
+        <sonar.organization>chrosciu</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.coverage.jacoco.xmlReportPaths>target/jacoco/jacoco-ut/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+      </properties>
+
       <build>
         <plugins>
           <plugin>
@@ -188,12 +189,12 @@
                         <limit>
                           <counter>LINE</counter>
                           <value>COVEREDRATIO</value>
-                          <minimum>1.00</minimum>
+                          <minimum>0.80</minimum>
                         </limit>
                         <limit>
                           <counter>CLASS</counter>
                           <value>MISSEDCOUNT</value>
-                          <maximum>0</maximum>
+                          <maximum>20</maximum>
                         </limit>
                       </limits>
                     </rule>
