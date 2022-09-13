@@ -53,7 +53,6 @@ public class TeamController {
         List<TeamDto> teams = StreamSupport.stream(teamRepository.findAll().spliterator(), false)
                 .map(Team::asTeamDto)
                 .collect(toList());
-
         return new ResponseEntity<>(teams, HttpStatus.OK);
     }
 
