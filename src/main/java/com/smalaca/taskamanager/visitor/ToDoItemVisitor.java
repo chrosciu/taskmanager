@@ -4,7 +4,6 @@ import com.smalaca.taskamanager.model.entities.Epic;
 import com.smalaca.taskamanager.model.entities.Story;
 import com.smalaca.taskamanager.model.entities.Task;
 import com.smalaca.taskamanager.model.interfaces.ToDoItem;
-import com.smalaca.taskamanager.state.ToDoItemApprovedState;
 
 public interface ToDoItemVisitor {
 
