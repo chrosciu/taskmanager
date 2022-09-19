@@ -6,13 +6,14 @@ import com.smalaca.taskamanager.service.CommunicationService;
 import com.smalaca.taskamanager.service.ProjectBacklogService;
 import com.smalaca.taskamanager.service.SprintBacklogService;
 import com.smalaca.taskamanager.service.StoryService;
-import com.smalaca.taskamanager.state.ToDoItemApprovedState;
 import com.smalaca.taskamanager.state.ToDoItemDefinedState;
 import com.smalaca.taskamanager.state.ToDoItemDoneState;
 import com.smalaca.taskamanager.state.ToDoItemInProgressState;
 import com.smalaca.taskamanager.state.ToDoItemNoOpState;
 import com.smalaca.taskamanager.state.ToDoItemReleasedState;
 import com.smalaca.taskamanager.state.ToDoItemState;
+import com.smalaca.taskamanager.state.ToDoItemVisitorState;
+import com.smalaca.taskamanager.visitor.ToDoItemApprovedStateVisitor;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,7 +21,7 @@ public class ToDoItemProcessor {
     private final ToDoItemDefinedState toDoItemDefinedState;
     private final ToDoItemInProgressState toDoItemInProgressState;
     private final ToDoItemDoneState toDoItemDoneState;
-    private final ToDoItemApprovedState toDoItemApprovedState;
+    private final ToDoItemState toDoItemApprovedState;
     private final ToDoItemReleasedState toDoItemReleasedState;
     private final ToDoItemNoOpState toDoItemNoOpState;
 
@@ -32,7 +33,7 @@ public class ToDoItemProcessor {
             eventsRegistry);
         toDoItemInProgressState = new ToDoItemInProgressState(storyService);
         toDoItemDoneState = new ToDoItemDoneState(eventsRegistry, storyService);
-        toDoItemApprovedState = new ToDoItemApprovedState(eventsRegistry, storyService);
+        toDoItemApprovedState = new ToDoItemVisitorState(new ToDoItemApprovedStateVisitor(eventsRegistry, storyService));
         toDoItemReleasedState = new ToDoItemReleasedState(eventsRegistry);
         toDoItemNoOpState = new ToDoItemNoOpState();
     }
