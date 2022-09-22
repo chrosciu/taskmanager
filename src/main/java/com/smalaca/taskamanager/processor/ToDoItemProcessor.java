@@ -30,7 +30,7 @@ public class ToDoItemProcessor {
         toDoItemDefinedState = new ToDoItemDefinedState(projectBacklogService, communicationService,
             sprintBacklogService,
             eventsRegistry);
-        toDoItemInProgressState = new ToDoItemInProgressState(storyService);;
+        toDoItemInProgressState = new ToDoItemInProgressState(storyService);
         toDoItemDoneState = new ToDoItemDoneState(eventsRegistry, storyService);
         toDoItemApprovedState = new ToDoItemApprovedState(eventsRegistry, storyService);
         toDoItemReleasedState = new ToDoItemReleasedState(eventsRegistry);
