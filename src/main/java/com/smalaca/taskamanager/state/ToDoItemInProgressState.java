@@ -1,22 +1,19 @@
 package com.smalaca.taskamanager.state;
 
-import com.smalaca.taskamanager.model.entities.Task;
 import com.smalaca.taskamanager.model.interfaces.ToDoItem;
 import com.smalaca.taskamanager.service.StoryService;
+import com.smalaca.taskamanager.visitor.ToDoItemInProgressStateVisitor;
+import com.smalaca.taskamanager.visitor.ToDoItemVisitor;
 
 public class ToDoItemInProgressState implements ToDoItemState {
-
-    private final StoryService storyService;
+    private final ToDoItemInProgressStateVisitor toDoItemVisitor;
 
     public ToDoItemInProgressState(StoryService storyService) {
-        this.storyService = storyService;
+        this.toDoItemVisitor = new ToDoItemInProgressStateVisitor(storyService);
     }
 
     @Override
     public void process(ToDoItem toDoItem) {
-        if (toDoItem instanceof Task) {
-            Task task = (Task) toDoItem;
-            storyService.updateProgressOf(task.getStory(), task);
-        }
+        ToDoItemVisitor.visit(toDoItemVisitor, toDoItem);
     }
 }
