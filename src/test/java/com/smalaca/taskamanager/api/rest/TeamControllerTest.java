@@ -1,16 +1,5 @@
 package com.smalaca.taskamanager.api.rest;
 
-import com.smalaca.taskamanager.dto.TeamDto;
-import com.smalaca.taskamanager.dto.TeamMembersDto;
-import com.smalaca.taskamanager.model.entities.User;
-import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.List;
-import java.util.UUID;
-
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.CONFLICT;
@@ -18,6 +7,16 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.util.UriComponentsBuilder.fromUriString;
+
+import com.smalaca.taskamanager.dto.TeamDto;
+import com.smalaca.taskamanager.dto.TeamMembersDto;
+import com.smalaca.taskamanager.model.entities.User;
+import java.util.List;
+import java.util.UUID;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.util.UriComponentsBuilder;
 
 class TeamControllerTest {
     private static final Long EXISTING_TEAM_ID = 1L;
@@ -70,8 +69,7 @@ class TeamControllerTest {
     @Test
     void shouldInformAboutConflictWhenCreatedTeamAlreadyExists() {
         UriComponentsBuilder uriComponentsBuilder = null;
-        TeamDto existing = new TeamDto();
-        existing.setName(EXISTING_TEAM_NAME);
+        TeamDto existing = TeamDto.builder().name(EXISTING_TEAM_NAME).build();
 
         ResponseEntity<Void> response = controller.createTeam(existing, uriComponentsBuilder);
 
@@ -80,8 +78,7 @@ class TeamControllerTest {
 
     @Test
     void shouldCreateTeam() {
-        TeamDto teamDto = new TeamDto();
-        teamDto.setName("Invaders");
+        TeamDto teamDto = TeamDto.builder().name("Invaders").build();
         UriComponentsBuilder uriComponentsBuilder = fromUriString("/");
 
         ResponseEntity<Void> response = controller.createTeam(teamDto, uriComponentsBuilder);
@@ -107,7 +104,7 @@ class TeamControllerTest {
 
     @Test
     void shouldNotUpdateAnythingWhenNoChangesSend() {
-        ResponseEntity<TeamDto> response = controller.updateTeam(EXISTING_TEAM_ID, new TeamDto());
+        ResponseEntity<TeamDto> response = controller.updateTeam(EXISTING_TEAM_ID, TeamDto.builder().build());
 
         assertThat(response.getStatusCode()).isEqualTo(OK);
         assertTeam(controller.findById(EXISTING_TEAM_ID).getBody());
@@ -128,11 +125,11 @@ class TeamControllerTest {
         String newCodenameShort = randomString();
         String newCodenameFull = randomString();
         String newDescription = randomString();
-        TeamDto dto = new TeamDto();
-        dto.setName(newName);
-        dto.setCodenameShort(newCodenameShort);
-        dto.setCodenameFull(newCodenameFull);
-        dto.setDescription(newDescription);
+        TeamDto dto = TeamDto.builder()
+            .name(newName)
+            .codename(newCodenameShort, newCodenameFull)
+            .description(newDescription)
+            .build();
 
         ResponseEntity<TeamDto> response = controller.updateTeam(EXISTING_TEAM_ID, dto);
 
