@@ -1,15 +1,14 @@
 package com.smalaca.taskamanager.domain;
 
+import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.smalaca.taskamanager.model.embedded.Codename;
+import java.math.BigDecimal;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import java.math.BigDecimal;
-import java.util.List;
-
-import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
 
 class CodenameTest {
     private static final String SHORT_NAME = "FF";
@@ -54,9 +53,7 @@ class CodenameTest {
     }
 
     private static Codename codename(String shortName, String fullName) {
-        Codename codename = new Codename();
-        codename.setShortName(shortName);
-        codename.setFullName(fullName);
+        Codename codename = new Codename(shortName, fullName);
         return codename;
     }
 }

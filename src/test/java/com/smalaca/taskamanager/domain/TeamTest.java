@@ -1,28 +1,25 @@
 package com.smalaca.taskamanager.domain;
 
+import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import com.smalaca.taskamanager.model.embedded.Codename;
 import com.smalaca.taskamanager.model.embedded.UserName;
 import com.smalaca.taskamanager.model.entities.Team;
 import com.smalaca.taskamanager.model.entities.User;
+import java.math.BigDecimal;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import java.math.BigDecimal;
-import java.util.List;
-
-import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TeamTest {
     @Test
     void shouldCreateTeam() {
         Team actual = new Team();
         actual.setName("Avengers");
-        Codename codename = new Codename();
-        codename.setShortName("A");
-        codename.setFullName("Mighty Avengers");
+        Codename codename = new Codename("A", "Mighty Avengers");
         actual.setCodename(codename);
         actual.setDescription("Some fancy description");
 
@@ -122,9 +119,7 @@ class TeamTest {
     private static Team differentTeam() {
         Team team = new Team();
         team.setName("X-Men");
-        Codename codename = new Codename();
-        codename.setShortName("X");
-        codename.setFullName("XM");
+        Codename codename = new Codename("X", "XM");
         team.setCodename(codename);
         team.setDescription("Mutants");
         return team;

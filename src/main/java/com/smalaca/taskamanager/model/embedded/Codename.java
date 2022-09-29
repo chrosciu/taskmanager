@@ -7,6 +7,13 @@ public class Codename {
     private String shortName;
     private String fullName;
 
+    public Codename(String shortName, String fullName) {
+        this.shortName = shortName;
+        this.fullName = fullName;
+    }
+
+    private Codename() {}
+
     public String getShortName() {
         return shortName;
     }

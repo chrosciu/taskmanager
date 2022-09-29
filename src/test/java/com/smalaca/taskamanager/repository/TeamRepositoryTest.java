@@ -1,16 +1,15 @@
 package com.smalaca.taskamanager.repository;
 
+import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.smalaca.taskamanager.model.embedded.Codename;
 import com.smalaca.taskamanager.model.entities.Team;
+import java.util.function.Predicate;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
-import java.util.function.Predicate;
-
-import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 class TeamRepositoryTest {
@@ -68,9 +67,7 @@ class TeamRepositoryTest {
     private Team team(String name, String codenameShort, String codenameFull, String description) {
         Team team = new Team();
         team.setName(name);
-        Codename codename = new Codename();
-        codename.setShortName(codenameShort);
-        codename.setFullName(codenameFull);
+        Codename codename = new Codename(codenameShort, codenameFull);
         team.setCodename(codename);
         team.setDescription(description);
         return team;
