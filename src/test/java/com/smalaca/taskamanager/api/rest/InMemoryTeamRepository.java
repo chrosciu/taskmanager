@@ -1,16 +1,15 @@
 package com.smalaca.taskamanager.api.rest;
 
+import static java.util.List.copyOf;
+
 import com.smalaca.taskamanager.model.embedded.Codename;
 import com.smalaca.taskamanager.model.entities.Team;
 import com.smalaca.taskamanager.repository.TeamRepository;
-import org.apache.commons.lang3.RandomUtils;
-
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
-import static java.util.List.copyOf;
+import org.apache.commons.lang3.RandomUtils;
 
 class InMemoryTeamRepository implements TeamRepository {
     private final Map<Long, Team> teams = new HashMap<>();
@@ -26,9 +25,7 @@ class InMemoryTeamRepository implements TeamRepository {
     private Team createTeam(long id, String name, String codenameShort, String codenameFull, String description) {
         Team team = new Team();
         team.setName(name);
-        Codename codename = new Codename();
-        codename.setShortName(codenameShort);
-        codename.setFullName(codenameFull);
+        Codename codename = new Codename(codenameShort, codenameFull);
         team.setCodename(codename);
         team.setDescription(description);
         setId(id, team);
