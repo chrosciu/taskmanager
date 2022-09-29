@@ -31,6 +31,7 @@ public class TeamDto {
         return codenameShort;
     }
 
+    @Deprecated
     public void setCodenameShort(String codenameShort) {
         this.codenameShort = codenameShort;
     }
@@ -39,6 +40,7 @@ public class TeamDto {
         return codenameFull;
     }
 
+    @Deprecated
     public void setCodenameFull(String codenameFull) {
         this.codenameFull = codenameFull;
     }
@@ -57,5 +59,10 @@ public class TeamDto {
 
     public void setUserIds(List<Long> userIds) {
         this.userIds = userIds;
+    }
+
+    public void setCodename(String codenameShort, String codenameFull) {
+        this.codenameShort = codenameShort;
+        this.codenameFull = codenameFull;
     }
 }
