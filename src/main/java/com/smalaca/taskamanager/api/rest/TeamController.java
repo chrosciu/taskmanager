@@ -1,6 +1,8 @@
 package com.smalaca.taskamanager.api.rest;
 
 
+import static java.util.stream.Collectors.toList;
+
 import com.google.common.collect.Iterables;
 import com.smalaca.taskamanager.dto.TeamDto;
 import com.smalaca.taskamanager.dto.TeamMembersDto;
@@ -10,6 +12,9 @@ import com.smalaca.taskamanager.model.entities.Team;
 import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.repository.TeamRepository;
 import com.smalaca.taskamanager.repository.UserRepository;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.StreamSupport;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +28,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.StreamSupport;
-
-import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequestMapping("/team")
@@ -67,8 +66,10 @@ public class TeamController {
     @GetMapping("/{id}")
     @Transactional
     public ResponseEntity<TeamDto> findById(@PathVariable Long id) {
-        try {
-            Team team = getTeamById(id);
+        Optional<Team> foundTeam = teamRepository.findById(id);
+
+        if (foundTeam.isPresent()) {
+            Team team = foundTeam.get();
             TeamDto dto = new TeamDto();
             dto.setId(team.getId());
             dto.setName(team.getName());
@@ -82,7 +83,7 @@ public class TeamController {
             dto.setUserIds(team.getMembers().stream().map(User::getId).collect(toList()));
 
             return new ResponseEntity<>(dto, HttpStatus.OK);
-        } catch (TeamNotFoundException exception) {
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
