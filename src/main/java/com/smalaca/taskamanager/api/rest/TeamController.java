@@ -75,11 +75,12 @@ public class TeamController {
             dto.setName(team.getName());
 
             if (team.hasCodename()) {
-                dto.setCodename(team.getCodename().getShortName(), team.getCodename().getFullName());
+                dto.setCodename(team.getCodenameShort(), team.getCodenameFull());
             }
 
             dto.setDescription(team.getDescription());
-            dto.setUserIds(team.getMembers().stream().map(User::getId).collect(toList()));
+            List<User> members = team.getMembers();
+            dto.setUserIds(members.stream().map(User::getId).collect(toList()));
 
             return new ResponseEntity<>(dto, HttpStatus.OK);
         } else {
