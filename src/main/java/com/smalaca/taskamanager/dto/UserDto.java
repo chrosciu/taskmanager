@@ -1,5 +1,7 @@
 package com.smalaca.taskamanager.dto;
 
+import com.smalaca.taskamanager.model.enums.TeamRole;
+
 public class UserDto {
     private Long id;
     private String firstName;
@@ -81,5 +83,9 @@ public class UserDto {
 
     public void setTeamRole(String teamRole) {
         this.teamRole = teamRole;
+    }
+
+    public TeamRole asTeamRole() {
+        return TeamRole.valueOf(getTeamRole());
     }
 }

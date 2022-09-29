@@ -1,28 +1,5 @@
 package com.smalaca.taskamanager.api.rest;
 
-import com.google.common.collect.ImmutableList;
-import com.smalaca.taskamanager.dto.UserDto;
-import com.smalaca.taskamanager.model.embedded.EmailAddress;
-import com.smalaca.taskamanager.model.embedded.PhoneNumber;
-import com.smalaca.taskamanager.model.embedded.UserName;
-import com.smalaca.taskamanager.model.entities.User;
-import com.smalaca.taskamanager.model.enums.TeamRole;
-import com.smalaca.taskamanager.repository.UserRepository;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.lang.reflect.Field;
-import java.net.URI;
-import java.util.List;
-import java.util.Optional;
-
 import static com.smalaca.taskamanager.model.enums.TeamRole.BUSINESS_ANALYSIS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -36,7 +13,31 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
+import com.google.common.collect.ImmutableList;
+import com.smalaca.taskamanager.dto.UserDto;
+import com.smalaca.taskamanager.model.embedded.EmailAddress;
+import com.smalaca.taskamanager.model.embedded.PhoneNumber;
+import com.smalaca.taskamanager.model.embedded.UserName;
+import com.smalaca.taskamanager.model.entities.User;
+import com.smalaca.taskamanager.model.enums.TeamRole;
+import com.smalaca.taskamanager.repository.UserRepository;
+import java.lang.reflect.Field;
+import java.net.URI;
+import java.util.List;
+import java.util.Optional;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
+
 @ExtendWith(MockitoExtension.class)
+@Disabled("No diagnostic value")
 class UserControllerMockTest {
     private static final User DUMMY_USER_1 = dummyUser();
     private static final User DUMMY_USER_2 = dummyUser();
