@@ -79,8 +79,7 @@ public class TeamController {
             }
 
             dto.setDescription(team.getDescription());
-            List<User> members = team.getMembers();
-            dto.setUserIds(members.stream().map(User::getId).collect(toList()));
+            dto.setUserIds(team.getMemberIds());
 
             return new ResponseEntity<>(dto, HttpStatus.OK);
         } else {
