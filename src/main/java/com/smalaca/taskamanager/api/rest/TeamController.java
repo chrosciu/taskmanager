@@ -13,6 +13,7 @@ import com.smalaca.taskamanager.model.entities.TeamFactory;
 import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.repository.TeamRepository;
 import com.smalaca.taskamanager.repository.UserRepository;
+import com.smalaca.taskmanager.team.command.TeamCommands;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -70,7 +71,7 @@ public class TeamController {
 
     @PostMapping
     public ResponseEntity<Void> createTeam(@RequestBody TeamDto teamDto, UriComponentsBuilder uriComponentsBuilder) {
-        Optional<Long> id = createTeam(teamDto);
+        Optional<Long> id = new TeamCommands(teamRepository, teamFactory).create(teamDto);
 
         if (id.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -78,17 +79,6 @@ public class TeamController {
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(uriComponentsBuilder.path("/team/{id}").buildAndExpand(id.get()).toUri());
             return new ResponseEntity<>(headers, HttpStatus.CREATED);
-        }
-    }
-
-    private Optional<Long> createTeam(TeamDto teamDto) {
-        Optional<Team> foundTeam = teamRepository.findByName(teamDto.getName());
-        if (foundTeam.isEmpty()) {
-            Team team = teamFactory.createTeam(teamDto);
-            Team saved = teamRepository.save(team);
-            return Optional.of(saved.getId());
-        } else {
-            return Optional.empty();
         }
     }
 
