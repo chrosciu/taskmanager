@@ -30,6 +30,7 @@ public class CommunicationServiceImpl implements CommunicationService {
     private final SmsCommunicatorClient smsCommunicator;
     private final MailClient mailClient;
     private CommunicatorType type;
+    private CommunicationStrategy communicationStrategy;
 
     public CommunicationServiceImpl(
             ProjectBacklogService projectBacklogService, DevNullDirectory devNullDirectory, ChatClient chat,
@@ -41,99 +42,163 @@ public class CommunicationServiceImpl implements CommunicationService {
         this.mailClient = mailClient;
     }
 
-
     public void setType(CommunicatorType type) {
         this.type = type;
+        this.communicationStrategy = new LegacyCommunicationStrategy();
     }
 
-    @SuppressWarnings("MissingSwitchDefault")
+    private interface CommunicationStrategy {
+        void notify(ToDoItem toDoItem, ProductOwner productOwner);
+
+        void notify(ToDoItem toDoItem, Owner owner);
+
+        void notify(ToDoItem toDoItem, Watcher watcher);
+
+        void notify(ToDoItem toDoItem, User user);
+
+        void notify(ToDoItem toDoItem, Stakeholder stakeholder);
+    }
+
+    private class LegacyCommunicationStrategy implements CommunicationStrategy {
+
+        @SuppressWarnings("MissingSwitchDefault")
+        @Override
+        public void notify(ToDoItem toDoItem, ProductOwner productOwner) {
+            switch (type) {
+                case MAIL:
+                    notifyAbout(toDoItem, productOwner.getEmailAddress());
+                    break;
+                case SMS:
+                    notifyAbout(toDoItem, productOwner.getPhoneNumber());
+                    break;
+                case DIRECT:
+                    notifyAbout(toDoItem, productOwner.getFirstName() + SEPARATOR + productOwner.getLastName());
+                    break;
+                case NULL_TYPE:
+                    notifyAbout();
+                    break;
+            }
+        }
+
+        @SuppressWarnings("MissingSwitchDefault")
+        @Override
+        public void notify(ToDoItem toDoItem, Owner owner) {
+            switch (type) {
+                case SMS:
+                    notifyAbout(toDoItem, owner.getPhoneNumber());
+                    break;
+                case MAIL:
+                    notifyAbout(toDoItem, owner.getEmailAddress());
+                    break;
+                case DIRECT:
+                    notifyAbout(toDoItem, owner.getFirstName() + SEPARATOR + owner.getLastName());
+                    break;
+                case NULL_TYPE:
+                    notifyAbout();
+                    break;
+            }
+        }
+
+        @SuppressWarnings("MissingSwitchDefault")
+        @Override
+        public void notify(ToDoItem toDoItem, Watcher watcher) {
+            switch (type) {
+                case SMS:
+                    notifyAbout(toDoItem, watcher.getPhoneNumber());
+                    break;
+                case DIRECT:
+                    notifyAbout(toDoItem, watcher.getFirstName() + SEPARATOR + watcher.getLastName());
+                    break;
+                case MAIL:
+                    notifyAbout(toDoItem, watcher.getEmailAddress());
+                    break;
+                case NULL_TYPE:
+                    notifyAbout();
+                    break;
+            }
+        }
+
+        @SuppressWarnings("MissingSwitchDefault")
+        @Override
+        public void notify(ToDoItem toDoItem, User user) {
+            switch (type) {
+                case SMS:
+                    notifyAbout(toDoItem, user.getPhoneNumber());
+                    break;
+                case DIRECT:
+                    notifyAbout(toDoItem, user.getLogin());
+                    break;
+                case MAIL:
+                    notifyAbout(toDoItem, user.getEmailAddress());
+                    break;
+                case NULL_TYPE:
+                    notifyAbout();
+                    break;
+            }
+        }
+
+        @SuppressWarnings("MissingSwitchDefault")
+        @Override
+        public void notify(ToDoItem toDoItem, Stakeholder stakeholder) {
+            switch (type) {
+                case DIRECT:
+                    notifyAbout(toDoItem, stakeholder.getFirstName() + SEPARATOR + stakeholder.getLastName());
+                    break;
+                case SMS:
+                    notifyAbout(toDoItem, stakeholder.getPhoneNumber());
+                    break;
+                case MAIL:
+                    notifyAbout(toDoItem, stakeholder.getEmailAddress());
+                    break;
+                case NULL_TYPE:
+                    notifyAbout();
+                    break;
+            }
+        }
+
+        private void notifyAbout() {
+            devNullDirectory.forget();
+        }
+
+        private void notifyAbout(ToDoItem toDoItem, String userName) {
+            ChatRoom chatRoom = chat.connectWith(userName);
+            chatRoom.send(projectBacklogService.linkFor(toDoItem.getId()));
+        }
+
+        private void notifyAbout(ToDoItem toDoItem, PhoneNumber phoneNumber) {
+            smsCommunicator.textTo(phoneNumber, projectBacklogService.linkFor(toDoItem.getId()));
+        }
+
+        private void notifyAbout(ToDoItem toDoItem, EmailAddress emailAddress) {
+            User loggedUser = SessionHolder.instance().logged();
+            Mail mail = new Mail();
+            mail.setFrom(loggedUser.getEmailAddress());
+            mail.setTo(emailAddress);
+            mail.setTopic("NOTIFICATION ABOUT: " + toDoItem.getId());
+            mail.setContent(String.valueOf(toDoItem.getId()));
+
+            mailClient.send(mail);
+        }
+    }
+
     public void notify(ToDoItem toDoItem, ProductOwner productOwner) {
-        switch (type) {
-            case MAIL:
-                notifyAbout(toDoItem, productOwner.getEmailAddress());
-                break;
-            case SMS:
-                notifyAbout(toDoItem, productOwner.getPhoneNumber());
-                break;
-            case DIRECT:
-                notifyAbout(toDoItem, productOwner.getFirstName() + SEPARATOR + productOwner.getLastName());
-                break;
-            case NULL_TYPE:
-                notifyAbout();
-                break;
-        }
+        communicationStrategy.notify(toDoItem, productOwner);
     }
 
-    @SuppressWarnings("MissingSwitchDefault")
     public void notify(ToDoItem toDoItem, Owner owner) {
-        switch (type) {
-            case SMS:
-                notifyAbout(toDoItem, owner.getPhoneNumber());
-                break;
-            case MAIL:
-                notifyAbout(toDoItem, owner.getEmailAddress());
-                break;
-            case DIRECT:
-                notifyAbout(toDoItem, owner.getFirstName() + SEPARATOR + owner.getLastName());
-                break;
-            case NULL_TYPE:
-                notifyAbout();
-                break;
-        }
+        communicationStrategy.notify(toDoItem, owner);
     }
 
-    @SuppressWarnings("MissingSwitchDefault")
     public void notify(ToDoItem toDoItem, Watcher watcher) {
-        switch (type) {
-            case SMS:
-                notifyAbout(toDoItem, watcher.getPhoneNumber());
-                break;
-            case DIRECT:
-                notifyAbout(toDoItem, watcher.getFirstName() + SEPARATOR + watcher.getLastName());
-                break;
-            case MAIL:
-                notifyAbout(toDoItem, watcher.getEmailAddress());
-                break;
-            case NULL_TYPE:
-                notifyAbout();
-                break;
-        }
+        communicationStrategy.notify(toDoItem, watcher);
     }
 
-    @SuppressWarnings("MissingSwitchDefault")
     public void notify(ToDoItem toDoItem, User user) {
-        switch (type) {
-            case SMS:
-                notifyAbout(toDoItem, user.getPhoneNumber());
-                break;
-            case DIRECT:
-                notifyAbout(toDoItem, user.getLogin());
-                break;
-            case MAIL:
-                notifyAbout(toDoItem, user.getEmailAddress());
-                break;
-            case NULL_TYPE:
-                notifyAbout();
-                break;
-        }
+        communicationStrategy.notify(toDoItem, user);
     }
 
-    @SuppressWarnings("MissingSwitchDefault")
     public void notify(ToDoItem toDoItem, Stakeholder stakeholder) {
-        switch (type) {
-            case DIRECT:
-                notifyAbout(toDoItem, stakeholder.getFirstName() + SEPARATOR + stakeholder.getLastName());
-                break;
-            case SMS:
-                notifyAbout(toDoItem, stakeholder.getPhoneNumber());
-                break;
-            case MAIL:
-                notifyAbout(toDoItem, stakeholder.getEmailAddress());
-                break;
-            case NULL_TYPE:
-                notifyAbout();
-                break;
-        }
+        communicationStrategy.notify(toDoItem, stakeholder);
     }
 
     public void notifyTeamsAbout(ToDoItem toDoItem, Project project) {
@@ -148,27 +213,5 @@ public class CommunicationServiceImpl implements CommunicationService {
         }
     }
 
-    private void notifyAbout() {
-        devNullDirectory.forget();
-    }
 
-    private void notifyAbout(ToDoItem toDoItem, String userName) {
-        ChatRoom chatRoom = chat.connectWith(userName);
-        chatRoom.send(projectBacklogService.linkFor(toDoItem.getId()));
-    }
-
-    private void notifyAbout(ToDoItem toDoItem, PhoneNumber phoneNumber) {
-        smsCommunicator.textTo(phoneNumber, projectBacklogService.linkFor(toDoItem.getId()));
-    }
-
-    private void notifyAbout(ToDoItem toDoItem, EmailAddress emailAddress) {
-        User loggedUser = SessionHolder.instance().logged();
-        Mail mail = new Mail();
-        mail.setFrom(loggedUser.getEmailAddress());
-        mail.setTo(emailAddress);
-        mail.setTopic("NOTIFICATION ABOUT: " + toDoItem.getId());
-        mail.setContent(String.valueOf(toDoItem.getId()));
-
-        mailClient.send(mail);
-    }
 }
