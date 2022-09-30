@@ -36,12 +36,14 @@ public class TeamController {
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
     private final TeamFactory teamFactory;
+    private final TeamCommandFacade teamCommandFacade;
     private final TeamQueryFacade teamQueryFacade;
 
     public TeamController(TeamRepository teamRepository, UserRepository userRepository) {
         this.teamRepository = teamRepository;
         this.userRepository = userRepository;
         this.teamFactory = new TeamFactory();
+        teamCommandFacade = new TeamCommandFacade(teamRepository, teamFactory);
         teamQueryFacade = new TeamQueryFacade(teamRepository);
     }
 
@@ -62,7 +64,7 @@ public class TeamController {
 
     @PostMapping
     public ResponseEntity<Void> createTeam(@RequestBody TeamDto teamDto, UriComponentsBuilder uriComponentsBuilder) {
-        Optional<Long> id = new TeamCommandFacade(teamRepository, teamFactory).create(teamDto);
+        Optional<Long> id = teamCommandFacade.create(teamDto);
 
         if (id.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
