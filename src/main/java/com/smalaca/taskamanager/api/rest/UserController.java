@@ -29,15 +29,13 @@ import java.util.Optional;
 @SuppressWarnings("checkstyle:ClassFanOutComplexity")
 public class UserController {
     private final UserRepository userRepository;
-    private final UserFactory userFactory;
     private final UserCommandFacade userCommandFacade;
     private final UserQueryFacade userQueryFacade;
 
     @Autowired
     public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.userFactory = new UserFactory();
-        userCommandFacade = new UserCommandFacade(userFactory, userRepository);
+        userCommandFacade = new UserCommandFacade(userRepository, new UserFactory());
         userQueryFacade = new UserQueryFacade(userRepository);
     }
 

@@ -35,15 +35,13 @@ import java.util.Optional;
 public class TeamController {
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
-    private final TeamFactory teamFactory;
     private final TeamCommandFacade teamCommandFacade;
     private final TeamQueryFacade teamQueryFacade;
 
     public TeamController(TeamRepository teamRepository, UserRepository userRepository) {
         this.teamRepository = teamRepository;
         this.userRepository = userRepository;
-        this.teamFactory = new TeamFactory();
-        teamCommandFacade = new TeamCommandFacade(teamRepository, teamFactory);
+        teamCommandFacade = new TeamCommandFacade(teamRepository, new TeamFactory());
         teamQueryFacade = new TeamQueryFacade(teamRepository);
     }
 

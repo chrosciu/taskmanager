@@ -8,12 +8,12 @@ import com.smalaca.taskamanager.repository.UserRepository;
 import java.util.Optional;
 
 public class UserCommandFacade {
-    private final UserFactory userFactory;
     private final UserRepository userRepository;
+    private final UserFactory userFactory;
 
-    public UserCommandFacade(UserFactory userFactory, UserRepository userRepository) {
-        this.userFactory = userFactory;
+    public UserCommandFacade(UserRepository userRepository, UserFactory userFactory) {
         this.userRepository = userRepository;
+        this.userFactory = userFactory;
     }
 
     public Optional<Long> createUser(UserDto userDto) {
