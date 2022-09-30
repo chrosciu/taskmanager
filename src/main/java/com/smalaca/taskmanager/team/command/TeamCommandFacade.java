@@ -4,6 +4,7 @@ import com.smalaca.taskamanager.dto.TeamDto;
 import com.smalaca.taskamanager.model.entities.Team;
 import com.smalaca.taskamanager.model.entities.TeamFactory;
 import com.smalaca.taskamanager.repository.TeamRepository;
+
 import java.util.Optional;
 
 public class TeamCommandFacade {
@@ -24,5 +25,18 @@ public class TeamCommandFacade {
         } else {
             return Optional.empty();
         }
+    }
+
+    public Optional<TeamDto> update(Long id, TeamDto teamDto) {
+        Optional<Team> found = teamRepository.findById(id);
+        Optional<TeamDto> updated = Optional.empty();
+        if (found.isPresent()) {
+            Team team = found.get();
+
+            team.update(teamDto);
+
+            updated = Optional.of(teamRepository.save(team).asTeamDto());
+        }
+        return updated;
     }
 }
