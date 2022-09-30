@@ -6,7 +6,6 @@ import com.smalaca.taskamanager.model.embedded.Stakeholder;
 import com.smalaca.taskamanager.model.embedded.Watcher;
 import com.smalaca.taskamanager.model.entities.Project;
 import com.smalaca.taskamanager.model.enums.ToDoItemStatus;
-
 import java.util.List;
 
 public interface ToDoItem {
