@@ -22,21 +22,19 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CommunicationServiceImpl implements CommunicationService {
-    private final ProjectBacklogService projectBacklogService;
-    private final DevNullDirectory devNullDirectory;
-    private final ChatClient chat;
-    private final SmsCommunicatorClient smsCommunicator;
-    private final MailClient mailClient;
     private CommunicationStrategy communicationStrategy;
+    private final MailCommunicationStrategy mailCommunicationStrategy;
+    private final SmsCommunicationStrategy smsCommunicationStrategy;
+    private final DirectCommunicationStrategy directCommunicationStrategy;
+    private final NullTypeCommunicationStrategy nullTypeCommunicationStrategy;
 
     public CommunicationServiceImpl(
             ProjectBacklogService projectBacklogService, DevNullDirectory devNullDirectory, ChatClient chat,
             SmsCommunicatorClient smsCommunicator, MailClient mailClient) {
-        this.projectBacklogService = projectBacklogService;
-        this.devNullDirectory = devNullDirectory;
-        this.chat = chat;
-        this.smsCommunicator = smsCommunicator;
-        this.mailClient = mailClient;
+        this.mailCommunicationStrategy = new MailCommunicationStrategy(mailClient);
+        this.smsCommunicationStrategy = new SmsCommunicationStrategy(smsCommunicator, projectBacklogService);
+        this.directCommunicationStrategy = new DirectCommunicationStrategy(chat, projectBacklogService);
+        this.nullTypeCommunicationStrategy = new NullTypeCommunicationStrategy(devNullDirectory);
     }
 
     @Override
@@ -53,13 +51,13 @@ public class CommunicationServiceImpl implements CommunicationService {
     private CommunicationStrategy selectCommunicationStrategy(CommunicatorType type) {
         switch (type) {
             case MAIL:
-                return new MailCommunicationStrategy(mailClient);
+                return mailCommunicationStrategy;
             case SMS:
-                return new SmsCommunicationStrategy(smsCommunicator, projectBacklogService);
+                return smsCommunicationStrategy;
             case DIRECT:
-                return new DirectCommunicationStrategy(chat, projectBacklogService);
+                return directCommunicationStrategy;
             case NULL_TYPE:
-                return new NullTypeCommunicationStrategy(devNullDirectory);
+                return nullTypeCommunicationStrategy;
             default:
                 throw new IllegalStateException("Should never happen");
         }
