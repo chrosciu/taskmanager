@@ -6,7 +6,6 @@ import com.smalaca.taskamanager.client.SmsCommunicatorClient;
 import com.smalaca.taskamanager.devnull.DevNullDirectory;
 import com.smalaca.taskamanager.infrastructure.enums.CommunicatorType;
 import com.smalaca.taskamanager.model.embedded.Owner;
-import com.smalaca.taskamanager.model.embedded.PhoneNumber;
 import com.smalaca.taskamanager.model.embedded.Stakeholder;
 import com.smalaca.taskamanager.model.embedded.Watcher;
 import com.smalaca.taskamanager.model.entities.ProductOwner;
@@ -14,7 +13,6 @@ import com.smalaca.taskamanager.model.entities.Project;
 import com.smalaca.taskamanager.model.entities.Team;
 import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.model.interfaces.ToDoItem;
-import com.smalaca.taskamanager.model.other.ChatRoom;
 import com.smalaca.taskamanager.strategy.CommunicationStrategy;
 import com.smalaca.taskamanager.strategy.DirectCommunicationStrategy;
 import com.smalaca.taskamanager.strategy.MailCommunicationStrategy;
@@ -58,36 +56,7 @@ public class CommunicationServiceImpl implements CommunicationService {
             case NULL_TYPE:
                 return new NullTypeCommunicationStrategy(devNullDirectory);
             default:
-                return new LegacyCommunicationStrategy();
-
-        }
-    }
-
-    private class LegacyCommunicationStrategy implements CommunicationStrategy {
-
-        @SuppressWarnings("MissingSwitchDefault")
-        @Override
-        public void notify(ToDoItem toDoItem, ProductOwner productOwner) {
-        }
-
-        @SuppressWarnings("MissingSwitchDefault")
-        @Override
-        public void notify(ToDoItem toDoItem, Owner owner) {
-        }
-
-        @SuppressWarnings("MissingSwitchDefault")
-        @Override
-        public void notify(ToDoItem toDoItem, Watcher watcher) {
-        }
-
-        @SuppressWarnings("MissingSwitchDefault")
-        @Override
-        public void notify(ToDoItem toDoItem, User user) {
-        }
-
-        @SuppressWarnings("MissingSwitchDefault")
-        @Override
-        public void notify(ToDoItem toDoItem, Stakeholder stakeholder) {
+                throw new IllegalStateException("Should never happen");
         }
     }
 
