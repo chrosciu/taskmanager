@@ -7,7 +7,8 @@ import com.smalaca.taskamanager.model.entities.ProductOwner;
 import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.model.interfaces.ToDoItem;
 
-interface CommunicationStrategy {
+public interface CommunicationStrategy {
+
     void notify(ToDoItem toDoItem, ProductOwner productOwner);
 
     void notify(ToDoItem toDoItem, Owner owner);
