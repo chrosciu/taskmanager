@@ -61,15 +61,25 @@ public class TeamController {
 
     @PostMapping
     public ResponseEntity<Void> createTeam(@RequestBody TeamDto teamDto, UriComponentsBuilder uriComponentsBuilder) {
-        if (teamRepository.findByName(teamDto.getName()).isPresent()) {
+        Optional<Long> id = createTeam(teamDto);
+
+        if (id.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         } else {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setLocation(uriComponentsBuilder.path("/team/{id}").buildAndExpand(id.get()).toUri());
+            return new ResponseEntity<>(headers, HttpStatus.CREATED);
+        }
+    }
+
+    private Optional<Long> createTeam(TeamDto teamDto) {
+        Optional<Team> foundTeam = teamRepository.findByName(teamDto.getName());
+        if (foundTeam.isEmpty()) {
             Team team = teamFactory.createTeam(teamDto);
             Team saved = teamRepository.save(team);
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(uriComponentsBuilder.path("/team/{id}").buildAndExpand(saved.getId()).toUri());
-            return new ResponseEntity<>(headers, HttpStatus.CREATED);
+            return Optional.of(saved.getId());
+        } else {
+            return Optional.empty();
         }
     }
 
