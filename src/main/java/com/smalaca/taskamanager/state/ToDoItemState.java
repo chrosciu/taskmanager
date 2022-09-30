@@ -4,5 +4,5 @@ import com.smalaca.taskamanager.model.interfaces.ToDoItem;
 
 public interface ToDoItemState {
 
-    void process(ToDoItem toDoItem);
+    default void process(ToDoItem toDoItem) {}
 }
