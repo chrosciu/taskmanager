@@ -1,5 +1,7 @@
 package com.smalaca.taskamanager.processor;
 
+import static com.smalaca.taskamanager.model.enums.ToDoItemStatus.DONE;
+
 import com.smalaca.taskamanager.events.EpicReadyToPrioritize;
 import com.smalaca.taskamanager.events.StoryApprovedEvent;
 import com.smalaca.taskamanager.events.StoryDoneEvent;
@@ -16,8 +18,6 @@ import com.smalaca.taskamanager.service.ProjectBacklogService;
 import com.smalaca.taskamanager.service.SprintBacklogService;
 import com.smalaca.taskamanager.service.StoryService;
 import org.springframework.stereotype.Component;
-
-import static com.smalaca.taskamanager.model.enums.ToDoItemStatus.DONE;
 
 @Component
 public class ToDoItemProcessor {
@@ -37,10 +37,46 @@ public class ToDoItemProcessor {
         this.sprintBacklogService = sprintBacklogService;
     }
 
+    interface ToDoItemState {
+        void process(ToDoItem toDoItem);
+    }
+
+    private class ToDoItemDefinedState implements ToDoItemState {
+        @Override
+        public void process(ToDoItem toDoItem) {
+            if (toDoItem instanceof Story) {
+                Story story = (Story) toDoItem;
+                if (story.getTasks().isEmpty()) {
+                    projectBacklogService.moveToReadyForDevelopment(story, story.getProject());
+                } else {
+                    if (!story.isAssigned()) {
+                        communicationService.notifyTeamsAbout(story, story.getProject());
+                    }
+                }
+            } else {
+                if (toDoItem instanceof Task) {
+                    Task task = (Task) toDoItem;
+                    sprintBacklogService.moveToReadyForDevelopment(task, task.getCurrentSprint());
+                } else {
+                    if (toDoItem instanceof Epic) {
+                        Epic epic = (Epic) toDoItem;
+                        projectBacklogService.putOnTop(epic);
+                        EpicReadyToPrioritize event = new EpicReadyToPrioritize();
+                        event.setEpicId(epic.getId());
+                        eventsRegistry.publish(event);
+                        communicationService.notify(toDoItem, toDoItem.getProject().getProductOwner());
+                    } else {
+                        throw new UnsupportedToDoItemType();
+                    }
+                }
+            }
+        }
+    }
+
     public void processFor(ToDoItem toDoItem) {
         switch (toDoItem.getStatus()) {
             case DEFINED:
-                processDefined(toDoItem);
+                new ToDoItemDefinedState().process(toDoItem);
                 break;
 
             case IN_PROGRESS:
@@ -65,32 +101,7 @@ public class ToDoItemProcessor {
     }
 
     private void processDefined(ToDoItem toDoItem) {
-        if (toDoItem instanceof Story) {
-            Story story = (Story) toDoItem;
-            if (story.getTasks().isEmpty()) {
-                projectBacklogService.moveToReadyForDevelopment(story, story.getProject());
-            } else {
-                if (!story.isAssigned()) {
-                    communicationService.notifyTeamsAbout(story, story.getProject());
-                }
-            }
-        } else {
-            if (toDoItem instanceof Task) {
-                Task task = (Task) toDoItem;
-                sprintBacklogService.moveToReadyForDevelopment(task, task.getCurrentSprint());
-            } else {
-                if (toDoItem instanceof Epic) {
-                    Epic epic = (Epic) toDoItem;
-                    projectBacklogService.putOnTop(epic);
-                    EpicReadyToPrioritize event = new EpicReadyToPrioritize();
-                    event.setEpicId(epic.getId());
-                    eventsRegistry.publish(event);
-                    communicationService.notify(toDoItem, toDoItem.getProject().getProductOwner());
-                } else {
-                    throw new UnsupportedToDoItemType();
-                }
-            }
-        }
+
     }
 
     private void processInProgress(ToDoItem toDoItem) {
