@@ -16,20 +16,23 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ToDoItemProcessor {
-    private final StoryService storyService;
-    private final EventsRegistry eventsRegistry;
-    private final ProjectBacklogService projectBacklogService;
-    private final CommunicationService communicationService;
-    private final SprintBacklogService sprintBacklogService;
+    private final ToDoItemDefinedState toDoItemDefinedState;
+    private final ToDoItemInProgressState toDoItemInProgressState;
+    private final ToDoItemDoneState toDoItemDoneState;
+    private final ToDoItemApprovedState toDoItemApprovedState;
+    private final ToDoItemReleasedState toDoItemReleasedState;
+    private final ToDoItemState toDoItemNoOpState;
 
     public ToDoItemProcessor(
             StoryService storyService, EventsRegistry eventsRegistry, ProjectBacklogService projectBacklogService,
             CommunicationService communicationService, SprintBacklogService sprintBacklogService) {
-        this.storyService = storyService;
-        this.eventsRegistry = eventsRegistry;
-        this.projectBacklogService = projectBacklogService;
-        this.communicationService = communicationService;
-        this.sprintBacklogService = sprintBacklogService;
+        toDoItemDefinedState = new ToDoItemDefinedState(projectBacklogService, communicationService,
+            sprintBacklogService, eventsRegistry);
+        toDoItemInProgressState = new ToDoItemInProgressState(storyService);
+        toDoItemDoneState = new ToDoItemDoneState(eventsRegistry, storyService);
+        toDoItemApprovedState = new ToDoItemApprovedState(eventsRegistry, storyService);
+        toDoItemReleasedState = new ToDoItemReleasedState(eventsRegistry);
+        toDoItemNoOpState = new ToDoItemState() {};
     }
 
     public void processFor(ToDoItem toDoItem) {
@@ -40,18 +43,17 @@ public class ToDoItemProcessor {
     private ToDoItemState getStateForToDoItem(ToDoItem toDoItem) {
         switch (toDoItem.getStatus()) {
             case DEFINED:
-                return new ToDoItemDefinedState(projectBacklogService, communicationService,
-                    sprintBacklogService, eventsRegistry);
+                return toDoItemDefinedState;
             case IN_PROGRESS:
-                return new ToDoItemInProgressState(storyService);
+                return toDoItemInProgressState;
             case DONE:
-                return new ToDoItemDoneState(eventsRegistry, storyService);
+                return toDoItemDoneState;
             case APPROVED:
-                return new ToDoItemApprovedState(eventsRegistry, storyService);
+                return toDoItemApprovedState;
             case RELEASED:
-                return new ToDoItemReleasedState(eventsRegistry);
+                return toDoItemReleasedState;
             default:
-                return new ToDoItemState() {};
+                return toDoItemNoOpState;
         }
     }
 }
