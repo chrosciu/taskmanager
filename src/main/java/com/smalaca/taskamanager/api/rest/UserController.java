@@ -69,21 +69,9 @@ public class UserController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable("id") Long id, @RequestBody UserDto userDto) {
-        User user;
-
-        try {
-            user = getUserById(id);
-        } catch (UserNotFoundException exception) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        user.update(userDto);
-
-        User updated = userRepository.save(user);
-
-        UserDto response = updated.asDto();
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return userCommandFacade.updateUser(id, userDto)
+                .map(dto -> new ResponseEntity<>(dto, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping(value = "/{id}")
