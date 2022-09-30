@@ -27,7 +27,6 @@ public class CommunicationServiceImpl implements CommunicationService {
     private final ChatClient chat;
     private final SmsCommunicatorClient smsCommunicator;
     private final MailClient mailClient;
-    private CommunicatorType type;
     private CommunicationStrategy communicationStrategy;
 
     public CommunicationServiceImpl(
@@ -40,9 +39,15 @@ public class CommunicationServiceImpl implements CommunicationService {
         this.mailClient = mailClient;
     }
 
+    @Override
+    @Deprecated
     public void setType(CommunicatorType type) {
-        this.type = type;
         this.communicationStrategy = selectCommunicationStrategy(type);
+    }
+
+    @Override
+    public void setCommunicationStrategy(CommunicationStrategy communicationStrategy) {
+        this.communicationStrategy = communicationStrategy;
     }
 
     private CommunicationStrategy selectCommunicationStrategy(CommunicatorType type) {
