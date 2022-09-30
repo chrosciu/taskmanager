@@ -9,9 +9,13 @@ import com.smalaca.taskamanager.model.entities.Project;
 import com.smalaca.taskamanager.model.entities.Team;
 import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.model.interfaces.ToDoItem;
+import com.smalaca.taskamanager.strategy.CommunicationStrategy;
 
 public interface CommunicationService {
+    @Deprecated
     void setType(CommunicatorType type);
+
+    void setCommunicationStrategy(CommunicationStrategy communicationStrategy);
 
     void notify(ToDoItem toDoItem, ProductOwner productOwner);
 
