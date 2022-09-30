@@ -28,4 +28,21 @@ public class UserCommandFacade {
     private boolean exists(UserDto userDto) {
         return !userRepository.findByUserNameFirstNameAndUserNameLastName(userDto.getFirstName(), userDto.getLastName()).isEmpty();
     }
+
+    public Optional<UserDto> updateUser(Long id, UserDto userDto) {
+        Optional<User> foundUser = userRepository.findById(id);
+
+        if (foundUser.isEmpty()) {
+            return Optional.empty();
+        }
+
+        User user = foundUser.get();
+
+        user.updateFromUserDto(userDto);
+
+        User updated = userRepository.save(user);
+
+        UserDto response = updated.asDto();
+        return Optional.of(response);
+    }
 }
