@@ -10,6 +10,7 @@ import com.smalaca.taskamanager.model.entities.TeamFactory;
 import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.repository.TeamRepository;
 import com.smalaca.taskamanager.repository.UserRepository;
+import com.smalaca.taskmanager.team.query.TeamQueryFacade;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,9 +27,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.StreamSupport;
-
-import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequestMapping("/team")
@@ -37,18 +35,18 @@ public class TeamController {
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
     private final TeamFactory teamFactory;
+    private final TeamQueryFacade teamQueryFacade;
 
     public TeamController(TeamRepository teamRepository, UserRepository userRepository) {
         this.teamRepository = teamRepository;
         this.userRepository = userRepository;
         this.teamFactory = new TeamFactory();
+        teamQueryFacade = new TeamQueryFacade(teamRepository);
     }
 
     @GetMapping
     public ResponseEntity<List<TeamDto>> findAll() {
-        List<TeamDto> teams = StreamSupport.stream(teamRepository.findAll().spliterator(), false)
-                .map(Team::asTeamDto)
-                .collect(toList());
+        List<TeamDto> teams = teamQueryFacade.findAll();
 
         return new ResponseEntity<>(teams, HttpStatus.OK);
     }
