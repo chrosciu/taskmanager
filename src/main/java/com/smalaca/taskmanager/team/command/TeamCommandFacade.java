@@ -2,7 +2,6 @@ package com.smalaca.taskmanager.team.command;
 
 import com.smalaca.taskamanager.dto.TeamDto;
 import com.smalaca.taskamanager.model.entities.TeamFactory;
-import com.smalaca.taskamanager.repository.TeamRepository;
 import com.smalaca.taskmanager.team.command.create.TeamCreateCommand;
 import com.smalaca.taskmanager.team.command.update.TeamUpdateCommand;
 
@@ -12,7 +11,7 @@ public class TeamCommandFacade {
     private final TeamCreateCommand teamCreateCommand;
     private final TeamUpdateCommand teamUpdateCommand;
 
-    public TeamCommandFacade(TeamRepository teamRepository, TeamFactory teamFactory) {
+    public TeamCommandFacade(TeamCommandRepository teamRepository, TeamFactory teamFactory) {
         teamCreateCommand = new TeamCreateCommand(teamRepository, teamFactory);
         teamUpdateCommand = new TeamUpdateCommand(teamRepository);
     }
