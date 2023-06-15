@@ -35,28 +35,31 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<List<UserDto>> getAllUsers() {
+        List<UserDto> usersDtos = getAllUsersAsDto();
+
+        return new ResponseEntity<>(usersDtos, HttpStatus.OK);
+    }
+
+    private List<UserDto> getAllUsersAsDto() {
         List<UserDto> usersDtos = new ArrayList<>();
 
         for (User user : userRepository.findAll()) {
             UserDto userDto = user.asDto();
             usersDtos.add(userDto);
         }
-
-        return new ResponseEntity<>(usersDtos, HttpStatus.OK);
+        return usersDtos;
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable("id") Long id) {
-        Optional<User> foundUser = userRepository.findById(id);
-        if (foundUser.isPresent()) {
+        Optional<UserDto> userDto = getUserAsDto(id);
+        return userDto
+                .map(dto -> new ResponseEntity<>(dto, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 
-            User user = foundUser.get();
-            UserDto userDto = user.asDto();
-            return new ResponseEntity<>(userDto, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
+    private Optional<UserDto> getUserAsDto(Long id) {
+        return userRepository.findById(id).map(User::asDto);
     }
 
     @PostMapping
