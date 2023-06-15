@@ -4,6 +4,7 @@ import com.smalaca.taskamanager.dto.UserDto;
 import com.smalaca.taskamanager.exception.UserNotFoundException;
 import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.repository.UserRepository;
+import com.smalaca.taskmanager.user.query.UserQueryFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,39 +27,27 @@ import java.util.Optional;
 @SuppressWarnings("checkstyle:ClassFanOutComplexity")
 public class UserController {
     private final UserRepository userRepository;
+    private final UserQueryFacade userQueryFacade;
 
     @Autowired
     public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
+        userQueryFacade = new UserQueryFacade(userRepository);
     }
 
     @GetMapping
     public ResponseEntity<List<UserDto>> getAllUsers() {
-        List<UserDto> usersDtos = getAllUsersAsDto();
+        List<UserDto> usersDtos = userQueryFacade.getAllUsers();
 
         return new ResponseEntity<>(usersDtos, HttpStatus.OK);
     }
 
-    private List<UserDto> getAllUsersAsDto() {
-        List<UserDto> usersDtos = new ArrayList<>();
-
-        for (User user : userRepository.findAll()) {
-            UserDto userDto = user.asDto();
-            usersDtos.add(userDto);
-        }
-        return usersDtos;
-    }
-
     @GetMapping(value = "/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable("id") Long id) {
-        Optional<UserDto> userDto = getUserAsDto(id);
+        Optional<UserDto> userDto = userQueryFacade.getUser(id);
         return userDto
                 .map(dto -> new ResponseEntity<>(dto, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-
-    private Optional<UserDto> getUserAsDto(Long id) {
-        return userRepository.findById(id).map(User::asDto);
     }
 
     @PostMapping
