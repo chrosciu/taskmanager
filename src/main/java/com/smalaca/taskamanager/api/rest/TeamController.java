@@ -77,10 +77,12 @@ public class TeamController {
 
     @PutMapping("/{id}")
     public ResponseEntity<TeamDto> updateTeam(@PathVariable Long id, @RequestBody TeamDto teamDto) {
-        Optional<TeamDto> updated = teamCommandFacade.update(id ,teamDto);
+        Optional<Long> updatedTeamId = teamCommandFacade.update(id ,teamDto);
 
-        return updated.map(dto -> new ResponseEntity<>(dto, HttpStatus.OK))
-            .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        return updatedTeamId
+                .flatMap(teamQueryFacade::findById)
+                .map(dto -> new ResponseEntity<>(dto, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PutMapping("/{id}/members")

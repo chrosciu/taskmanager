@@ -13,16 +13,16 @@ public class TeamUpdateCommand {
         this.teamRepository = teamRepository;
     }
 
-    public Optional<TeamDto> update(Long id, TeamDto teamDto) {
+    public Optional<Long> update(Long id, TeamDto teamDto) {
         Optional<Team> found = teamRepository.findById(id);
-        Optional<TeamDto> updated = Optional.empty();
+        Optional<Long> updatedTeamId = Optional.empty();
         if (found.isPresent()) {
             Team team = found.get();
 
             team.update(teamDto);
 
-            updated = Optional.of(teamRepository.save(team).asTeamDto());
+            updatedTeamId = Optional.of(teamRepository.save(team).getId());
         }
-        return updated;
+        return updatedTeamId;
     }
 }

@@ -20,7 +20,7 @@ public class TeamCommandFacade {
         return teamCreateCommand.create(teamDto);
     }
 
-    public Optional<TeamDto> update(Long id, TeamDto teamDto) {
+    public Optional<Long> update(Long id, TeamDto teamDto) {
         return teamUpdateCommand.update(id, teamDto);
     }
 }
