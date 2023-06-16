@@ -17,13 +17,12 @@ public class TeamCreateCommand {
     }
 
     public Optional<Long> create(TeamDto teamDto) {
-        Optional<Team> foundTeam = teamRepository.findByName(teamDto.getName());
-        if (foundTeam.isEmpty()) {
+        if (teamRepository.existsByName(teamDto.getName())) {
+            return Optional.empty();
+        } else {
             Team team = teamFactory.createTeam(teamDto);
             Team saved = teamRepository.save(team);
             return Optional.of(saved.getId());
-        } else {
-            return Optional.empty();
         }
     }
 }

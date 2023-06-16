@@ -14,8 +14,8 @@ public class TeamAntiCorruptionLayer implements TeamCommandRepository {
     }
 
     @Override
-    public Optional<Team> findByName(String name) {
-        return teamRepository.findByName(name);
+    public boolean existsByName(String name) {
+        return teamRepository.findByName(name).isPresent();
     }
 
     @Override
