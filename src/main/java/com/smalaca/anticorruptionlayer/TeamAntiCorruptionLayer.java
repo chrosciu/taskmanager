@@ -19,8 +19,8 @@ public class TeamAntiCorruptionLayer implements TeamCommandRepository {
     }
 
     @Override
-    public Team save(Team team) {
-        return teamRepository.save(team);
+    public Long save(Team team) {
+        return teamRepository.save(team).getId();
     }
 
     @Override

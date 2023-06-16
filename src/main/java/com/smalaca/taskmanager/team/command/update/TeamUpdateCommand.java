@@ -21,7 +21,7 @@ public class TeamUpdateCommand {
 
             team.update(teamDto);
 
-            updatedTeamId = Optional.of(teamRepository.save(team).getId());
+            updatedTeamId = Optional.of(teamRepository.save(team));
         }
         return updatedTeamId;
     }

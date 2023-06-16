@@ -7,7 +7,7 @@ import java.util.Optional;
 public interface TeamCommandRepository {
     boolean existsByName(String name);
 
-    Team save(Team team);
+    Long save(Team team);
 
     Optional<Team> findById(Long id);
 }
