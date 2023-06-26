@@ -1,7 +1,5 @@
 package com.smalaca.taskamanager.model.entities;
 
-import static java.util.stream.Collectors.toList;
-
 import com.smalaca.taskamanager.dto.TeamDto;
 import com.smalaca.taskamanager.dto.TeamDto.TeamDtoBuilder;
 import com.smalaca.taskamanager.model.embedded.Codename;
@@ -16,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @Entity
 public class Team {
@@ -45,6 +45,7 @@ public class Team {
         return id;
     }
 
+    @Deprecated
     public void setName(String name) {
         this.name = name;
     }
@@ -73,6 +74,7 @@ public class Team {
         return codename;
     }
 
+    @Deprecated
     public void setCodename(Codename codename) {
         this.codename = codename;
     }
@@ -82,6 +84,7 @@ public class Team {
         return description;
     }
 
+    @Deprecated
     public void setDescription(String description) {
         this.description = description;
     }
@@ -146,5 +149,20 @@ public class Team {
         }
 
         return builder.build();
+    }
+
+    public void update(TeamDto teamDto) {
+        if (teamDto.getName() != null) {
+            this.name = teamDto.getName();
+        }
+
+        if (teamDto.getCodenameShort() != null && teamDto.getCodenameFull() != null) {
+            Codename codename = new Codename(teamDto.getCodenameShort(), teamDto.getCodenameFull());
+            this.codename = codename;
+        }
+
+        if (teamDto.getDescription() != null) {
+            this.description = teamDto.getDescription();
+        }
     }
 }
