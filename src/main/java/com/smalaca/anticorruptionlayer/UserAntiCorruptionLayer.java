@@ -19,8 +19,8 @@ public class UserAntiCorruptionLayer implements UserCommandRepository {
     }
 
     @Override
-    public User save(User user) {
-        return userRepository.save(user);
+    public Long save(User user) {
+        return userRepository.save(user).getId();
     }
 
     @Override

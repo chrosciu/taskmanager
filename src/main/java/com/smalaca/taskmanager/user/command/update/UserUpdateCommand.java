@@ -24,8 +24,8 @@ public class UserUpdateCommand {
 
         user.update(userDto);
 
-        User updated = userRepository.save(user);
+        Long updatedUserId = userRepository.save(user);
 
-        return Optional.of(updated.getId());
+        return Optional.of(updatedUserId);
     }
 }
