@@ -204,4 +204,31 @@ public class User {
         return getTeamRole() != null;
     }
 
+    public void updateFromUserDto(UserDto userDto) {
+        if (userDto.getPassword() != null) {
+            this.password = userDto.getPassword();
+        }
+
+        if (userDto.getPhoneNumber() != null) {
+            PhoneNumber phoneNumber = new PhoneNumber();
+            phoneNumber.setPrefix(userDto.getPhonePrefix());
+            phoneNumber.setNumber(userDto.getPhoneNumber());
+            this.phoneNumber = phoneNumber;
+        }
+
+        if (userDto.getEmailAddress() != null) {
+            EmailAddress emailAddress = new EmailAddress();
+            emailAddress.setEmailAddress(userDto.getEmailAddress());
+            this.emailAddress = emailAddress;
+        }
+
+        if (userDto.getTeamRole() != null) {
+            TeamRole teamRole = TeamRole.valueOf(userDto.getTeamRole());
+            this.teamRole = teamRole;
+        }
+
+        if (userDto.getLogin() != null) {
+            this.login = userDto.getLogin();
+        }
+    }
 }
