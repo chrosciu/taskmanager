@@ -71,7 +71,10 @@ public class UserController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable("id") Long id, @RequestBody UserDto userDto) {
-        return userCommandFacade.updateUser(id, userDto)
+        Optional<Long> updatedUserId = userCommandFacade.updateUser(id, userDto);
+
+        return updatedUserId
+                .flatMap(userQueryFacade::getUser)
                 .map(dto -> new ResponseEntity<>(dto, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
