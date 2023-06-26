@@ -2,11 +2,8 @@ package com.smalaca.taskamanager.api.rest;
 
 import com.smalaca.taskamanager.dto.UserDto;
 import com.smalaca.taskamanager.exception.UserNotFoundException;
-import com.smalaca.taskamanager.model.embedded.EmailAddress;
-import com.smalaca.taskamanager.model.embedded.PhoneNumber;
 import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.model.entities.UserFactory;
-import com.smalaca.taskamanager.model.enums.TeamRole;
 import com.smalaca.taskamanager.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -92,28 +89,8 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        if (userDto.getLogin() != null) {
-            user.setLogin(userDto.getLogin());
-        }
+        user.update(userDto);
 
-        if (userDto.getPassword() != null) {
-            user.setPassword(userDto.getPassword());
-        }
-
-        if (userDto.getPhoneNumber() != null) {
-            PhoneNumber phoneNumber = new PhoneNumber(userDto.getPhonePrefix(), userDto.getPhoneNumber());
-            user.setPhoneNumber(phoneNumber);
-        }
-
-        if (userDto.getEmailAddress() != null) {
-            EmailAddress emailAddress = new EmailAddress(userDto.getEmailAddress());
-            user.setEmailAddress(emailAddress);
-        }
-
-        if (userDto.getTeamRole() != null) {
-            user.setTeamRole(TeamRole.valueOf(userDto.getTeamRole()));
-        }
-        
         User updated = userRepository.save(user);
 
         UserDto response = updated.asDto();
