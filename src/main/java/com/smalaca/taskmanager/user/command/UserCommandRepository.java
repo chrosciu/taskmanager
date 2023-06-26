@@ -6,6 +6,6 @@ import java.util.Optional;
 
 public interface UserCommandRepository {
     boolean existsByFirstNameAndLastName(String firstName, String lastName);
-    User save(User user);
+    Long save(User user);
     Optional<User> findById(Long id);
 }

@@ -19,8 +19,8 @@ public class UserCreateCommand {
             return Optional.empty();
         } else {
             User user = User.createFromUserDto(userDto);
-            User saved = userRepository.save(user);
-            return Optional.of(saved.getId());
+            Long savedId = userRepository.save(user);
+            return Optional.of(savedId);
         }
     }
 
