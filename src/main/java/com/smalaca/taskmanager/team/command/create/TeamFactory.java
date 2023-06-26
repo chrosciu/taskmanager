@@ -1,8 +1,9 @@
-package com.smalaca.taskamanager.model.entities;
+package com.smalaca.taskmanager.team.command.create;
 
 import com.smalaca.taskamanager.dto.TeamDto;
+import com.smalaca.taskamanager.model.entities.Team;
 
-public class TeamFactory {
+class TeamFactory {
 
     public Team createTeam(TeamDto teamDto) {
         Team team = new Team();

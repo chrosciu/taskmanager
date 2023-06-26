@@ -7,7 +7,6 @@ import com.smalaca.taskamanager.dto.TeamDto;
 import com.smalaca.taskamanager.dto.TeamMembersDto;
 import com.smalaca.taskamanager.exception.TeamNotFoundException;
 import com.smalaca.taskamanager.model.entities.Team;
-import com.smalaca.taskamanager.model.entities.TeamFactory;
 import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.repository.TeamRepository;
 import com.smalaca.taskamanager.repository.UserRepository;
@@ -43,7 +42,7 @@ public class TeamController {
         this.teamRepository = teamRepository;
         this.userRepository = userRepository;
         teamCommandFacade = new TeamCommandFacade(
-                new TeamAntiCorruptionLayer(teamRepository), new TeamFactory());
+                new TeamAntiCorruptionLayer(teamRepository));
         teamQueryFacade = new TeamQueryFacade(teamRepository);
     }
 
