@@ -2,14 +2,14 @@ package com.smalaca.taskmanager.user.command.update;
 
 import com.smalaca.taskamanager.dto.UserDto;
 import com.smalaca.taskamanager.model.entities.User;
-import com.smalaca.taskamanager.repository.UserRepository;
+import com.smalaca.taskmanager.user.command.UserCommandRepository;
 
 import java.util.Optional;
 
 public class UserUpdateCommand {
-    private final UserRepository userRepository;
+    private final UserCommandRepository userRepository;
 
-    public UserUpdateCommand(UserRepository userRepository) {
+    public UserUpdateCommand(UserCommandRepository userRepository) {
         this.userRepository = userRepository;
     }
 

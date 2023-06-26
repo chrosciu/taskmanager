@@ -1,7 +1,6 @@
 package com.smalaca.taskmanager.user.command;
 
 import com.smalaca.taskamanager.dto.UserDto;
-import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.repository.UserRepository;
 import com.smalaca.taskmanager.user.command.create.UserCreateCommand;
 import com.smalaca.taskmanager.user.command.update.UserUpdateCommand;
@@ -13,7 +12,7 @@ public class UserCommandFacade {
     private final UserUpdateCommand userUpdateCommand;
 
 
-    public UserCommandFacade(UserRepository userRepository) {
+    public UserCommandFacade(UserCommandRepository userRepository) {
         this.userCreateCommand = new UserCreateCommand(userRepository);
         this.userUpdateCommand = new UserUpdateCommand(userRepository);
     }
