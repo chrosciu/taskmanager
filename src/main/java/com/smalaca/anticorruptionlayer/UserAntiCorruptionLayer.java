@@ -14,8 +14,8 @@ public class UserAntiCorruptionLayer implements UserCommandRepository {
     }
 
     @Override
-    public Optional<User> findByUserNameFirstNameAndUserNameLastName(String firstName, String lastName) {
-        return userRepository.findByUserNameFirstNameAndUserNameLastName(firstName, lastName);
+    public boolean existsByFirstNameAndLastName(String firstName, String lastName) {
+        return userRepository.findByUserNameFirstNameAndUserNameLastName(firstName, lastName).isPresent();
     }
 
     @Override

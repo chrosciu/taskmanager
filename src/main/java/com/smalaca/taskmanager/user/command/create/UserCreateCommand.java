@@ -15,18 +15,13 @@ public class UserCreateCommand {
     }
 
     public Optional<Long> createUser(UserDto userDto) {
-        Optional<Long> createdUserId = Optional.empty();
-
-        if (!exists(userDto)) {
+        if (userRepository.existsByFirstNameAndLastName(userDto.getFirstName(), userDto.getLastName())) {
+            return Optional.empty();
+        } else {
             User user = User.createFromUserDto(userDto);
-
             User saved = userRepository.save(user);
-            createdUserId = Optional.of(saved.getId());
+            return Optional.of(saved.getId());
         }
-        return createdUserId;
     }
 
-    private boolean exists(UserDto userDto) {
-        return !userRepository.findByUserNameFirstNameAndUserNameLastName(userDto.getFirstName(), userDto.getLastName()).isEmpty();
-    }
 }
