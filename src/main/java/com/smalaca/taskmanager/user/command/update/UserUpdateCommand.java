@@ -13,7 +13,7 @@ public class UserUpdateCommand {
         this.userRepository = userRepository;
     }
 
-    public Optional<UserDto> updateUser(Long id, UserDto userDto) {
+    public Optional<Long> updateUser(Long id, UserDto userDto) {
         Optional<User> foundUser = userRepository.findById(id);
 
         if (foundUser.isEmpty()) {
@@ -26,7 +26,6 @@ public class UserUpdateCommand {
 
         User updated = userRepository.save(user);
 
-        UserDto response = updated.asDto();
-        return Optional.of(response);
+        return Optional.of(updated.getId());
     }
 }

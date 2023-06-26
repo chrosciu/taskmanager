@@ -21,7 +21,7 @@ public class UserCommandFacade {
         return userCreateCommand.createUser(userDto);
     }
 
-    public Optional<UserDto> updateUser(Long id, UserDto userDto) {
+    public Optional<Long> updateUser(Long id, UserDto userDto) {
         return userUpdateCommand.updateUser(id, userDto);
     }
 }
