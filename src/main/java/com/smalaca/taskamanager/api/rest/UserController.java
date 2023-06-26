@@ -1,5 +1,6 @@
 package com.smalaca.taskamanager.api.rest;
 
+import com.smalaca.anticorruptionlayer.UserAntiCorruptionLayer;
 import com.smalaca.taskamanager.dto.UserDto;
 import com.smalaca.taskamanager.exception.UserNotFoundException;
 import com.smalaca.taskamanager.model.entities.User;
@@ -35,7 +36,8 @@ public class UserController {
     @Autowired
     public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
-        userCommandFacade = new UserCommandFacade(userRepository, new UserFactory());
+        userCommandFacade = new UserCommandFacade(
+                new UserAntiCorruptionLayer(userRepository), new UserFactory());
         userQueryFacade = new UserQueryFacade(userRepository);
     }
 

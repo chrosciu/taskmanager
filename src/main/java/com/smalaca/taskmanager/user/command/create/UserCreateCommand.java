@@ -3,15 +3,15 @@ package com.smalaca.taskmanager.user.command.create;
 import com.smalaca.taskamanager.dto.UserDto;
 import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.model.entities.UserFactory;
-import com.smalaca.taskamanager.repository.UserRepository;
+import com.smalaca.taskmanager.user.command.UserCommandRepository;
 
 import java.util.Optional;
 
 public class UserCreateCommand {
-    private final UserRepository userRepository;
+    private final UserCommandRepository userRepository;
     private final UserFactory userFactory;
 
-    public UserCreateCommand(UserRepository userRepository, UserFactory userFactory) {
+    public UserCreateCommand(UserCommandRepository userRepository, UserFactory userFactory) {
         this.userRepository = userRepository;
         this.userFactory = userFactory;
     }
