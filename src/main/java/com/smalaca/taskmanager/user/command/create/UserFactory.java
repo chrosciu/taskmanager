@@ -1,9 +1,10 @@
-package com.smalaca.taskamanager.model.entities;
+package com.smalaca.taskmanager.user.command.create;
 
 import com.smalaca.taskamanager.dto.UserDto;
 import com.smalaca.taskamanager.model.embedded.UserName;
+import com.smalaca.taskamanager.model.entities.User;
 
-public class UserFactory {
+class UserFactory {
 
     public User create(UserDto userDto) {
         User user = new User();
