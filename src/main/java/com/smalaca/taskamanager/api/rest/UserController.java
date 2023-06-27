@@ -6,6 +6,7 @@ import com.smalaca.taskamanager.exception.UserNotFoundException;
 import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.repository.UserRepository;
 import com.smalaca.taskmanager.user.command.UserCommandFacade;
+import com.smalaca.taskmanager.user.command.create.UserCreateCommandInput;
 import com.smalaca.taskmanager.user.query.UserQueryFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -57,7 +58,8 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<Void> createUser(@RequestBody UserDto userDto, UriComponentsBuilder uriComponentsBuilder) {
-        Optional<Long> createdUserId = userCommandFacade.createUser(userDto);
+        UserCreateCommandInput input = userDto.getUserCreateCommandInput();
+        Optional<Long> createdUserId = userCommandFacade.createUser(input);
 
         if (createdUserId.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);

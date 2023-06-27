@@ -15,11 +15,11 @@ public class UserCreateCommand {
         this.userFactory = new UserFactory();
     }
 
-    public Optional<Long> createUser(UserDto userDto) {
-        if (userRepository.existsByFirstNameAndLastName(userDto.getFirstName(), userDto.getLastName())) {
+    public Optional<Long> createUser(UserCreateCommandInput input) {
+        if (userRepository.existsByFirstNameAndLastName(input.getFirstName(), input.getLastName())) {
             return Optional.empty();
         } else {
-            User user = userFactory.create(userDto);
+            User user = userFactory.create(input);
             Long savedId = userRepository.save(user);
             return Optional.of(savedId);
         }

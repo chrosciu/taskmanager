@@ -1,6 +1,7 @@
 package com.smalaca.taskamanager.dto;
 
 import com.smalaca.taskamanager.model.enums.TeamRole;
+import com.smalaca.taskmanager.user.command.create.UserCreateCommandInput;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -17,8 +18,18 @@ public class UserDto {
     private final String emailAddress;
     private final String teamRole;
 
-    public TeamRole asTeamRole() {
+    private TeamRole asTeamRole() {
         return TeamRole.valueOf(getTeamRole());
+    }
+
+    public UserCreateCommandInput getUserCreateCommandInput() {
+        return UserCreateCommandInput.builder()
+                .firstName(firstName)
+                .lastName(lastName)
+                .login(login)
+                .password(password)
+                .teamRole(asTeamRole())
+                .build();
     }
 
     public static class UserDtoBuilder {
