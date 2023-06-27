@@ -1,6 +1,7 @@
 package com.smalaca.taskamanager.dto;
 
 import com.smalaca.taskmanager.team.command.create.TeamCreateCommandInput;
+import com.smalaca.taskmanager.team.command.update.TeamUpdateCommandInput;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,6 +22,16 @@ public class TeamDto {
     public TeamCreateCommandInput getTeamCreateCommandInput() {
         return TeamCreateCommandInput.builder()
                 .name(name)
+                .build();
+    }
+
+    public TeamUpdateCommandInput getTeamUpdateCommandInput(Long id) {
+        return TeamUpdateCommandInput.builder()
+                .id(id)
+                .name(name)
+                .codenameShort(codenameShort)
+                .codenameFull(codenameFull)
+                .description(description)
                 .build();
     }
 

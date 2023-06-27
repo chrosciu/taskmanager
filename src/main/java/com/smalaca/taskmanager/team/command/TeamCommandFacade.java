@@ -1,9 +1,9 @@
 package com.smalaca.taskmanager.team.command;
 
-import com.smalaca.taskamanager.dto.TeamDto;
 import com.smalaca.taskmanager.team.command.create.TeamCreateCommand;
 import com.smalaca.taskmanager.team.command.create.TeamCreateCommandInput;
 import com.smalaca.taskmanager.team.command.update.TeamUpdateCommand;
+import com.smalaca.taskmanager.team.command.update.TeamUpdateCommandInput;
 
 import java.util.Optional;
 
@@ -20,7 +20,7 @@ public class TeamCommandFacade {
         return teamCreateCommand.create(input);
     }
 
-    public Optional<Long> update(Long id, TeamDto teamDto) {
-        return teamUpdateCommand.update(id, teamDto);
+    public Optional<Long> update(TeamUpdateCommandInput input) {
+        return teamUpdateCommand.update(input);
     }
 }

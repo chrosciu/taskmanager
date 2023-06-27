@@ -12,6 +12,7 @@ import com.smalaca.taskamanager.repository.TeamRepository;
 import com.smalaca.taskamanager.repository.UserRepository;
 import com.smalaca.taskmanager.team.command.TeamCommandFacade;
 import com.smalaca.taskmanager.team.command.create.TeamCreateCommandInput;
+import com.smalaca.taskmanager.team.command.update.TeamUpdateCommandInput;
 import com.smalaca.taskmanager.team.query.TeamQueryFacade;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -78,7 +79,11 @@ public class TeamController {
 
     @PutMapping("/{id}")
     public ResponseEntity<TeamDto> updateTeam(@PathVariable Long id, @RequestBody TeamDto teamDto) {
-        Optional<Long> updatedTeamId = teamCommandFacade.update(id ,teamDto);
+        if (null == teamDto) {
+            teamDto = TeamDto.builder().build();
+        }
+        TeamUpdateCommandInput input = teamDto.getTeamUpdateCommandInput(id);
+        Optional<Long> updatedTeamId = teamCommandFacade.update(input);
 
         return updatedTeamId
                 .flatMap(teamQueryFacade::findById)

@@ -1,6 +1,5 @@
 package com.smalaca.taskmanager.team.command.update;
 
-import com.smalaca.taskamanager.dto.TeamDto;
 import com.smalaca.taskamanager.model.entities.Team;
 import com.smalaca.taskmanager.team.command.TeamCommandRepository;
 
@@ -13,13 +12,13 @@ public class TeamUpdateCommand {
         this.teamRepository = teamRepository;
     }
 
-    public Optional<Long> update(Long id, TeamDto teamDto) {
-        Optional<Team> found = teamRepository.findById(id);
+    public Optional<Long> update(TeamUpdateCommandInput input) {
+        Optional<Team> found = teamRepository.findById(input.getId());
         Optional<Long> updatedTeamId = Optional.empty();
         if (found.isPresent()) {
             Team team = found.get();
 
-            team.update(teamDto);
+            team.update(input);
 
             updatedTeamId = Optional.of(teamRepository.save(team));
         }
