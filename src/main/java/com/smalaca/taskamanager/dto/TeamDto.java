@@ -1,9 +1,11 @@
 package com.smalaca.taskamanager.dto;
 
-import java.util.List;
+import com.smalaca.taskmanager.team.command.create.TeamCreateCommandInput;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -15,6 +17,12 @@ public class TeamDto {
     private String codenameFull;
     private String description;
     private List<Long> userIds;
+
+    public TeamCreateCommandInput getTeamCreateCommandInput() {
+        return TeamCreateCommandInput.builder()
+                .name(name)
+                .build();
+    }
 
     public static class TeamDtoBuilder {
         public TeamDtoBuilder codename(String shortName, String fullName) {

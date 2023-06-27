@@ -11,6 +11,7 @@ import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.repository.TeamRepository;
 import com.smalaca.taskamanager.repository.UserRepository;
 import com.smalaca.taskmanager.team.command.TeamCommandFacade;
+import com.smalaca.taskmanager.team.command.create.TeamCreateCommandInput;
 import com.smalaca.taskmanager.team.query.TeamQueryFacade;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -63,7 +64,8 @@ public class TeamController {
 
     @PostMapping
     public ResponseEntity<Void> createTeam(@RequestBody TeamDto teamDto, UriComponentsBuilder uriComponentsBuilder) {
-        Optional<Long> id = teamCommandFacade.create(teamDto);
+        TeamCreateCommandInput input = teamDto.getTeamCreateCommandInput();
+        Optional<Long> id = teamCommandFacade.create(input);
 
         if (id.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
