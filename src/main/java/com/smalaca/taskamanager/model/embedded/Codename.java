@@ -7,6 +7,15 @@ public class Codename {
     private String shortName;
     private String fullName;
 
+    @Deprecated
+    public Codename() {
+    }
+
+    public Codename(String shortName, String fullName) {
+        this.shortName = shortName;
+        this.fullName = fullName;
+    }
+
     public String getShortName() {
         return shortName;
     }
