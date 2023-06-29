@@ -71,7 +71,7 @@ public class TeamController {
 
         if (foundTeam.isPresent()) {
             Team team = foundTeam.get();
-            TeamDto dto = team.getTeamDto();
+            TeamDto dto = team.asTeamDto();
 
             return new ResponseEntity<>(dto, HttpStatus.OK);
         } else {
