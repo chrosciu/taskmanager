@@ -20,10 +20,7 @@ class TeamTest {
     void shouldCreateTeam() {
         Team actual = new Team();
         actual.setName("Avengers");
-        Codename codename = new Codename();
-        codename.setShortName("A");
-        codename.setFullName("Mighty Avengers");
-        actual.setCodename(codename);
+        actual.setCodename(new Codename("A", "Mighty Avengers"));
         actual.setDescription("Some fancy description");
 
         assertThat(actual.getName()).isEqualTo("Avengers");
@@ -122,10 +119,7 @@ class TeamTest {
     private static Team differentTeam() {
         Team team = new Team();
         team.setName("X-Men");
-        Codename codename = new Codename();
-        codename.setShortName("X");
-        codename.setFullName("XM");
-        team.setCodename(codename);
+        team.setCodename(new Codename("X", "XM"));
         team.setDescription("Mutants");
         return team;
     }

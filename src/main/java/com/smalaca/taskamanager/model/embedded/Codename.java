@@ -4,11 +4,12 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class Codename {
-    private String shortName;
-    private String fullName;
+    private final String shortName;
+    private final String fullName;
 
     @Deprecated
-    public Codename() {
+    private Codename() {
+        this(null, null);
     }
 
     public Codename(String shortName, String fullName) {
@@ -20,16 +21,8 @@ public class Codename {
         return shortName;
     }
 
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
-    }
-
     public String getFullName() {
         return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
     }
 
     @Override

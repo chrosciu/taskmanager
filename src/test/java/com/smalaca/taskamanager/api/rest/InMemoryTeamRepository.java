@@ -26,10 +26,7 @@ class InMemoryTeamRepository implements TeamRepository {
     private Team createTeam(long id, String name, String codenameShort, String codenameFull, String description) {
         Team team = new Team();
         team.setName(name);
-        Codename codename = new Codename();
-        codename.setShortName(codenameShort);
-        codename.setFullName(codenameFull);
-        team.setCodename(codename);
+        team.setCodename(new Codename(codenameShort, codenameFull));
         team.setDescription(description);
         setId(id, team);
         return team;
