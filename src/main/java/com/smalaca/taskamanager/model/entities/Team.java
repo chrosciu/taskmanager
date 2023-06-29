@@ -67,6 +67,7 @@ public class Team {
         members.remove(user);
     }
 
+    @Deprecated
     public Codename getCodename() {
         return codename;
     }
@@ -120,5 +121,13 @@ public class Team {
                 .append(codename)
                 .append(description)
                 .toHashCode();
+    }
+
+    public String getCodenameShort() {
+        return codename.getShortName();
+    }
+
+    public String getCodenameFull() {
+        return codename.getFullName();
     }
 }
