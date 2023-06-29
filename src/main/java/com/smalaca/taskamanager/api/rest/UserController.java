@@ -73,8 +73,13 @@ public class UserController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable("id") Long id) {
-        try {
-            User user = getUserById(id);
+
+        Optional<User> foundUser;
+        foundUser = userRepository.findById(id);
+
+        if (foundUser.isPresent()) {
+
+            User user = foundUser.get();
 
             UserDto userDto = new UserDto();
             userDto.setId(user.getId());
@@ -100,9 +105,10 @@ public class UserController {
             }
 
             return new ResponseEntity<>(userDto, HttpStatus.OK);
-        } catch (UserNotFoundException exception) {
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
     }
 
     @PostMapping
