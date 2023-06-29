@@ -32,6 +32,10 @@ public class Team {
     @ManyToOne
     private Project project;
 
+    public boolean hasCodename() {
+        return getCodename() != null;
+    }
+
     public String getName() {
         return name;
     }
