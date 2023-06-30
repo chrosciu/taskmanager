@@ -46,18 +46,17 @@ public class TeamController {
     public ResponseEntity<List<TeamDto>> findAll() {
         List<TeamDto> teams = StreamSupport.stream(teamRepository.findAll().spliterator(), false)
                 .map(team -> {
-                    TeamDto dto = new TeamDto();
-                    dto.setId(team.getId());
-                    dto.setName(team.getName());
+                    TeamDto.TeamDtoBuilder builder = TeamDto.builder();
+                    builder.id(team.getId());
+                    builder.name(team.getName());
 
                     if (team.hasCodename()) {
-                        dto.setCodenameShort(team.getCodename().getShortName());
-                        dto.setCodenameFull(team.getCodename().getFullName());
+                        builder.codename(team.getCodename().getShortName(), team.getCodename().getFullName());
                     }
 
-                    dto.setDescription(team.getDescription());
+                    builder.description(team.getDescription());
 
-                    return dto;
+                    return builder.build();
                 })
                 .collect(toList());
 
@@ -118,17 +117,16 @@ public class TeamController {
 
         Team updated = teamRepository.save(team);
 
-        TeamDto dto = new TeamDto();
-        dto.setId(updated.getId());
-        dto.setName(updated.getName());
+        TeamDto.TeamDtoBuilder builder = TeamDto.builder();
+        builder.id(updated.getId());
+        builder.name(updated.getName());
         if (updated.hasCodename()) {
-            dto.setCodenameShort(updated.getCodename().getShortName());
-            dto.setCodenameFull(updated.getCodename().getFullName());
+            builder.codename(updated.getCodename().getShortName(), updated.getCodename().getFullName());
         }
 
-        dto.setDescription(updated.getDescription());
+        builder.description(updated.getDescription());
 
-        return new ResponseEntity<>(dto, HttpStatus.OK);
+        return new ResponseEntity<>(builder.build(), HttpStatus.OK);
     }
 
     @PutMapping("/{id}/members")
