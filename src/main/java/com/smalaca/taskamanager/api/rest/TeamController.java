@@ -9,6 +9,7 @@ import com.smalaca.taskamanager.model.entities.Team;
 import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.repository.TeamRepository;
 import com.smalaca.taskamanager.repository.UserRepository;
+import com.smalaca.taskmanager.team.query.TeamQueryFacade;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +26,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.StreamSupport;
-
-import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequestMapping("/team")
@@ -35,17 +33,17 @@ import static java.util.stream.Collectors.toList;
 public class TeamController {
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
+    private final TeamQueryFacade teamQueryFacade;
 
     public TeamController(TeamRepository teamRepository, UserRepository userRepository) {
         this.teamRepository = teamRepository;
         this.userRepository = userRepository;
+        this.teamQueryFacade = new TeamQueryFacade(teamRepository);
     }
 
     @GetMapping
     public ResponseEntity<List<TeamDto>> findAll() {
-        List<TeamDto> teams = StreamSupport.stream(teamRepository.findAll().spliterator(), false)
-                .map(Team::asTeamDto)
-                .collect(toList());
+        List<TeamDto> teams = teamQueryFacade.findAllAsDto();
 
         return new ResponseEntity<>(teams, HttpStatus.OK);
     }
@@ -53,16 +51,9 @@ public class TeamController {
     @GetMapping("/{id}")
     @Transactional
     public ResponseEntity<TeamDto> findById(@PathVariable Long id) {
-        Optional<Team> foundTeam = teamRepository.findById(id);
-
-        if (foundTeam.isPresent()) {
-            Team team = foundTeam.get();
-            TeamDto dto = team.asTeamDto();
-
-            return new ResponseEntity<>(dto, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return teamQueryFacade.findTeamDtoById(id)
+                .map(teamDto -> new ResponseEntity<>(teamDto, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
