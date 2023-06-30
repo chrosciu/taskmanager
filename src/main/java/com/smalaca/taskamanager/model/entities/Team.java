@@ -35,10 +35,24 @@ public class Team {
     @ManyToOne
     private Project project;
 
-    public static Team fromTeamDto(TeamDto teamDto) {
+    public static Team createFromTeamDto(TeamDto teamDto) {
         Team team = new Team();
         team.setName(teamDto.getName());
         return team;
+    }
+
+    public void updateFromTeamDto(TeamDto teamDto) {
+        if (teamDto.getName() != null) {
+            setName(teamDto.getName());
+        }
+
+        if (teamDto.getCodenameShort() != null && teamDto.getCodenameFull() != null) {
+            setCodename(new Codename(teamDto.getCodenameShort(), teamDto.getCodenameFull()));
+        }
+
+        if (teamDto.getDescription() != null) {
+            setDescription(teamDto.getDescription());
+        }
     }
 
     public boolean hasCodename() {

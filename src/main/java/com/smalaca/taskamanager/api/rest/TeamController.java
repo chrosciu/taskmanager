@@ -5,7 +5,6 @@ import com.google.common.collect.Iterables;
 import com.smalaca.taskamanager.dto.TeamDto;
 import com.smalaca.taskamanager.dto.TeamMembersDto;
 import com.smalaca.taskamanager.exception.TeamNotFoundException;
-import com.smalaca.taskamanager.model.embedded.Codename;
 import com.smalaca.taskamanager.model.entities.Team;
 import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.repository.TeamRepository;
@@ -71,7 +70,7 @@ public class TeamController {
         if (teamRepository.findByName(teamDto.getName()).isPresent()) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         } else {
-            Team team = Team.fromTeamDto(teamDto);
+            Team team = Team.createFromTeamDto(teamDto);
             Team saved = teamRepository.save(team);
 
             HttpHeaders headers = new HttpHeaders();
@@ -90,17 +89,7 @@ public class TeamController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        if (teamDto.getName() != null) {
-            team.setName(teamDto.getName());
-        }
-
-        if (teamDto.getCodenameShort() != null && teamDto.getCodenameFull() != null) {
-            team.setCodename(new Codename(teamDto.getCodenameShort(), teamDto.getCodenameFull()));
-        }
-
-        if (teamDto.getDescription() != null) {
-            team.setDescription(teamDto.getDescription());
-        }
+        team.updateFromTeamDto(teamDto);
 
         Team updated = teamRepository.save(team);
 
