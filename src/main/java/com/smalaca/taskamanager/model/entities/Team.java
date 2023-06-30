@@ -2,6 +2,7 @@ package com.smalaca.taskamanager.model.entities;
 
 import com.smalaca.taskamanager.dto.TeamDto;
 import com.smalaca.taskamanager.model.embedded.Codename;
+import com.smalaca.taskmanager.team.command.create.TeamCreateCommandInput;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -35,9 +36,9 @@ public class Team {
     @ManyToOne
     private Project project;
 
-    public static Team createFromTeamDto(TeamDto teamDto) {
+    public static Team createFromInput(TeamCreateCommandInput input) {
         Team team = new Team();
-        team.setName(teamDto.getName());
+        team.setName(input.getName());
         return team;
     }
 

@@ -1,6 +1,5 @@
 package com.smalaca.taskmanager.team.command.create;
 
-import com.smalaca.taskamanager.dto.TeamDto;
 import com.smalaca.taskamanager.model.entities.Team;
 import com.smalaca.taskmanager.team.command.TeamCommandRepository;
 
@@ -13,11 +12,11 @@ public class TeamCreateCommand {
         this.teamRepository = teamRepository;
     }
 
-    public Optional<Long> createTeam(TeamDto teamDto) {
-        if (teamRepository.existsByName(teamDto.getName())) {
+    public Optional<Long> createTeam(TeamCreateCommandInput input) {
+        if (teamRepository.existsByName(input.getName())) {
             return Optional.empty();
         } else {
-            Team team = Team.createFromTeamDto(teamDto);
+            Team team = Team.createFromInput(input);
             Long savedId = teamRepository.save(team);
             return Optional.of(savedId);
         }
