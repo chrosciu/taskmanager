@@ -19,8 +19,8 @@ public class TeamUpdateCommand {
         if (foundTeam.isPresent()) {
             Team team = foundTeam.get();
             team.updateFromTeamDto(teamDto);
-            Team updated = teamRepository.save(team);
-            return Optional.of(updated.getId());
+            Long updatedId = teamRepository.save(team);
+            return Optional.of(updatedId);
         } else {
             return Optional.empty();
         }

@@ -18,8 +18,8 @@ public class TeamCreateCommand {
             return Optional.empty();
         } else {
             Team team = Team.createFromTeamDto(teamDto);
-            Team saved = teamRepository.save(team);
-            return Optional.of(saved.getId());
+            Long savedId = teamRepository.save(team);
+            return Optional.of(savedId);
         }
     }
 }
