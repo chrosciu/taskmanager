@@ -42,6 +42,18 @@ public class User {
     @OneToMany
     private List<Team> teams = new ArrayList<>();
 
+    public static User createFromUserDto(UserDto userDto) {
+        User user = new User();
+        user.setTeamRole(userDto.asTeamRole());
+        UserName userName = new UserName();
+        userName.setFirstName(userDto.getFirstName());
+        userName.setLastName(userDto.getLastName());
+        user.setUserName(userName);
+        user.setLogin(userDto.getLogin());
+        user.setPassword(userDto.getPassword());
+        return user;
+    }
+
     @Deprecated
     public UserName getUserName() {
         return userName;

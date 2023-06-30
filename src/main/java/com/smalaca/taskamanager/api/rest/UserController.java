@@ -4,7 +4,6 @@ import com.smalaca.taskamanager.dto.UserDto;
 import com.smalaca.taskamanager.exception.UserNotFoundException;
 import com.smalaca.taskamanager.model.embedded.EmailAddress;
 import com.smalaca.taskamanager.model.embedded.PhoneNumber;
-import com.smalaca.taskamanager.model.embedded.UserName;
 import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.model.enums.TeamRole;
 import com.smalaca.taskamanager.repository.UserRepository;
@@ -68,14 +67,7 @@ public class UserController {
         if (exists(userDto)) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         } else {
-            User user = new User();
-            user.setTeamRole(userDto.asTeamRole());
-            UserName userName = new UserName();
-            userName.setFirstName(userDto.getFirstName());
-            userName.setLastName(userDto.getLastName());
-            user.setUserName(userName);
-            user.setLogin(userDto.getLogin());
-            user.setPassword(userDto.getPassword());
+            User user = User.createFromUserDto(userDto);
 
             User saved = userRepository.save(user);
 
