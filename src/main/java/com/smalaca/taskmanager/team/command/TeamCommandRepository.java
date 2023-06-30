@@ -5,7 +5,7 @@ import com.smalaca.taskamanager.model.entities.Team;
 import java.util.Optional;
 
 public interface TeamCommandRepository {
-    Optional<Team> findByName(String name);
+    boolean existsByName(String name);
 
     Team save(Team team);
 
