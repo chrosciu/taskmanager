@@ -74,19 +74,11 @@ public class TeamController {
 
     @PutMapping("/{id}")
     public ResponseEntity<TeamDto> updateTeam(@PathVariable Long id, @RequestBody TeamDto teamDto) {
-        Team team;
+        Optional<TeamDto> updatedTeamDto = teamCommandFacade.updateTeam(id, teamDto);
 
-        try {
-            team = getTeamById(id);
-        } catch (TeamNotFoundException exception) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        team.updateFromTeamDto(teamDto);
-
-        Team updated = teamRepository.save(team);
-
-        return new ResponseEntity<>(updated.asTeamDto(), HttpStatus.OK);
+        return updatedTeamDto
+                .map(dto -> new ResponseEntity<>(dto, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PutMapping("/{id}/members")

@@ -22,4 +22,16 @@ public class TeamCommandFacade {
             return Optional.empty();
         }
     }
+
+    public Optional<TeamDto> updateTeam(Long id, TeamDto teamDto) {
+        Optional<Team> foundTeam = teamRepository.findById(id);
+        if (foundTeam.isPresent()) {
+            Team team = foundTeam.get();
+            team.updateFromTeamDto(teamDto);
+            Team updated = teamRepository.save(team);
+            return Optional.of(updated.asTeamDto());
+        } else {
+            return Optional.empty();
+        }
+    }
 }
