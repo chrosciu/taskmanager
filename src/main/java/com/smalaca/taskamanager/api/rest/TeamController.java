@@ -45,19 +45,7 @@ public class TeamController {
     @GetMapping
     public ResponseEntity<List<TeamDto>> findAll() {
         List<TeamDto> teams = StreamSupport.stream(teamRepository.findAll().spliterator(), false)
-                .map(team -> {
-                    TeamDto.TeamDtoBuilder builder = TeamDto.builder();
-                    builder.id(team.getId());
-                    builder.name(team.getName());
-
-                    if (team.hasCodename()) {
-                        builder.codename(team.getCodename().getShortName(), team.getCodename().getFullName());
-                    }
-
-                    builder.description(team.getDescription());
-
-                    return builder.build();
-                })
+                .map(Team::asTeamDto)
                 .collect(toList());
 
         return new ResponseEntity<>(teams, HttpStatus.OK);
@@ -117,16 +105,7 @@ public class TeamController {
 
         Team updated = teamRepository.save(team);
 
-        TeamDto.TeamDtoBuilder builder = TeamDto.builder();
-        builder.id(updated.getId());
-        builder.name(updated.getName());
-        if (updated.hasCodename()) {
-            builder.codename(updated.getCodename().getShortName(), updated.getCodename().getFullName());
-        }
-
-        builder.description(updated.getDescription());
-
-        return new ResponseEntity<>(builder.build(), HttpStatus.OK);
+        return new ResponseEntity<>(updated.asTeamDto(), HttpStatus.OK);
     }
 
     @PutMapping("/{id}/members")
