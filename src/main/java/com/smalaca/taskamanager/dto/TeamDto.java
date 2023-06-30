@@ -1,8 +1,16 @@
 package com.smalaca.taskamanager.dto;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class TeamDto {
     private Long id;
     private String name;
@@ -64,5 +72,11 @@ public class TeamDto {
     public void setCodename(String shortName, String fullName) {
         this.codenameShort = shortName;
         this.codenameFull = fullName;
+    }
+
+    public static class TeamDtoBuilder {
+        public TeamDtoBuilder codename(String shortName, String fullName) {
+            return codenameShort(shortName).codenameFull(fullName);
+        }
     }
 }
