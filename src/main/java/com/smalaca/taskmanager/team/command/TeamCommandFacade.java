@@ -1,7 +1,6 @@
 package com.smalaca.taskmanager.team.command;
 
 import com.smalaca.taskamanager.dto.TeamDto;
-import com.smalaca.taskamanager.repository.TeamRepository;
 import com.smalaca.taskmanager.team.command.create.TeamCreateCommand;
 import com.smalaca.taskmanager.team.command.update.TeamUpdateCommand;
 
@@ -11,7 +10,7 @@ public class TeamCommandFacade {
     public final TeamCreateCommand teamCreateCommand;
     private final TeamUpdateCommand teamUpdateCommand;
 
-    public TeamCommandFacade(TeamRepository teamRepository) {
+    public TeamCommandFacade(TeamCommandRepository teamRepository) {
         teamCreateCommand = new TeamCreateCommand(teamRepository);
         teamUpdateCommand = new TeamUpdateCommand(teamRepository);
     }

@@ -3,13 +3,14 @@ package com.smalaca.taskmanager.team.command.create;
 import com.smalaca.taskamanager.dto.TeamDto;
 import com.smalaca.taskamanager.model.entities.Team;
 import com.smalaca.taskamanager.repository.TeamRepository;
+import com.smalaca.taskmanager.team.command.TeamCommandRepository;
 
 import java.util.Optional;
 
 public class TeamCreateCommand {
-    private final TeamRepository teamRepository;
+    private final TeamCommandRepository teamRepository;
 
-    public TeamCreateCommand(TeamRepository teamRepository) {
+    public TeamCreateCommand(TeamCommandRepository teamRepository) {
         this.teamRepository = teamRepository;
     }
 

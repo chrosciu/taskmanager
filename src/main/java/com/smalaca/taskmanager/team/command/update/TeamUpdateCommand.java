@@ -3,14 +3,15 @@ package com.smalaca.taskmanager.team.command.update;
 import com.smalaca.taskamanager.dto.TeamDto;
 import com.smalaca.taskamanager.model.entities.Team;
 import com.smalaca.taskamanager.repository.TeamRepository;
+import com.smalaca.taskmanager.team.command.TeamCommandRepository;
 
 import java.util.Optional;
 
 public class TeamUpdateCommand {
 
-    private final TeamRepository teamRepository;
+    private final TeamCommandRepository teamRepository;
 
-    public TeamUpdateCommand(TeamRepository teamRepository) {
+    public TeamUpdateCommand(TeamCommandRepository teamRepository) {
         this.teamRepository = teamRepository;
     }
 

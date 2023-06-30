@@ -2,6 +2,7 @@ package com.smalaca.taskamanager.api.rest;
 
 
 import com.google.common.collect.Iterables;
+import com.smalaca.anticorruptionlayer.TeamAntiCorruptionLayer;
 import com.smalaca.taskamanager.dto.TeamDto;
 import com.smalaca.taskamanager.dto.TeamMembersDto;
 import com.smalaca.taskamanager.exception.TeamNotFoundException;
@@ -41,7 +42,7 @@ public class TeamController {
         this.teamRepository = teamRepository;
         this.userRepository = userRepository;
         this.teamQueryFacade = new TeamQueryFacade(teamRepository);
-        this.teamCommandFacade = new TeamCommandFacade(teamRepository);
+        this.teamCommandFacade = new TeamCommandFacade(new TeamAntiCorruptionLayer(teamRepository));
     }
 
     @GetMapping
