@@ -9,6 +9,7 @@ import com.smalaca.taskamanager.model.entities.Team;
 import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.repository.TeamRepository;
 import com.smalaca.taskamanager.repository.UserRepository;
+import com.smalaca.taskmanager.team.command.TeamCommandFacade;
 import com.smalaca.taskmanager.team.query.TeamQueryFacade;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,11 +35,13 @@ public class TeamController {
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
     private final TeamQueryFacade teamQueryFacade;
+    private final TeamCommandFacade teamCommandFacade;
 
     public TeamController(TeamRepository teamRepository, UserRepository userRepository) {
         this.teamRepository = teamRepository;
         this.userRepository = userRepository;
         this.teamQueryFacade = new TeamQueryFacade(teamRepository);
+        this.teamCommandFacade = new TeamCommandFacade(teamRepository);
     }
 
     @GetMapping
@@ -58,15 +61,14 @@ public class TeamController {
 
     @PostMapping
     public ResponseEntity<Void> createTeam(@RequestBody TeamDto teamDto, UriComponentsBuilder uriComponentsBuilder) {
-        if (teamRepository.findByName(teamDto.getName()).isPresent()) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        } else {
-            Team team = Team.createFromTeamDto(teamDto);
-            Team saved = teamRepository.save(team);
+        Optional<Long> id = teamCommandFacade.createTeam(teamDto);
 
+        if (id.isPresent()) {
             HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(uriComponentsBuilder.path("/team/{id}").buildAndExpand(saved.getId()).toUri());
+            headers.setLocation(uriComponentsBuilder.path("/team/{id}").buildAndExpand(id.get()).toUri());
             return new ResponseEntity<>(headers, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
 
