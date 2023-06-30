@@ -35,6 +35,12 @@ public class Team {
     @ManyToOne
     private Project project;
 
+    public static Team fromTeamDto(TeamDto teamDto) {
+        Team team = new Team();
+        team.setName(teamDto.getName());
+        return team;
+    }
+
     public boolean hasCodename() {
         return getCodename() != null;
     }
@@ -145,4 +151,5 @@ public class Team {
 
         return builder.build();
     }
+
 }

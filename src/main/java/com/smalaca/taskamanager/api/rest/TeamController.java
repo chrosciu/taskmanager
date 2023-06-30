@@ -71,8 +71,7 @@ public class TeamController {
         if (teamRepository.findByName(teamDto.getName()).isPresent()) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         } else {
-            Team team = new Team();
-            team.setName(teamDto.getName());
+            Team team = Team.fromTeamDto(teamDto);
             Team saved = teamRepository.save(team);
 
             HttpHeaders headers = new HttpHeaders();
