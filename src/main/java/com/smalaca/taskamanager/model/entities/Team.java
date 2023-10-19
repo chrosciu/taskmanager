@@ -13,6 +13,8 @@ import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+
 @Entity
 public class Team {
     @Id
@@ -129,5 +131,9 @@ public class Team {
 
     public String getCodenameFull() {
         return getCodename().getFullName();
+    }
+
+    public List<Long> getMemberIds() {
+        return getMembers().stream().map(User::getId).collect(toList());
     }
 }
