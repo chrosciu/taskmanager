@@ -238,6 +238,7 @@ class UserControllerMockTest {
         given(user.getPhonePrefix()).willReturn(PHONE_PREFIX);
         given(user.getPhoneNumber()).willReturn(PHONE_NUMBER);
         given(user.getTeamRole()).willReturn(TEAM_ROLE_AS_STRING);
+        given(user.asTeamRole()).willReturn(TEAM_ROLE);
         return user;
     }
 }
