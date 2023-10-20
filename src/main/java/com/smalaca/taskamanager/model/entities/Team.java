@@ -136,6 +136,11 @@ public class Team {
         }
 
         dto.setDescription(description);
+        return dto;
+    }
+
+    public TeamDto asTeamDtoIncludingUserIds() {
+        TeamDto dto = asTeamDto();
         dto.setUserIds(getMemberIds());
         return dto;
     }
