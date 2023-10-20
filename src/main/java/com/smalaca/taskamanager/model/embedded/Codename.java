@@ -12,8 +12,7 @@ public class Codename {
         this.fullName = fullName;
     }
 
-    @Deprecated
-    public Codename() {
+    private Codename() {
     }
 
     public String getShortName() {
