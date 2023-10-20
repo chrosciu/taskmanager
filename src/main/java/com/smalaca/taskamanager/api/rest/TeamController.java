@@ -9,6 +9,7 @@ import com.smalaca.taskamanager.model.entities.Team;
 import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.repository.TeamRepository;
 import com.smalaca.taskamanager.repository.UserRepository;
+import com.smalaca.taskmanager.team.command.create.TeamCreateCommand;
 import com.smalaca.taskmanager.team.query.TeamQueryFacade;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,11 +35,13 @@ public class TeamController {
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
     private final TeamQueryFacade teamQueryFacade;
+    private final TeamCreateCommand teamCreateCommand;
 
     public TeamController(TeamRepository teamRepository, UserRepository userRepository) {
         this.teamRepository = teamRepository;
         this.userRepository = userRepository;
         teamQueryFacade = new TeamQueryFacade(teamRepository);
+        teamCreateCommand = new TeamCreateCommand(teamRepository);
     }
 
     @GetMapping
@@ -58,15 +61,13 @@ public class TeamController {
 
     @PostMapping
     public ResponseEntity<Void> createTeam(@RequestBody TeamDto teamDto, UriComponentsBuilder uriComponentsBuilder) {
-        if (teamRepository.findByName(teamDto.getName()).isPresent()) {
+        Optional<Long> savedTeamId = teamCreateCommand.create(teamDto);
+
+        if (savedTeamId.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         } else {
-            Team team = new Team();
-            team.setName(teamDto.getName());
-            Team saved = teamRepository.save(team);
-
             HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(uriComponentsBuilder.path("/team/{id}").buildAndExpand(saved.getId()).toUri());
+            headers.setLocation(uriComponentsBuilder.path("/team/{id}").buildAndExpand(savedTeamId.get()).toUri());
             return new ResponseEntity<>(headers, HttpStatus.CREATED);
         }
     }
