@@ -154,6 +154,28 @@ public class User {
                 .toHashCode();
     }
 
+    public UserDto asDto() {
+        UserDto userDto = new UserDto();
+        userDto.setId(id);
+        userDto.setFirstName(userName.getFirstName());
+        userDto.setLastName(userName.getLastName());
+        userDto.setLogin(login);
+        userDto.setPassword(password);
+
+        if (hasTeamRole()) {
+            userDto.setTeamRole(getTeamRole().name());
+        }
+
+        if (hasPhoneNumber()) {
+            userDto.setPhoneNumber(phoneNumber.getPrefix(), phoneNumber.getNumber());
+        }
+
+        if (hasEmailAddress()) {
+            userDto.setEmailAddress(emailAddress.getEmailAddress());
+        }
+        return userDto;
+    }
+
     public boolean hasPhoneNumber() {
         return getPhoneNumber() != null;
     }
@@ -166,49 +188,4 @@ public class User {
         return getTeamRole() != null;
     }
 
-    public String lastName() {
-        return getUserName().getLastName();
-    }
-
-    public String firstName() {
-        return getUserName().getFirstName();
-    }
-
-    public String teamRoleName() {
-        return getTeamRole().name();
-    }
-
-    public String phonePrefix() {
-        return getPhoneNumber().getPrefix();
-    }
-
-    public String phoneNumber() {
-        return getPhoneNumber().getNumber();
-    }
-
-    public String emailAddress() {
-        return getEmailAddress().getEmailAddress();
-    }
-
-    public UserDto asDto() {
-        UserDto userDto = new UserDto();
-        userDto.setId(getId());
-        userDto.setFirstName(firstName());
-        userDto.setLastName(lastName());
-        userDto.setLogin(getLogin());
-        userDto.setPassword(getPassword());
-
-        if (hasTeamRole()) {
-            userDto.setTeamRole(teamRoleName());
-        }
-
-        if (hasPhoneNumber()) {
-            userDto.setPhoneNumber(phonePrefix(), phoneNumber());
-        }
-
-        if (hasEmailAddress()) {
-            userDto.setEmailAddress(emailAddress());
-        }
-        return userDto;
-    }
 }

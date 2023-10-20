@@ -53,8 +53,8 @@ class UserControllerMockTest {
     private static final String PHONE_NUMBER = "123456789";
     private static final TeamRole TEAM_ROLE = BUSINESS_ANALYSIS;
     private static final String TEAM_ROLE_AS_STRING = TEAM_ROLE.name();
-    private static final User MOCKED_USER = aMockedUser();
     private static final UserDto MOCKED_USER_DTO = aMockedUserDto();
+    private static final User MOCKED_USER = aMockedUser();
     private static final URI DUMMY_URI = URI.create("dummy/uri");
 
     @Mock private UriComponentsBuilder uriComponentsBuilder;
@@ -205,11 +205,7 @@ class UserControllerMockTest {
 
     private static User aMockedUser() {
         User user = mock(User.class);
-        given(user.getId()).willReturn(EXISTING_USER_ID);
-        given(user.firstName()).willReturn(FIRST_NAME);
-        given(user.lastName()).willReturn(LAST_NAME);
-        given(user.getLogin()).willReturn(LOGIN);
-        given(user.getPassword()).willReturn(PASSWORD);
+        given(user.asDto()).willReturn(MOCKED_USER_DTO);
         return user;
     }
 
