@@ -51,18 +51,9 @@ public class TeamController {
     @GetMapping("/{id}")
     @Transactional
     public ResponseEntity<TeamDto> findById(@PathVariable Long id) {
-
-        Optional<Team> foundTeam = teamRepository.findById(id);
-
-        if (foundTeam.isPresent()) {
-            Team team = foundTeam.get();
-            TeamDto dto = team.asTeamDtoIncludingUserIds();
-
-            return new ResponseEntity<>(dto, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
+        return teamQueryFacade.findById(id)
+                .map(teamDto -> new ResponseEntity<>(teamDto, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
