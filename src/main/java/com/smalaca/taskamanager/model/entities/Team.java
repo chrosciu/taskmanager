@@ -143,4 +143,21 @@ public class Team {
     private List<Long> getMemberIds() {
         return getMembers().stream().map(User::getId).collect(toList());
     }
+
+    public void updateFromTeamDto(TeamDto teamDto) {
+        if (teamDto.getName() != null) {
+            setName(teamDto.getName());
+        }
+
+        if (teamDto.getCodenameShort() != null && teamDto.getCodenameFull() != null) {
+            Codename codename = new Codename();
+            codename.setShortName(teamDto.getCodenameShort());
+            codename.setFullName(teamDto.getCodenameFull());
+            setCodename(codename);
+        }
+
+        if (teamDto.getDescription() != null) {
+            setDescription(teamDto.getDescription());
+        }
+    }
 }
