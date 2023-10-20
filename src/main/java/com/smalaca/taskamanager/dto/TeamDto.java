@@ -2,7 +2,9 @@ package com.smalaca.taskamanager.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +12,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class TeamDto {
     private Long id;
     private String name;
@@ -23,61 +27,14 @@ public class TeamDto {
             return codenameShort(shortName).codenameFull(fullName);
         }
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCodenameShort() {
-        return codenameShort;
-    }
-
     @Deprecated
     public void setCodenameShort(String codenameShort) {
         this.codenameShort = codenameShort;
-    }
-
-    public String getCodenameFull() {
-        return codenameFull;
     }
 
     @Deprecated
     public void setCodenameFull(String codenameFull) {
         this.codenameFull = codenameFull;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<Long> getUserIds() {
-        return userIds;
-    }
-
-    public void setUserIds(List<Long> userIds) {
-        this.userIds = userIds;
-    }
-
-    public void setCodename(String codenameShort, String codenameFull) {
-        this.codenameShort = codenameShort;
-        this.codenameFull = codenameFull;
-    }
-
 
 }
