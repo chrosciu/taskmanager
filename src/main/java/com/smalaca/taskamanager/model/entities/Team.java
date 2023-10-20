@@ -126,29 +126,21 @@ public class Team {
         return getCodename() != null;
     }
 
-    public String getCodenameShort() {
-        return getCodename().getShortName();
-    }
-
-    public String getCodenameFull() {
-        return getCodename().getFullName();
-    }
-
-    public List<Long> getMemberIds() {
-        return getMembers().stream().map(User::getId).collect(toList());
-    }
-
     public TeamDto asTeamDto() {
         TeamDto dto = new TeamDto();
-        dto.setId(getId());
-        dto.setName(getName());
+        dto.setId(id);
+        dto.setName(name);
 
         if (hasCodename()) {
-            dto.setCodename(getCodenameShort(), getCodenameFull());
+            dto.setCodename(codename.getShortName(), codename.getFullName());
         }
 
-        dto.setDescription(getDescription());
+        dto.setDescription(description);
         dto.setUserIds(getMemberIds());
         return dto;
+    }
+
+    private List<Long> getMemberIds() {
+        return getMembers().stream().map(User::getId).collect(toList());
     }
 }
