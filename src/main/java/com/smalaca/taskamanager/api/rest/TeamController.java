@@ -10,6 +10,7 @@ import com.smalaca.taskamanager.model.entities.User;
 import com.smalaca.taskamanager.repository.TeamRepository;
 import com.smalaca.taskamanager.repository.UserRepository;
 import com.smalaca.taskmanager.team.command.create.TeamCreateCommand;
+import com.smalaca.taskmanager.team.command.update.TeamUpdateCommand;
 import com.smalaca.taskmanager.team.query.TeamQueryFacade;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -36,12 +37,14 @@ public class TeamController {
     private final UserRepository userRepository;
     private final TeamQueryFacade teamQueryFacade;
     private final TeamCreateCommand teamCreateCommand;
+    private final TeamUpdateCommand teamUpdateCommand;
 
     public TeamController(TeamRepository teamRepository, UserRepository userRepository) {
         this.teamRepository = teamRepository;
         this.userRepository = userRepository;
         teamQueryFacade = new TeamQueryFacade(teamRepository);
         teamCreateCommand = new TeamCreateCommand(teamRepository);
+        teamUpdateCommand = new TeamUpdateCommand(teamRepository);
     }
 
     @GetMapping
@@ -74,21 +77,9 @@ public class TeamController {
 
     @PutMapping("/{id}")
     public ResponseEntity<TeamDto> updateTeam(@PathVariable Long id, @RequestBody TeamDto teamDto) {
-        Team team;
-
-        try {
-            team = getTeamById(id);
-        } catch (TeamNotFoundException exception) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        team.updateFromTeamDto(teamDto);
-
-        Team updated = teamRepository.save(team);
-
-        TeamDto dto = updated.asTeamDto();
-
-        return new ResponseEntity<>(dto, HttpStatus.OK);
+        return teamUpdateCommand.update(id ,teamDto)
+                .map(dto -> new ResponseEntity<>(dto, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PutMapping("/{id}/members")
