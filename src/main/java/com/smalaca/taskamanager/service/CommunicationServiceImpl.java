@@ -22,7 +22,21 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CommunicationServiceImpl implements CommunicationService {
-    private CommunicationStrategy communicationStrategy;
+
+    static class EmptyCommunicationStrategy implements CommunicationStrategy {
+        @Override
+        public void notify(ToDoItem toDoItem, ProductOwner productOwner) {}
+        @Override
+        public void notify(ToDoItem toDoItem, Owner owner) {}
+        @Override
+        public void notify(ToDoItem toDoItem, Watcher watcher) {}
+        @Override
+        public void notify(ToDoItem toDoItem, User user) {}
+        @Override
+        public void notify(ToDoItem toDoItem, Stakeholder stakeholder) {}
+    }
+
+    private CommunicationStrategy communicationStrategy = new EmptyCommunicationStrategy();
     private final MailCommunicationStrategy mailCommunicationStrategy;
     private final SmsCommunicationStrategy smsCommunicationStrategy;
     private final DirectCommunicationStrategy directCommunicationStrategy;
