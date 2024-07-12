@@ -15,7 +15,6 @@ import com.smalaca.taskamanager.service.CommunicationService;
 import com.smalaca.taskamanager.service.ProjectBacklogService;
 import com.smalaca.taskamanager.service.SprintBacklogService;
 import com.smalaca.taskamanager.service.StoryService;
-import com.smalaca.taskamanager.state.ToDoItemDefinedState;
 import org.springframework.stereotype.Component;
 
 import static com.smalaca.taskamanager.model.enums.ToDoItemStatus.DONE;
@@ -41,7 +40,7 @@ public class ToDoItemProcessor {
     public void processFor(ToDoItem toDoItem) {
         switch (toDoItem.getStatus()) {
             case DEFINED:
-                new ToDoItemDefinedState().process(toDoItem);
+                processDefined(toDoItem);
                 break;
 
             case IN_PROGRESS:
