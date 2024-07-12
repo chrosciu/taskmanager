@@ -1,21 +1,40 @@
 package com.smalaca.taskamanager.state;
 
+import com.smalaca.taskamanager.events.StoryApprovedEvent;
+import com.smalaca.taskamanager.events.TaskApprovedEvent;
+import com.smalaca.taskamanager.model.entities.Story;
+import com.smalaca.taskamanager.model.entities.Task;
 import com.smalaca.taskamanager.model.interfaces.ToDoItem;
 import com.smalaca.taskamanager.registry.EventsRegistry;
 import com.smalaca.taskamanager.service.StoryService;
-import com.smalaca.taskamanager.visitor.ToDoItemApprovedStateVisitor;
-import com.smalaca.taskamanager.visitor.ToDoItemVisitor;
 
 public class ToDoItemApprovedState implements ToDoItemState {
 
-    private final ToDoItemApprovedStateVisitor toDoItemApprovedStateVisitor;
+    private final EventsRegistry eventsRegistry;
+    private final StoryService storyService;
 
     public ToDoItemApprovedState(EventsRegistry eventsRegistry, StoryService storyService) {
-        toDoItemApprovedStateVisitor = new ToDoItemApprovedStateVisitor(eventsRegistry, storyService);
+        this.eventsRegistry = eventsRegistry;
+        this.storyService = storyService;
     }
 
     @Override
     public void process(ToDoItem toDoItem) {
-        ToDoItemVisitor.visit(toDoItemApprovedStateVisitor, toDoItem);
+        if (toDoItem instanceof Story) {
+            Story story = (Story) toDoItem;
+            StoryApprovedEvent event = new StoryApprovedEvent();
+            event.setStoryId(story.getId());
+            eventsRegistry.publish(event);
+        } else if (toDoItem instanceof Task) {
+            Task task = (Task) toDoItem;
+
+            if (task.isSubtask()) {
+                TaskApprovedEvent event = new TaskApprovedEvent();
+                event.setTaskId(task.getId());
+                eventsRegistry.publish(event);
+            } else {
+                storyService.attachPartialApprovalFor(task.getStory().getId(), task.getId());
+            }
+        }
     }
 }
